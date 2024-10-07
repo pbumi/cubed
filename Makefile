@@ -6,7 +6,7 @@
 #    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2024/10/07 15:45:07 by pbumidan         ###   ########.fr        #
+#    Updated: 2024/10/07 16:19:08 by pbumidan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,14 +62,14 @@ $(NAME): .mlx .libft .gnl $(OBJS) $(OBJS_SHARED)
 bonus: .bonus
 .bonus: .mlx .libft .gnl $(OBJS) $(OBJS_BONUS) $(OBJS_SHARED)
 	@cc $(CFLAGS) $(OBJS_BONUS) $(OBJS_SHARED) $(LIBFT) $(GNL) $(MLX42) -o $(NAME_BONUS)
-	@echo "$(CYAN)* * * SO_LONG_BONUS COMPLETE! * * *$(NC)"
+	@echo "$(CYAN)* * * $(NAME)_BONUS COMPLETE! * * *$(NC)"
 	@touch .bonus
 
 clean:
+	@make clean -C libft
+	@make clean -C gnl
 	@rm -f $(OBJS) $(OBJ_BONUS) $(OBJS_SHARED)
-	@rm -rf ./MLX42
-	@echo "$(YELLOW)The mlx42 objects have been removed!$(NC)"
-	@echo "$(YELLOW)The so_long object files have been removed!$(NC)"
+	@echo "$(YELLOW)The $(NAME) object files have been removed!$(NC)"
 
 fclean:
 	@rm -rf ./libft
@@ -90,44 +90,3 @@ YELLOW = \033[0;93m
 CYAN = \033[0;96m
 MAGENTA = \033[0;95m
 NC = \033[0m
-
-# NAME = cubed
-
-# SRCS = \
-# 		main.c \
-
-# OBJS := $(SRCS:.c=.o)
-
-# CFLAGS = -Wall -Wextra -Werror
-
-# all: $(NAME)
-
-# %.o: %.c
-# 	@cc $(CFLAGS) -c $<
-
-# $(NAME): $(OBJS)
-# 	@cc $(CFLAGS) -o $(NAME) $(OBJS)
-# 	@echo "$(CYAN)* * * PHILO COMPLETE! * * *$(NC)"
-
-# clean:
-# 	@rm -f $(OBJS)
-# 	@echo "$(YELLOW)* The object files have been removed! *$(NC)"
-
-# fclean: clean
-# 	@rm -f $(NAME)
-# 	@echo "$(MAGENTA)* * * CLEANED EVERYTHING! * * *$(NC)"
-
-# re: fclean all
-
-# .PHONY: all clean fclean re bonus
-
-# #Color ANSI Code
-# RED    := \033[91;1m
-# GREEN  := \033[92;1m
-# YELLOW := \033[93;1m
-# BLUE   := \033[94;1m
-# MAGENTA   := \033[95;1m
-# CYAN      := \033[96;1m
-# WHITE     := \033[97;1m
-# RESET     := \x1b[0m #reseting the text formatting to default state
-
