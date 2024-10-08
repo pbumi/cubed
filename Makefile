@@ -6,7 +6,7 @@
 #    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2024/10/07 16:19:08 by pbumidan         ###   ########.fr        #
+#    Updated: 2024/10/08 18:51:29 by pbumidan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,19 +44,19 @@ $(NAME): .mlx .libft .gnl $(OBJS) $(OBJS_SHARED)
 
 .mlx:
 	@git clone https://github.com/codam-coding-college/MLX42.git
-	@cmake ./MLX42 -B ./MLX42/build && make -C ./MLX42/build -j4
+	@cmake ./MLX42 -B ./MLX42/build && make -s -C ./MLX42/build -j4
 	@echo "$(MAGENTA)mlx42 cloned and built!$(NC)"
 	@echo "$(GREEN)mlx42 compiled!$(NC)"
 	@touch .mlx
 
 .libft:
 	@git clone https://github.com/pbumi/libft.git
-	@make -C libft
+	@make -s -C libft
 	@touch .libft
 
 .gnl:
 	@git clone https://github.com/pbumi/gnl.git
-	@make -C gnl
+	@make -s -C gnl
 	@touch .gnl
 
 bonus: .bonus
@@ -66,8 +66,8 @@ bonus: .bonus
 	@touch .bonus
 
 clean:
-	@make clean -C libft
-	@make clean -C gnl
+	@make -s clean -C libft
+	@make -s clean -C gnl
 	@rm -f $(OBJS) $(OBJ_BONUS) $(OBJS_SHARED)
 	@echo "$(YELLOW)The $(NAME) object files have been removed!$(NC)"
 

@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/07 16:10:29 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/10/08 18:41:30 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@ int main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 
-	ft_putstr("WOW");
+	ft_putstr("WOW\n");
 }
 
