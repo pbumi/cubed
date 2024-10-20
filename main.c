@@ -6,50 +6,80 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/17 17:28:14 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/10/20 15:03:38 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
+# include <stdio.h>
 
-int	valid_cub(char *argv)
+void safe_free(void **ptr)
 {
-	char	*filetype;
-
-	if (!argv)
-		return (0);
-	if (ft_strlen(argv) < 5)
-		return (0);
-	filetype = ft_strrchr((char *)argv, '.');
-	if (!filetype)
-		return (0);
-	if (ft_strncmp(filetype, ".cub", 5) == 0)
-		return (1);
-	return (0);
+    if (*ptr)
+    {
+        free(*ptr);
+        *ptr = NULL;
+    }
 }
 
-int	check_file(int argc, char **argv)
+void free_struct(t_main *game)
+{
+    // Free wall components
+    safe_free((void **)&game->walls->NO);
+    safe_free((void **)&game->walls->SO);
+    safe_free((void **)&game->walls->WE);
+    safe_free((void **)&game->walls->EA);
+    
+    // Free walls struct itself
+    safe_free((void **)&game->walls);
+
+    // Free floor and ceiling components
+    safe_free((void **)&game->floor);
+    safe_free((void **)&game->ceil);
+}
+
+void    free_arr(char **arr)
+{
+    size_t i = 0;
+    while (arr[i])
+        free(arr[i++]);
+    free(arr);
+}
+bool    valid_cub(char *argv)
+{
+    int len;
+
+    if (!argv)
+        return false;
+    len = ft_strlen(argv);
+    if (len > 4 && ft_strncmp(&argv[len - 4], ".cub", 4) == 0)
+    {
+        return true;
+    }
+	return false;
+}
+
+bool	check_file(int argc, char **argv)
 {
 	if (argc > 2)
 	{
 		ft_putstr_fd("Error\n*  Only one (1) file *\n\n", 2);
-		return (0);
+		return false;
 	}
 	else if (argc == 1)
 	{
 		ft_putstr_fd("Error\n* Run with .cub file and press ENTER *\n\n", 2);
-		return (0);
+		return false;
 	}
 	else if (argc == 2)
 	{
 		if (!valid_cub(argv[1]))
 		{
 			ft_putstr_fd("Error\n* Invalid file *\n\n", 2);
-			return (0);
+			return false;
 		}
-		return (1);
 	}
-	return (0);
+	return true;
 }
 
 char *get_substr(char *line, int start)
@@ -57,16 +87,16 @@ char *get_substr(char *line, int start)
 	char *substr = NULL;
 	int x = start;
 	int end;
-	ft_putstr("getsub\n");
 	while(line[x] && (line[x] == ' ' || (line[x] >= 9 && line[x] <= 13)))
+    {
 		x++;
+    }
 	end = ft_strlen(line) - 1;
 	while (end > x && (line[end] == ' ' || (line[end] >= 9 && line[end] <= 13)))
+    {
         end--;
+    }
 	substr = ft_substr(line, x, end - x + 1);
-	ft_putstr("substr: ");
-	ft_putstr(substr);
-	ft_putstr("\n");
 	return (substr);
 }
 
@@ -82,7 +112,7 @@ size_t  arr_size(char **arr)
     return (count);
 }
 
-bool check_colors(char **colors)
+bool check_range(char **colors)
 {
     if (ft_atoi(colors[0]) < 0 || ft_atoi(colors[0]) > 255)
         return false;
@@ -96,283 +126,199 @@ bool check_colors(char **colors)
 bool get_rgb(char *line, t_fc *fc)
 {
     char **colors;
-    ft_putstr("LINEEEEEEEEEEE ");
-    ft_putstr(line);
-    ft_putstr("\n");
 	colors = ft_split(line, ',');
     if (!colors)
     {
         ft_putstr_fd("Error\n* Memory allocation failed for colors *\n\n", 2);
         return false;
     }
-    if ((arr_size(colors) != 3) || (check_colors(colors) == false))
+    if ((arr_size(colors) != 3) || (check_range(colors) == false))
     {
-        ft_putstr_fd("Error\n* invalid parmeters for colors *\n\n", 2);
-        int i = 0; // free
-        while (colors[i])
-            free(colors[i++]);
-        free(colors);
+        ft_putstr_fd("Error\n* Invalid parmeters for colors *\n\n", 2);
+        free_arr(colors);
         return false;
     }
     fc->R = ft_atoi(colors[0]);
     fc->G = ft_atoi(colors[1]);
     fc->B = ft_atoi(colors[2]);
-    int i = 0; // free
-    while (colors[i])
-        free(colors[i++]);
-    free(colors);
+    free_arr(colors);
 	return (true);
 }
 
 bool is_space(char c)
 {
-    if (c == ' ' || (c >= 9 && c <= 13))
+    if ((c == 32 || (c >= 9 && c <= 13)) && c != '\n')
         return true;
     return false;
 }
 
-bool check_fc(int fd, t_main *game)
+bool extract_rgb(char *line, char *str, t_fc *fc)
 {
-	char *line;
-	ft_putstr("went to FCCCC \n");
-	game->ceil = malloc(sizeof(t_fc));
-	if (!game->ceil)
-	    {
-        ft_putstr_fd("Error\n* Memory allocation failed for ceiling *\n\n", 2);
-        close(fd);
-        return false;
-    }
-    game->floor = malloc(sizeof(t_fc));
-    if (!game->floor)
-	{
-        ft_putstr_fd("Error\n* Memory allocation failed for floor *\n\n", 2);
-        close(fd);
-        return false;
-    }
-	while ((line = get_next_line(fd)) != NULL)
+    // Check if the line starts with the correct prefix (C or F)
+    if (ft_strncmp(line, str, 1) == 0 && is_space(line[1]) == true)
     {
-        ft_putstr("line :");
-        ft_putstr(line);
-        ft_putstr("\n");
-        if (ft_strncmp(line, "C", 1) == 0)
-		{
-            if (is_space(line[1]) == true)
-            {
-                 ft_putstr("VVVVVVV");
-                if (get_rgb(get_substr(line, 2), game->ceil) == false)
-                {
-                    free(line);
-                    close(fd);
-                    return false;
-                }
-                ft_putstr("CEIL: ");
-                ft_putstr(line);
-                ft_putstr("\n");
-                free(line);
-            }
-            else
-            {
-                ft_putstr_fd("Error\n* Invalid format for ceiling wall *\n\n", 2);
-                free(line);
-                close(fd);
-                return false;
-            }
+        char *sub = get_substr(line, 2); // Extract substring after 'C' or 'F'
+        printf("Extracting RGB from: %s\n", sub);
+        
+        // Attempt to extract RGB values
+        if (get_rgb(sub, fc) == false)
+        {
+            free(sub);  // Clean up substring memory
+            return false;  // Return false if RGB extraction fails
         }
-        if (ft_strncmp(line, "F", 1) == 0)
-		{
-            if (is_space(line[1]) == true)
-            {
-                
-                if (get_rgb(get_substr(line, 2), game->floor) == false)
-                {
-                    free(line);
-                    close(fd);
-                    return false;
-                }
-                    ft_putstr("FLOOR: ");
-                    ft_putstr(line);
-                    ft_putstr("\n");
-                free(line);
-            }
-            else
-            {
-                ft_putstr_fd("Error\n* Invalid format for ceiling wall *\n\n", 2);
-                free(line);
-                close(fd);
-                return false;
-            }
+        free(sub);  // Clean up substring memory
+        return true;  // Return true if successful
+    }
+    return false;  // Return false if the line doesn't match
+}
+
+bool check_wall_component(char *line, char *identifier, char **wall_ptr)
+{
+    // Check if the line starts with the wall identifier (like "NO", "SO", etc.)
+    if (ft_strncmp(line, identifier, 2) == 0 && !(*wall_ptr))
+    {
+        // Ensure the character after the identifier is a space
+        if (is_space(line[2]) == true)
+        {
+            // Extract the substring after the identifier and store it
+            *wall_ptr = get_substr(line, 3);  // Start after the identifier and space
+            return true;
         }
-	}
-    close(fd);
+        else
+        {
+            ft_putstr_fd("Error\n* Invalid format for ", 2);
+            ft_putstr_fd(identifier, 2);
+            ft_putstr_fd(" wall *\n\n", 2);
+            return false;
+        }
+    }
+    return true;  // If the identifier doesn't match, just return true
+}
+
+bool check_walls(char *line, t_main *game)
+{
+    // Check NO wall
+    if (!check_wall_component(line, "NO", &game->walls->NO))
+        return false;
+
+    // Check SO wall
+    if (!check_wall_component(line, "SO", &game->walls->SO))
+        return false;
+
+    // Check WE wall
+    if (!check_wall_component(line, "WE", &game->walls->WE))
+        return false;
+
+    // Check EA wall
+    if (!check_wall_component(line, "EA", &game->walls->EA))
+        return false;
+
     return true;
 }
 
-bool check_walls(int fd, t_main *game)
-{   
-    char *line = NULL;
-
-    ft_putstr("checkcomp\n");
-
-    // Allocate memory for walls
+bool    initialize_struct(t_main *game)
+{
     game->walls = malloc(sizeof(t_wall));
     if (!game->walls)
     {
         ft_putstr_fd("Error\n* Memory allocation failed for walls *\n\n", 2);
-        close(fd);
         return false;
     }
-
-    // Initialize walls to NULL
+    game->ceil = malloc(sizeof(t_fc));
+    game->floor = malloc(sizeof(t_fc));
+    if (!game->ceil || !game->floor)
+    {
+        ft_putstr_fd("Error\n* Memory allocation failed for ceiling/floor *\n\n", 2);
+        return false;
+    }
     game->walls->NO = NULL;
     game->walls->SO = NULL;
     game->walls->WE = NULL;
     game->walls->EA = NULL;
-
-    // Read the file line by line
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        ft_putstr("test: ");
-        ft_putstr(line);
-        ft_putstr("\n");
-        if (ft_strncmp(line, "NO", 2) == 0 && !game->walls->NO)
-		{
-            if (is_space(line[2]) == true)
-            {
-                ft_putstr("b4sub\n");
-                game->walls->NO = get_substr(line, 3); // Start after "NO "
-                free(line);
-            }
-            else
-            {
-                ft_putstr_fd("Error\n* Invalid format for NO wall *\n\n", 2);
-                free(line);
-                close(fd);
-                return false;
-            }
-        }
-        else if (ft_strncmp(line, "SO", 2) == 0 && !game->walls->SO)
-        {
-            if (is_space(line[2]) == true)
-            {
-                ft_putstr("b4sub\n");
-                game->walls->SO = get_substr(line, 3); // Start after "NO "
-                free(line);
-            }
-            else
-            {
-                ft_putstr_fd("Error\n* Invalid format for SO wall *\n\n", 2);
-                free(line);
-                close(fd);
-                return false;
-            }
-        }
-        else if (ft_strncmp(line, "WE",2) == 0 && !game->walls->WE)
-        {
-            if (is_space(line[2]) == true)
-            {
-                ft_putstr("b4sub\n");
-                game->walls->WE = get_substr(line, 3); // Start after "NO "
-                free(line);
-            }
-            else
-            {
-                ft_putstr_fd("Error\n* Invalid format for WE wall *\n\n", 2);
-                free(line);
-                close(fd);
-                return false;
-            }
-        }
-        else if (ft_strncmp(line, "EA", 2) == 0 && !game->walls->EA)
-        {
-            if (is_space(line[2]) == true)
-            {
-                ft_putstr("b4sub\n");
-                game->walls->EA = get_substr(line, 3); // Start after "NO "
-                free(line);
-            }
-            else
-            {
-                ft_putstr_fd("Error\n* Invalid format for EA wall *\n\n", 2);
-                free(line);
-                close(fd);
-                return false;
-            }
-        }
-        else
-        {
-            // Ignore other lines or handle as needed
-            free(line);
-        }
-    }
-
-    close(fd);
-
-    // Validate that all walls have been set
-    if (!game->walls->NO || !game->walls->SO || !game->walls->WE || !game->walls->EA)
-    {
-        ft_putstr_fd("Error\n* Missing one or more wall components *\n\n", 2);
-        // Free any allocated walls
-        if (game->walls->NO) free(game->walls->NO);
-        if (game->walls->SO) free(game->walls->SO);
-        if (game->walls->WE) free(game->walls->WE);
-        if (game->walls->EA) free(game->walls->EA);
-        free(game->walls);
-        return false;
-    }
-
     return true;
 }
 
-void initialize_game(char *cubfile, t_main *game)
+bool check_components(int fd, t_main *game)
+{
+    char *line = NULL;
+    bool F = false;
+    bool C = false;
+
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        if (check_walls(line, game) == false)
+        {
+            free (line);
+            return false;  
+        }
+        if (extract_rgb(line, "C", game->ceil) == true)
+        {
+            C = true;
+        }
+        if (extract_rgb(line, "F", game->floor) == true)
+        {
+            F = true;
+        }
+        free(line);
+    }
+	line = get_next_line(-1);
+    if (!game->walls->NO || !game->walls->SO || !game->walls->WE || !game->walls->EA)
+    {
+        ft_putstr_fd("Error\n* Missing one or more wall components *\n\n", 2);
+            // Free any allocated walls
+        return false;
+    }
+    if (!F || !C)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool initialize_game(char *cubfile, t_main *game)
 {
 	ft_putstr("initgame\n");
 	int fd;
+    if (initialize_struct(game) == false)
+    {
+        return false;
+    }
 	fd = open(cubfile, O_RDONLY);
     if (fd < 0)
     {
         ft_putstr_fd("Error\n* Error opening file *\n\n", 2);
-        exit(1);
+        return false;
     }
-	if (check_walls(fd, game) == false)
-		exit(1);
-    close (fd);
-    fd = open(cubfile, O_RDONLY);
-    if (fd < 0)
+    if (check_components(fd, game) == false)
     {
-        ft_putstr_fd("Error\n* Error opening file *\n\n", 2);
-        exit(1);
+        close(fd);
+        return false;
     }
-	if (check_fc(fd, game) == false)
-		exit (1);
-    close(fd);
-	
+    return true;
 }
 
-#include <stdio.h>
 int main(int argc, char **argv)
 {
 	t_main game;
 	game = (t_main){0};
-	if (!check_file(argc, argv))
+	if (check_file(argc, argv) == false)
 		exit (1);
-	initialize_game(argv[1], &game);
+	if (initialize_game(argv[1], &game) == false)
+    {
+		free_struct(&game);
+        return 1;
+    }
 	ft_putstr("WOW\n");
-	// ft_putstr(game.walls->NO);
-	// ft_putstr("\n");
-	// ft_putstr(game.walls->SO);
-	// ft_putstr("\n");
-	// ft_putstr(game.walls->WE);
-	// ft_putstr("\n");
-	// ft_putstr(game.walls->EA);
-	// ft_putstr("\n");
-	// Free allocated memory
+	ft_putstr(game.walls->NO);
+	ft_putstr("\n");
+	ft_putstr(game.walls->SO);
+	ft_putstr("\n");
+	ft_putstr(game.walls->WE);
+	ft_putstr("\n");
+	ft_putstr(game.walls->EA);
+	ft_putstr("\n");
     printf("F: %d, %d, %d \n", game.floor->R, game.floor->G, game.floor->B);
     printf("C: %d, %d, %d \n", game.ceil->R, game.ceil->G, game.ceil->B);
-    free(game.walls->NO);
-    free(game.walls->SO);
-    free(game.walls->WE);
-    free(game.walls->EA);
-    free(game.walls);
-	
+	free_struct(&game);
+    return 0;
 }
-
