@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/17 17:54:48 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:07:51 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_wall
     char    *EA;
     char    *WE;
     char    *SO;
+	bool	walls_OK;
 }   t_wall;
 
 typedef struct s_fc
@@ -33,6 +34,7 @@ typedef struct s_fc
     int	R;
     int	G;
 	int	B;
+    bool OK;
 }   t_fc;
 
 typedef struct s_main
@@ -40,7 +42,8 @@ typedef struct s_main
     t_wall  *walls;
 	t_fc	*floor;
     t_fc    *ceil;
-	bool	OK;
+    char    *map;
+    char    **map_arr;
 }	t_main;
 
 #endif

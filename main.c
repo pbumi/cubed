@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/20 15:03:38 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:32:37 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,30 @@ void safe_free(void **ptr)
     }
 }
 
+void    free_arr(char **arr)
+{
+	if (!arr)
+		return;
+    size_t x;
+	x = 0;
+    while (arr[x])
+        free(arr[x++]);
+    free(arr);
+}
+
 void free_struct(t_main *game)
 {
-    // Free wall components
     safe_free((void **)&game->walls->NO);
     safe_free((void **)&game->walls->SO);
     safe_free((void **)&game->walls->WE);
     safe_free((void **)&game->walls->EA);
-    
-    // Free walls struct itself
     safe_free((void **)&game->walls);
-
-    // Free floor and ceiling components
     safe_free((void **)&game->floor);
     safe_free((void **)&game->ceil);
+	safe_free((void **)&game->map);
+	free_arr(game->map_arr);
 }
 
-void    free_arr(char **arr)
-{
-    size_t i = 0;
-    while (arr[i])
-        free(arr[i++]);
-    free(arr);
-}
 bool    valid_cub(char *argv)
 {
     int len;
@@ -82,7 +83,93 @@ bool	check_file(int argc, char **argv)
 	return true;
 }
 
-char *get_substr(char *line, int start)
+bool is_space(char c)
+{
+    if ((c == 32 || (c >= 9 && c <= 13)) && c != '\n')
+        return true;
+    return false;
+}
+
+bool is_empty_line(char *line)
+{
+    while (*line)
+    {
+        if (!is_space(*line))  // Check if the line has a non-space character
+            return false;
+        line++;
+    }
+    return true;  // The line has only spaces
+}
+
+bool is_broken_map(char *line)
+{
+	size_t x;
+	
+	x = 0;
+	while (line[x + 1])
+    {
+        if (line[x] == '\n' && line[x + 1] == '\n')
+            return true;
+        x++;
+    }
+    return false; 
+}
+bool incorrect_mapsize(char *line)
+{
+	size_t x;
+	size_t x_count;
+	size_t y_count;
+	
+	x = 0;
+	x_count = 0;
+	y_count	= 0;
+	while (line[x])
+    {
+        if (line[x] == '\n')
+        {
+			y_count++;
+			if (x_count < 2) // MIN MAX X
+				return true;
+		}
+		x_count++;
+        x++;
+    }
+	if (y_count < 2) // MIN MAX Y
+	{
+		return true;
+	}
+    return false; 
+}
+
+bool incorrect_mapcharacter(char *line)
+{
+	size_t x;
+	size_t x_count;
+	size_t y_count;
+	
+	x = 0;
+	x_count = 0;
+	y_count	= 0;
+	while (line[x])
+    {
+		x_count++;
+		if (!ft_strchr(" 01NSWE\n", line[x]))
+		{
+			printf("Error\n");
+			printf("* Invalid character : '%c' in x:%ld y:%ld *\n\n", line[x], x_count, y_count);
+			return true;
+		}
+        if (line[x] == '\n')
+        {
+			y_count++;
+			x_count = -1;
+		}
+        x++;
+    }
+    return false; 
+}
+
+char *remove_wspace(char *line, int start)
 {
 	char *substr = NULL;
 	int x = start;
@@ -123,7 +210,7 @@ bool check_range(char **colors)
     return true;
 }
 
-bool get_rgb(char *line, t_fc *fc)
+bool get_rgb2(char *line, t_fc *fc)
 {
     char **colors;
 	colors = ft_split(line, ',');
@@ -145,23 +232,17 @@ bool get_rgb(char *line, t_fc *fc)
 	return (true);
 }
 
-bool is_space(char c)
-{
-    if ((c == 32 || (c >= 9 && c <= 13)) && c != '\n')
-        return true;
-    return false;
-}
 
-bool extract_rgb(char *line, char *str, t_fc *fc)
+bool get_rgb1(char *line, char *str, t_fc *fc)
 {
     // Check if the line starts with the correct prefix (C or F)
     if (ft_strncmp(line, str, 1) == 0 && is_space(line[1]) == true)
     {
-        char *sub = get_substr(line, 2); // Extract substring after 'C' or 'F'
+        char *sub = remove_wspace(line, 2); // Extract substring after 'C' or 'F'
         printf("Extracting RGB from: %s\n", sub);
         
         // Attempt to extract RGB values
-        if (get_rgb(sub, fc) == false)
+        if (get_rgb2(sub, fc) == false)
         {
             free(sub);  // Clean up substring memory
             return false;  // Return false if RGB extraction fails
@@ -174,46 +255,44 @@ bool extract_rgb(char *line, char *str, t_fc *fc)
 
 bool check_wall_component(char *line, char *identifier, char **wall_ptr)
 {
-    // Check if the line starts with the wall identifier (like "NO", "SO", etc.)
+	char *tmp = NULL;
     if (ft_strncmp(line, identifier, 2) == 0 && !(*wall_ptr))
     {
-        // Ensure the character after the identifier is a space
         if (is_space(line[2]) == true)
         {
-            // Extract the substring after the identifier and store it
-            *wall_ptr = get_substr(line, 3);  // Start after the identifier and space
-            return true;
+			tmp = remove_wspace(line, 3);
+			if (is_empty_line(tmp) == false)
+			{
+				*wall_ptr = tmp;
+				return true;
+			}
+			free(tmp);
         }
-        else
-        {
-            ft_putstr_fd("Error\n* Invalid format for ", 2);
-            ft_putstr_fd(identifier, 2);
-            ft_putstr_fd(" wall *\n\n", 2);
-            return false;
-        }
+        ft_putstr_fd("Error\n* Invalid format for ", 2);
+        ft_putstr_fd(identifier, 2);
+        ft_putstr_fd(" wall *\n\n", 2);
+        return false;
     }
-    return true;  // If the identifier doesn't match, just return true
+    return true;
 }
 
 bool check_walls(char *line, t_main *game)
 {
-    // Check NO wall
     if (!check_wall_component(line, "NO", &game->walls->NO))
         return false;
-
-    // Check SO wall
     if (!check_wall_component(line, "SO", &game->walls->SO))
         return false;
-
-    // Check WE wall
     if (!check_wall_component(line, "WE", &game->walls->WE))
         return false;
-
-    // Check EA wall
     if (!check_wall_component(line, "EA", &game->walls->EA))
+	{
         return false;
-
-    return true;
+	}
+	if (game->walls->NO && game->walls->SO && game->walls->WE && game->walls->EA)
+	{
+		game->walls->walls_OK = true;
+	}
+	return true;
 }
 
 bool    initialize_struct(t_main *game)
@@ -224,6 +303,11 @@ bool    initialize_struct(t_main *game)
         ft_putstr_fd("Error\n* Memory allocation failed for walls *\n\n", 2);
         return false;
     }
+	game->walls->walls_OK = false;
+    game->walls->NO = NULL;
+    game->walls->SO = NULL;
+    game->walls->WE = NULL;
+    game->walls->EA = NULL;
     game->ceil = malloc(sizeof(t_fc));
     game->floor = malloc(sizeof(t_fc));
     if (!game->ceil || !game->floor)
@@ -231,53 +315,133 @@ bool    initialize_struct(t_main *game)
         ft_putstr_fd("Error\n* Memory allocation failed for ceiling/floor *\n\n", 2);
         return false;
     }
-    game->walls->NO = NULL;
-    game->walls->SO = NULL;
-    game->walls->WE = NULL;
-    game->walls->EA = NULL;
+	game->ceil->OK = false;
+	game->floor->OK = false;
     return true;
+}
+
+char *extract_loop(char *map_content, int fd)
+{
+    char *line;
+    char *tmp;
+
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        if (line[0] != '\0')
+        {
+            tmp = map_content;
+            map_content = gnl_strjoin(tmp, line);
+            free(tmp);
+            if (!map_content)
+            {
+                free(line);
+                return NULL;
+            }
+        }
+        free(line);
+    }
+    return map_content;
+}
+
+bool	validate_map(t_main *game)
+{
+	if (is_empty_line(game->map) == true)
+	{
+		ft_putstr_fd("Error\n* Empty MAP *\n\n", 2);
+		return false;
+	}
+	if (is_broken_map(game->map) == true)
+	{
+		ft_putstr_fd("Error\n* Empty lines in MAP *\n\n", 2);
+		return false;
+	}
+	if (incorrect_mapsize(game->map) == true)
+	{
+		ft_putstr_fd("Error\n* Incorrect MAP size *\n\n", 2);
+		return false;
+	}
+	if (incorrect_mapcharacter(game->map) == true)
+	{
+		return false;	
+	}
+	return true;
+}
+void	change_space_to1(char *str)
+{
+	size_t x;
+
+	x = 0;
+	while(str[x])
+	{
+		if (str[x] == ' ')
+		{
+			str[x] = '1';
+		}
+		x++; 
+	}
+}
+bool extract_map1(int fd, t_main *game)
+{
+    char *map_content;
+	map_content = ft_strdup("");
+    if (!map_content)
+        return false;
+    map_content = extract_loop(map_content, fd);
+    if (!map_content)
+        return false;
+    game->map = remove_wspace(map_content, 0);
+	free(map_content);
+	change_space_to1(game->map);
+	if (!validate_map(game))
+		return false;
+    return true;
+}
+
+bool	extract_components(int fd, char *line, t_main *game)
+{
+	if (check_walls(line, game) == false)
+        return false;
+	if (get_rgb1(line, "F", game->floor) == true)
+        game->floor->OK = true;
+	if (get_rgb1(line, "C", game->ceil) == true)
+	{
+        game->ceil->OK = true;
+	}
+	if (game->walls->walls_OK == true && game->floor->OK && game->ceil->OK)
+	{
+		if (extract_map1(fd, game) == false)
+		{
+			return false;
+    	}		
+	}
+	return true;
 }
 
 bool check_components(int fd, t_main *game)
 {
     char *line = NULL;
-    bool F = false;
-    bool C = false;
 
     while ((line = get_next_line(fd)) != NULL)
     {
-        if (check_walls(line, game) == false)
-        {
-            free (line);
-            return false;  
-        }
-        if (extract_rgb(line, "C", game->ceil) == true)
-        {
-            C = true;
-        }
-        if (extract_rgb(line, "F", game->floor) == true)
-        {
-            F = true;
-        }
-        free(line);
+		if (extract_components(fd, line, game) == false)
+		{
+			free (line);
+			line = get_next_line(-1);
+			return false;
+		}
+		else
+        	free(line);
     }
-	line = get_next_line(-1);
-    if (!game->walls->NO || !game->walls->SO || !game->walls->WE || !game->walls->EA)
-    {
-        ft_putstr_fd("Error\n* Missing one or more wall components *\n\n", 2);
-            // Free any allocated walls
-        return false;
-    }
-    if (!F || !C)
-    {
-        return false;
-    }
-    return true;
+	if (!game->walls->walls_OK || !game->floor->OK || !game->ceil->OK)
+	{
+		ft_putstr_fd("Error\n* Missing components *\n\n", 2);
+		return false;
+	}
+	return true;
 }
 
 bool initialize_game(char *cubfile, t_main *game)
 {
-	ft_putstr("initgame\n");
 	int fd;
     if (initialize_struct(game) == false)
     {
@@ -294,6 +458,11 @@ bool initialize_game(char *cubfile, t_main *game)
         close(fd);
         return false;
     }
+	game->map_arr = ft_split(game->map, '\n');
+	if (!game->map_arr)
+	{
+		return false;
+	}
     return true;
 }
 
@@ -308,17 +477,25 @@ int main(int argc, char **argv)
 		free_struct(&game);
         return 1;
     }
-	ft_putstr("WOW\n");
-	ft_putstr(game.walls->NO);
-	ft_putstr("\n");
-	ft_putstr(game.walls->SO);
-	ft_putstr("\n");
-	ft_putstr(game.walls->WE);
-	ft_putstr("\n");
-	ft_putstr(game.walls->EA);
-	ft_putstr("\n");
-    printf("F: %d, %d, %d \n", game.floor->R, game.floor->G, game.floor->B);
-    printf("C: %d, %d, %d \n", game.ceil->R, game.ceil->G, game.ceil->B);
+	else
+	{
+		ft_putstr("WOW\n");
+		ft_putstr(game.walls->NO);
+		ft_putstr("\n");
+		ft_putstr(game.walls->SO);
+		ft_putstr("\n");
+		ft_putstr(game.walls->WE);
+		ft_putstr("\n");
+		ft_putstr(game.walls->EA);
+		ft_putstr("\n");
+		printf("F: %d, %d, %d \n", game.floor->R, game.floor->G, game.floor->B);
+		printf("C: %d, %d, %d \n", game.ceil->R, game.ceil->G, game.ceil->B);
+		//printf("MAP : %s\n", game.map);
+		for (int i = 0; game.map_arr[i] != NULL; i++)
+    	{
+        printf("%s\n", game.map_arr[i]);
+    	}
+	}
 	free_struct(&game);
     return 0;
 }
