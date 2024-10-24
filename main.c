@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/23 17:32:37 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:47:14 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,13 +128,16 @@ bool incorrect_mapsize(char *line)
         if (line[x] == '\n')
         {
 			y_count++;
-			if (x_count < 2) // MIN MAX X
+			if (x_count < 2 || x_count > 500) // MIN MAX X
+			{
 				return true;
+			}
+			x_count = -1;
 		}
 		x_count++;
         x++;
     }
-	if (y_count < 2) // MIN MAX Y
+	if (y_count < 2 || y_count > 500) // MIN MAX Y
 	{
 		return true;
 	}
@@ -184,6 +187,10 @@ char *remove_wspace(char *line, int start)
         end--;
     }
 	substr = ft_substr(line, x, end - x + 1);
+	if (!substr)
+	{
+		return NULL;	
+	}
 	return (substr);
 }
 
@@ -201,13 +208,44 @@ size_t  arr_size(char **arr)
 
 bool check_range(char **colors)
 {
-    if (ft_atoi(colors[0]) < 0 || ft_atoi(colors[0]) > 255)
-        return false;
-    if (ft_atoi(colors[1]) < 0 || ft_atoi(colors[1]) > 255)
-        return false;
-    if (ft_atoi(colors[2]) < 0 || ft_atoi(colors[2]) > 255)
-        return false;
+	size_t x;
+	size_t y;
+
+	x = 0;
+	while (colors[x])
+	{
+		y = 0;
+		while (colors[x][y])
+		{
+			if (ft_isdigit(colors[x][y]) == 0)
+			{
+				return false;
+			}
+			y++;
+		}
+		if (ft_atoi(colors[x]) < 0 || ft_atoi(colors[x]) > 255)
+		{
+			return false;
+		}
+		x++;
+	}
     return true;
+}
+bool remove_spaces(char **colors)
+{
+	size_t x;
+
+	x = 0;
+	while (colors[x])
+	{
+		colors[x] = remove_wspace(colors[x], 0);
+		if (!colors[x])
+		{
+			return false;
+		}
+		x++;		
+	}
+	return true;
 }
 
 bool get_rgb2(char *line, t_fc *fc)
@@ -219,15 +257,22 @@ bool get_rgb2(char *line, t_fc *fc)
         ft_putstr_fd("Error\n* Memory allocation failed for colors *\n\n", 2);
         return false;
     }
+	if (remove_spaces(colors) == false)
+	{
+		return false;
+	}
     if ((arr_size(colors) != 3) || (check_range(colors) == false))
     {
         ft_putstr_fd("Error\n* Invalid parmeters for colors *\n\n", 2);
         free_arr(colors);
         return false;
     }
-    fc->R = ft_atoi(colors[0]);
-    fc->G = ft_atoi(colors[1]);
-    fc->B = ft_atoi(colors[2]);
+	else 
+	{
+		fc->R = ft_atoi(colors[0]);
+		fc->G = ft_atoi(colors[1]);
+		fc->B = ft_atoi(colors[2]);
+	}
     free_arr(colors);
 	return (true);
 }
@@ -235,13 +280,9 @@ bool get_rgb2(char *line, t_fc *fc)
 
 bool get_rgb1(char *line, char *str, t_fc *fc)
 {
-    // Check if the line starts with the correct prefix (C or F)
     if (ft_strncmp(line, str, 1) == 0 && is_space(line[1]) == true)
     {
-        char *sub = remove_wspace(line, 2); // Extract substring after 'C' or 'F'
-        printf("Extracting RGB from: %s\n", sub);
-        
-        // Attempt to extract RGB values
+        char *sub = remove_wspace(line, 2);
         if (get_rgb2(sub, fc) == false)
         {
             free(sub);  // Clean up substring memory
@@ -402,7 +443,9 @@ bool	extract_components(int fd, char *line, t_main *game)
 	if (check_walls(line, game) == false)
         return false;
 	if (get_rgb1(line, "F", game->floor) == true)
+	{
         game->floor->OK = true;
+	}
 	if (get_rgb1(line, "C", game->ceil) == true)
 	{
         game->ceil->OK = true;
@@ -432,7 +475,7 @@ bool check_components(int fd, t_main *game)
 		else
         	free(line);
     }
-	if (!game->walls->walls_OK || !game->floor->OK || !game->ceil->OK)
+	if (!game->walls->walls_OK || !game->ceil->OK || !game->floor->OK)
 	{
 		ft_putstr_fd("Error\n* Missing components *\n\n", 2);
 		return false;
