@@ -6,572 +6,164 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/25 18:53:18 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/11/01 18:46:13 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
-# include <stdio.h>
 
-void safe_free(void **ptr)
+void	delete_textures(t_main *game)
 {
-    if (*ptr)
-    {
-        free(*ptr);
-        *ptr = NULL;
-    }
+	if (game->textu->NO)
+		mlx_delete_texture(game->textu->NO);
+	if (game->textu->EA)
+		mlx_delete_texture(game->textu->EA);
+	if (game->textu->SO)
+		mlx_delete_texture(game->textu->SO);
+	if (game->textu->WE)
+		mlx_delete_texture(game->textu->WE);
 }
 
-void free_arr(char **arr)
+void	image_fail(t_main *game)
 {
-    if (!arr)
-        return;
-    size_t x = 0;
-    while (arr[x])
-    {
-        safe_free((void **)&arr[x]);  // Use safe_free for each element
-        x++;
-    }
-    safe_free((void **)&arr);  // Free the array itself
+	ft_putstr_fd("Error\n*  MLX42: fail to load texture *\n\n", 2);
+	if (game->mlx_ptr)
+		mlx_terminate(game->mlx_ptr);
+	delete_textures(game);
+	if (game->imag)
+		free(game->imag);
+	if (game->textu)
+		free(game->textu);
+	free_struct(game);
+	exit(1);
 }
 
-// void    free_arr(char **arr)
+void	load_images(t_main *game)
+{
+	game->imag = ft_calloc(1, sizeof(t_images));
+	if (!game->imag)
+		errorhandler(game, "mallocfail", true);
+	game->imag->NO = mlx_texture_to_image(game->mlx_ptr, game->textu->NO);
+	if (!game->imag->NO)
+		image_fail(game);
+	game->imag->EA = mlx_texture_to_image(game->mlx_ptr, game->textu->EA);
+	if (!game->imag->EA)
+		image_fail(game);
+	game->imag->SO = mlx_texture_to_image(game->mlx_ptr, game->textu->SO);
+	if (!game->imag->SO)
+		image_fail(game);
+	game->imag->WE = mlx_texture_to_image(game->mlx_ptr, game->textu->WE);
+	if (!game->imag->WE)
+		image_fail(game);
+}
+
+
+void	texture_fail(t_main *game)
+{
+	ft_putstr_fd("Error\n*  MLX42: fail to load texture *\n\n", 2);
+	if (game->mlx_ptr)
+		mlx_terminate(game->mlx_ptr);
+	delete_textures(game);
+	if (game->imag)
+		free(game->imag);
+	if (game->textu)
+		free(game->textu);
+	free_struct(game);
+	exit(1);
+}
+
+void	load_textures(t_main *game)
+{
+	game->textu = ft_calloc(1, sizeof(t_textures));
+	if (!game->textu)
+		errorhandler(game, "malloc fail", true);
+	game->textu->NO = mlx_load_png(game->walls->NO);
+	if (!game->textu->NO)
+		texture_fail(game);
+	game->textu->EA = mlx_load_png(game->walls->EA);
+	if (!game->textu->EA)
+		texture_fail(game);
+	game->textu->SO = mlx_load_png(game->walls->SO);
+	if (!game->textu->SO)
+		texture_fail(game);
+	game->textu->WE = mlx_load_png(game->walls->WE);
+	if (!game->textu->WE)
+		texture_fail(game);
+}
+void	initialize_grafics(t_main *game)
+{
+	load_textures(game);
+	load_images(game);
+	delete_textures(game);
+	//resize_images(game);
+	return ;
+}
+// static void ft_hook(void* param)
 // {
-// 	if (!arr)
-// 		return;
-//     size_t x;
-// 	x = 0;
-//     while (arr[x])
-//         free(arr[x++]);
-//     free(arr);
+// 	t_main *game;
+	
+// 	game = (t_main *)param;
+
+// 	printf("WIDTH: %d | HEIGHT: %d\n", game->mlx_ptr->width, game->mlx_ptr->height);
 // }
 
-void free_struct(t_main *game)
-{
-    safe_free((void **)&game->walls->NO);
-    safe_free((void **)&game->walls->SO);
-    safe_free((void **)&game->walls->WE);
-    safe_free((void **)&game->walls->EA);
-    safe_free((void **)&game->walls);
-    safe_free((void **)&game->floor);
-    safe_free((void **)&game->ceil);
-	safe_free((void **)&game->map);
-	free_arr(game->map_arr);
-}
-
-bool    valid_cub(char *argv)
-{
-    int len;
-
-    if (!argv)
-        return false;
-    len = ft_strlen(argv);
-    if (len > 4 && ft_strncmp(&argv[len - 4], ".cub", 4) == 0)
-    {
-        return true;
-    }
-	return false;
-}
-
-void	errorhandler(t_main *game, char *msg, bool fatal)
-{
-	if (game)
-		free_struct(game);
-	ft_putstr_fd("Error\n", 2);
-	ft_putendl_fd(msg, 2);
-	if (fatal)
-	{
-		exit(1);
-	}
-}
-
-void	check_file(int argc, char **argv, t_main *game)
-{
-	if (argc > 2)
-	{
-		errorhandler(game, "* Run with only 1 .cub file *", true);
-	}
-	else if (argc == 1)
-	{
-		errorhandler(game, "* Run with .cub file and press ENTER *", true);
-	}
-	else if (argc == 2)
-	{
-		if (!valid_cub(argv[1]))
-		{
-			errorhandler(game, "* Invalid file *", true);
-		}
-	}
-}
-
-bool is_space(char c)
-{
-    if ((c == 32 || (c >= 9 && c <= 13)) && c != '\n')
-        return true;
-    return false;
-}
-
-bool is_empty_line(char *line)
-{
-    while (*line)
-    {
-        if (!is_space(*line))  // Check if the line has a non-space character
-            return false;
-        line++;
-    }
-    return true;  // The line has only spaces
-}
-
-bool is_broken_map(char *line)
-{
-	size_t x;
-	
-	x = 0;
-	while (line[x + 1])
-    {
-        if (line[x] == '\n' && line[x + 1] == '\n')
-            return true;
-        x++;
-    }
-    return false; 
-}
-bool incorrect_mapsize(char *line)
-{
-	size_t x;
-	size_t x_count;
-	size_t y_count;
-	
-	x = 0;
-	x_count = 0;
-	y_count	= 0;
-	while (line[x])
-    {
-        if (line[x] == '\n')
-        {
-			y_count++;
-			if (x_count < 2 || x_count > 500) // MIN MAX X
-			{
-				return true;
-			}
-			x_count = -1;
-		}
-		x_count++;
-        x++;
-    }
-	if (y_count < 2 || y_count > 500) // MIN MAX Y
-	{
-		return true;
-	}
-    return false; 
-}
-
-bool incorrect_mapcharacter(char *line)
-{
-	size_t x;
-	size_t x_count;
-	size_t y_count;
-	
-	x = 0;
-	x_count = 0;
-	y_count	= 0;
-	while (line[x])
-    {
-		x_count++;
-		if (!ft_strchr(" 01NSWE\n", line[x]))
-		{
-			printf("Error\n");
-			printf("* Invalid character : '%c' in x:%ld y:%ld *\n\n", line[x], x_count, y_count);
-			return true;
-		}
-        if (line[x] == '\n')
-        {
-			y_count++;
-			x_count = -1;
-		}
-        x++;
-    }
-    return false; 
-}
-
-char *remove_wspace(char *line, int start)
-{
-	char *substr = NULL;
-	int x = start;
-	int end;
-	while(line[x] && (line[x] == ' ' || (line[x] >= 9 && line[x] <= 13)))
-    {
-		x++;
-    }
-	end = ft_strlen(line) - 1;
-	while (end > x && (line[end] == ' ' || (line[end] >= 9 && line[end] <= 13)))
-    {
-        end--;
-    }
-	substr = ft_substr(line, x, end - x + 1);
-	if (!substr)
-	{
-		return NULL;	
-	}
-	return (substr);
-}
-
-size_t  arr_size(char **arr)
-{
-    size_t count;
-    
-    count = 0;
-    while (arr[count] != NULL)
-    {
-        count++;
-    }
-    return (count);
-}
-
-bool check_range(char **colors)
-{
-	size_t x;
-	size_t y;
-
-	x = 0;
-	while (colors[x])
-	{
-		y = 0;
-		while (colors[x][y])
-		{
-			if (ft_isdigit(colors[x][y]) == 0)
-			{
-				return false;
-			}
-			y++;
-		}
-		if (ft_atoi(colors[x]) < 0 || ft_atoi(colors[x]) > 255)
-		{
-			return false;
-		}
-		x++;
-	}
-    return true;
-}
-bool remove_spaces(char **colors)
-{
-    size_t x = 0;
-    while (colors[x])
-    {
-        char *new_str = remove_wspace(colors[x], 0);
-        if (!new_str)
-        {
-            // Free all previously allocated memory before returning false
-            while (x > 0)
-            {
-                x--;
-                safe_free((void **)&colors[x]);
-            }
-            return false;
-        }
-        free(colors[x]);  // Free the old string
-        colors[x] = new_str;  // Replace with the new string without spaces
-        x++;
-    }
-    return true;
-}
-
-bool get_rgb2(char *line, t_fc *fc)
-{
-    char **colors;
-	colors = ft_split(line, ',');
-    if (!colors)
-    {
-		errorhandler(NULL,"* Memory allocation failed for colors *", false);
-        // ft_putstr_fd("Error\n* Memory allocation failed for colors *\n\n", 2);
-        return false;
-    }
-	if (remove_spaces(colors) == false)
-	{
-		return false;
-	}
-    if ((arr_size(colors) != 3) || (check_range(colors) == false))
-    {
-		errorhandler(NULL ,"* Invalid parmeters for colors *", false);
-        // ft_putstr_fd("Error\n* Invalid parmeters for colors *\n\n", 2);
-        free_arr(colors);
-		colors = NULL;
-        return false;
-    }
-	else 
-	{
-		fc->R = ft_atoi(colors[0]);
-		fc->G = ft_atoi(colors[1]);
-		fc->B = ft_atoi(colors[2]);
-	}
-    free_arr(colors);
-	colors = NULL;
-	return (true);
-}
-
-
-bool get_rgb1(char *line, char *str, t_fc *fc, t_main *game)
-{
-    if (ft_strncmp(line, str, 1) == 0 && is_space(line[1]) == true)
-    {
-        char *sub = remove_wspace(line, 2);
-        if (get_rgb2(sub, fc) == false)
-        {
-            free(sub);  // Clean up substring memory
-            sub = NULL;
-			return false;  // Return false if RGB extraction fails
-        }
-        free(sub);
-		sub = NULL;  // Clean up substring memory
-        return true;  // Return true if successful
-    }
-    return false;  // Return false if the line doesn't match
-}
-
-bool check_wall_component(char *line, char *identifier, char **wall_ptr)
-{
-	char *tmp;
-	tmp = NULL;
-    if (ft_strncmp(line, identifier, 2) == 0 && !(*wall_ptr))
-    {
-        if (is_space(line[2]) == true)
-        {
-			tmp = remove_wspace(line, 3);
-			if (is_empty_line(tmp) == false)
-			{
-				*wall_ptr = tmp;
-				return true;
-			}
-			free(tmp);
-			tmp = NULL;
-        }
-        ft_putstr_fd("Error\n* Invalid format for ", 2);
-        ft_putstr_fd(identifier, 2);
-        ft_putstr_fd(" wall *\n", 2);
-        return false;
-    }
-    return true;
-}
-
-bool check_walls(char *line, t_main *game)
-{
-    if (!check_wall_component(line, "NO", &game->walls->NO))
-        return false;
-    if (!check_wall_component(line, "SO", &game->walls->SO))
-        return false;
-    if (!check_wall_component(line, "WE", &game->walls->WE))
-        return false;
-    if (!check_wall_component(line, "EA", &game->walls->EA))
-	{
-        return false;
-	}
-	if (game->walls->NO && game->walls->SO && game->walls->WE && game->walls->EA)
-	{
-		game->walls->walls_OK = true;
-	}
-	return true;
-}
-
-void	initialize_struct(t_main *game)
-{
-    game->walls = malloc(sizeof(t_wall));
-    if (!game->walls)
-    {
-		errorhandler(game, "* Memory allocation failed for walls *", true);
-    }
-	game->walls->walls_OK = false;
-    game->walls->NO = NULL;
-    game->walls->SO = NULL;
-    game->walls->WE = NULL;
-    game->walls->EA = NULL;
-    game->ceil = malloc(sizeof(t_fc));
-    game->floor = malloc(sizeof(t_fc));
-    if (!game->ceil || !game->floor)
-    {
-		errorhandler(game, "* Memory allocation failed for walls *", true);
-    }
-	game->ceil->OK = false;
-	game->floor->OK = false;
-	game->map_arr = NULL;
-}
-
-char *extract_loop(char *map_content, int fd)
-{
-    char *line;
-    char *tmp;
-
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        if (line[0] != '\0')
-        {
-            tmp = map_content;
-            map_content = gnl_strjoin(tmp, line);
-            free(tmp);
-            if (!map_content)
-            {
-                free(line);
-                return NULL;
-            }
-        }
-        free(line);
-    }
-    return map_content;
-}
-
-bool	validate_map(t_main *game)
-{
-	if (is_empty_line(game->map) == true)
-	{
-		ft_putstr_fd("Error\n* Empty MAP *\n\n", 2);
-		return false;
-	}
-	if (is_broken_map(game->map) == true)
-	{
-		ft_putstr_fd("Error\n* Empty lines in MAP *\n\n", 2);
-		return false;
-	}
-	if (incorrect_mapsize(game->map) == true)
-	{
-		ft_putstr_fd("Error\n* Incorrect MAP size *\n\n", 2);
-		return false;
-	}
-	if (incorrect_mapcharacter(game->map) == true)
-	{
-		return false;	
-	}
-	return true;
-}
-void	change_space_to1(char *str)
-{
-	size_t x;
-
-	x = 0;
-	while(str[x])
-	{
-		if (str[x] == ' ')
-		{
-			str[x] = '1';
-		}
-		x++; 
-	}
-}
-bool extract_map1(int fd, t_main *game)
-{
-    char *map_content;
-	map_content = ft_strdup("");
-    if (!map_content)
-        return false;
-    map_content = extract_loop(map_content, fd);
-    if (!map_content)
-        return false;
-    game->map = remove_wspace(map_content, 0);
-	free(map_content);
-	map_content = NULL;
-	change_space_to1(game->map);
-	if (!validate_map(game))
-		return false;
-    return true;
-}
-
-bool	extract_components(int fd, char *line, t_main *game)
-{
-	if (check_walls(line, game) == false)
-        return false;
-	if (get_rgb1(line, "F", game->floor, game) == true)
-	{
-        game->floor->OK = true;
-	}
-	if (get_rgb1(line, "C", game->ceil, game) == true)
-	{
-        game->ceil->OK = true;
-	}
-	if (game->walls->walls_OK == true && game->floor->OK && game->ceil->OK)
-	{
-		if (extract_map1(fd, game) == false)
-		{
-			return false;
-    	}		
-	}
-	return true;
-}
-
-bool check_components(int fd, t_main *game)
-{
-    char *line = NULL;
-
-    while ((line = get_next_line(fd)) != NULL)
-    {
-		if (extract_components(fd, line, game) == false)
-		{
-			free (line);
-			line = get_next_line(-1);
-			return false;
-		}
-		else
-        	free(line);
-    }
-	if (!game->walls->walls_OK || !game->ceil->OK || !game->floor->OK)
-	{
-		ft_putstr_fd("Error\n* Missing components *\n\n", 2);
-		free (line);
-		line = get_next_line(-1);
-		return false;
-	}
-	free (line);
-	line = get_next_line(-1);
-	return true;
-}
-
-bool initialize_game(char *cubfile, t_main *game)
-{
-	int fd;
-;
-    initialize_struct(game);
-	fd = open(cubfile, O_RDONLY);
-    if (fd < 0)
-    {
-		errorhandler(game, "Error opening file *", true);
-    }
-    if (check_components(fd, game) == false)
-    {
-        close(fd);
-        return false;
-    }
-	game->map_arr = ft_split(game->map, '\n');
-	if (!game->map_arr)
-	{
-		return false;
-	}
-    return true;
-}
-
-int main(int argc, char **argv)
-{
-	t_main game;
-	game = (t_main){0};
-	check_file(argc, argv, &game);
-	if (initialize_game(argv[1], &game) == false)
-    {
-		free_struct(&game);
+int main() {
+    mlx_t *mlx_ptr = mlx_init(800, 600, "Test Window", false);
+    if (!mlx_ptr) {
+        printf("mlx_init failed\n");
         return 1;
     }
-	else
-	{
-		ft_putstr("WOW\n");
-		ft_putstr(game.walls->NO);
-		ft_putstr("\n");
-		ft_putstr(game.walls->SO);
-		ft_putstr("\n");
-		ft_putstr(game.walls->WE);
-		ft_putstr("\n");
-		ft_putstr(game.walls->EA);
-		ft_putstr("\n");
-		printf("F: %d, %d, %d \n", game.floor->R, game.floor->G, game.floor->B);
-		printf("C: %d, %d, %d \n", game.ceil->R, game.ceil->G, game.ceil->B);
-		for (int i = 0; game.map_arr[i] != NULL; i++)
-    	{
-        printf("%s\n", game.map_arr[i]);
-    	}
-	}
-	free_struct(&game);
+    mlx_terminate(mlx_ptr);
     return 0;
 }
+
+// int main(int argc, char **argv)
+// {
+// 	t_main game;
+// 	game = (t_main){0};
+// 	check_file(argc, argv, &game);
+// 	{
+// 		// game.mlx_ptr = NULL;
+// 		// mlx_set_setting(MLX_MAXIMIZED, true);
+// 		game.mlx_ptr = mlx_init(WIDTH, HEIGHT, "42Balls", false);
+// 		if (!game.mlx_ptr)
+// 		{
+// 			errorhandler(&game, "mlxerror", true);
+// 		}
+// 		game.window = malloc(sizeof(mlx_image_t));
+// 		if (!game.window)
+// 		{
+// 			errorhandler(&game, "window malloc error", true);
+// 		}
+// 		game.window = mlx_new_image(game.mlx_ptr, WIDTH, HEIGHT);
+// 		if (!game.window)
+// 		{
+// 			errorhandler(&game, "image error", true);
+// 		}
+// 		initialize_grafics(&game);
+// 		// if (mlx_image_to_window(game.mlx_ptr, game.imag->NO, HEIGHT, WIDTH) < 0)
+// 		// {
+// 		// 	errorhandler(&game, "image error", true);
+// 		// }
+// 		mlx_loop_hook(game.mlx_ptr, ft_hook, &game);
+// 		mlx_loop(game.mlx_ptr);
+// 		mlx_terminate(game.mlx_ptr);
+// 		// ft_putstr("WOW\n");
+// 		// ft_putstr(game.walls->NO);
+// 		// ft_putstr("\n");
+// 		// ft_putstr(game.walls->SO);
+// 		// ft_putstr("\n");
+// 		// ft_putstr(game.walls->WE);
+// 		// ft_putstr("\n");
+// 		// ft_putstr(game.walls->EA);
+// 		// ft_putstr("\n");
+// 		// printf("F: %d, %d, %d \n", game.floor->R, game.floor->G, game.floor->B);
+// 		// printf("C: %d, %d, %d \n", game.ceil->R, game.ceil->G, game.ceil->B);
+// 		// for (int i = 0; game.map_arr[i] != NULL; i++)
+//     	// {
+//         // printf("%s\n", game.map_arr[i]);
+//     	// }
+// 		// free_struct(&game);
+// 	}
+//     return 0;
+// }

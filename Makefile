@@ -6,7 +6,7 @@
 #    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2024/10/15 17:31:36 by pbumidan         ###   ########.fr        #
+#    Updated: 2024/11/01 19:19:09 by pbumidan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,11 +16,22 @@ NAME = cubed
 LIBFT = ./libft/libft.a
 GNL = ./gnl/gnl.a
 MLX42 = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
+
+# cgpt = ./MLX42/build/libmlx42.a -Iinclude -lglfw -lX11 -lpthread -lXrandr -lXi -ldl
+
+# = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 #-L"/Users/$(USER)/.brew/opt/glfw/lib/"
 # -I include -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 SRCS = \
 	main.c \
+	initialize.c \
+	extract_comp.c \
+	map_extract.c \
+	map_validate.c \
+	utils_free.c \
+	utils_space.c \
+	utils.c \
 
 SRCS_SHARED = \
 
