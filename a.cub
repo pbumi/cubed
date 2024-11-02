@@ -1,17 +1,15 @@
-                       
 
-
-NO  dsfdf
-
-SO  asdfgh
-WE                              weweewewewewewewe
+SO  ./textures/NO.png
+WE                              ./textures/NO.png
 F        123,      255          , 0
-C               1   , 225, 200
-EA qwerisdfgjhjk
-
-NNNNNNNNNN
-NNNNNNNNNNSSS
-NNNNNNNNNN
+C               1   , 225, 23
+EA ./textures/NO.png
+NO              ./textures/NO.png
 
 
+
+
+NNNNNNNNNNNNNNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNNNNN
 
