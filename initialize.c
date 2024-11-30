@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/31 17:04:53 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:46:36 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,17 @@ void	check_file(int argc, char **argv, t_main *game)
 {
 	if (argc > 2)
 	{
-		errorhandler(game, "* Run with only 1 .cub file *", true);
+		error_exit("* Run with only 1 .cub file *", true);
 	}
 	else if (argc == 1)
 	{
-		errorhandler(game, "* Run with .cub file and press ENTER *", true);
+		error_exit("* Run with .cub file and press ENTER *", true);
 	}
 	else if (argc == 2)
 	{
 		if (!valid_cub(argv[1]))
 		{
-			errorhandler(game, "* Invalid file *", true);
+			error_exit("* Invalid file *", true);
 		}
 		else
 			initialize_game(argv[1], game);

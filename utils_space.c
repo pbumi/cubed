@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:20:30 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/31 17:21:53 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/11/30 17:22:13 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ bool is_empty_line(char *line)
     return true;  // The line has only spaces
 }
 
+
 char *remove_wspace(char *line, int start)
 {
 	char *substr = NULL;
@@ -52,6 +53,7 @@ char *remove_wspace(char *line, int start)
 	}
 	return (substr);
 }
+
 
 bool remove_spaces(char **colors)
 {

@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/31 17:24:27 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/11/30 17:25:45 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,12 @@ bool	extract_components(int fd, char *line, t_main *game)
 		if (extract_map1(fd, game) == false)
 		{
 			return false;
-    	}		
+    	}
+		if (check_fill(game) == false)
+		{
+			errorhandler(game,"* Invalid map *", false);
+			return false;
+		}
 	}
 	return true;
 }

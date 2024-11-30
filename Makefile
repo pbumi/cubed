@@ -6,7 +6,7 @@
 #    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2024/11/01 19:19:09 by pbumidan         ###   ########.fr        #
+#    Updated: 2024/11/30 17:39:06 by pbumidan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRCS = \
 	extract_comp.c \
 	map_extract.c \
 	map_validate.c \
+	map_fill.c \
 	utils_free.c \
 	utils_space.c \
 	utils.c \

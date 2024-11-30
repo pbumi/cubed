@@ -6,11 +6,24 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:25:27 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/31 17:25:52 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:45:07 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
+
+void	error_exit(char *msg, bool fatal)
+{
+	if (msg)
+	{
+		ft_putstr_fd("Error\n", 2);
+		ft_putendl_fd(msg, 2);	
+	}
+	if (fatal)
+	{
+		exit(1);
+	}
+}
 
 void	errorhandler(t_main *game, char *msg, bool fatal)
 {

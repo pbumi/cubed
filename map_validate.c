@@ -6,11 +6,33 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:13:36 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/31 17:16:01 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/11/30 17:21:59 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
+
+bool duplicate_player(char *line)
+{
+	size_t x;
+	int player;
+	
+	x = 0;
+	player = 0;
+	while (line[x])
+    {
+		if (ft_strchr("NSWE", line[x]))
+		{
+			player++;
+		}
+        x++;
+    }
+	if (player > 1 || player == 0)
+	{	
+		return true;
+	}
+    return false; 
+}
 
 bool incorrect_mapcharacter(char *line)
 {
@@ -104,6 +126,11 @@ bool	validate_map(t_main *game)
 	if (incorrect_mapcharacter(game->map) == true)
 	{
 		errorhandler(game, "* Incorrect MAP character*", false);
+		return false;	
+	}
+	if (duplicate_player(game->map) == true)
+	{
+		errorhandler(game, "* Multiple/No players in map*", false);
 		return false;	
 	}
 	return true;
