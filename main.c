@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/11/29 18:04:16 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:03:01 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,14 +149,10 @@ int main(int argc, char **argv)
 		// mlx_loop(game.mlx_ptr);
 		// mlx_terminate(game.mlx_ptr);
 		ft_putstr("WOW\n");
-		ft_putstr(game.walls->NO);
-		ft_putstr("\n");
-		ft_putstr(game.walls->SO);
-		ft_putstr("\n");
-		ft_putstr(game.walls->WE);
-		ft_putstr("\n");
-		ft_putstr(game.walls->EA);
-		ft_putstr("\n");
+		printf("NO: %s\n", game.walls->NO);
+		printf("SO: %s\n", game.walls->SO);
+		printf("WE: %s\n", game.walls->WE);
+		printf("EA: %s\n", game.walls->EA);
 		printf("F: %d, %d, %d \n", game.floor->R, game.floor->G, game.floor->B);
 		printf("C: %d, %d, %d \n", game.ceil->R, game.ceil->G, game.ceil->B);
 		for (int i = 0; game.map_arr[i] != NULL; i++)
@@ -164,7 +160,7 @@ int main(int argc, char **argv)
         printf("%s\n", game.map_arr[i]);
     	}
 		printf("player x: %d y: %d \n", game.p_x, game.p_y);
-		free_struct(&game);
 	}
+	free_struct(&game);
     return 0;
 }
