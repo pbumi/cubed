@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/02 21:03:01 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:01:15 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,68 +98,63 @@ void	initialize_grafics(t_main *game)
 	//resize_images(game);
 	return ;
 }
-// static void ft_hook(void* param)
-// {
-// 	t_main *game;
+static void ft_hook(void* param)
+{
+	t_main *game;
 
-// 	game = (t_main *)param;
+	game = (t_main *)param;
 
-// 	printf("WIDTH: %d | HEIGHT: %d\n", game->mlx_ptr->width, game->mlx_ptr->height);
-// }
+	printf("WIDTH: %d | HEIGHT: %d\n", game->mlx_ptr->width, game->mlx_ptr->height);
+}
 
-// int main() {
-//     mlx_t *mlx_ptr = mlx_init(800, 600, "Test Window", false);
-//     if (!mlx_ptr) {
-//         printf("mlx_init failed\n");
-//         return 1;
-//     }
-//     mlx_terminate(mlx_ptr);
-//     return 0;
-// }
+void testchecker(t_main *game) //TESTER DELETE
+{
+		ft_putstr("WOW\n");
+		printf("NO: %s\n", game->walls->NO);
+		printf("SO: %s\n", game->walls->SO);
+		printf("WE: %s\n", game->walls->WE);
+		printf("EA: %s\n", game->walls->EA);
+		printf("F: %d, %d, %d \n", game->floor->R, game->floor->G, game->floor->B);
+		printf("C: %d, %d, %d \n", game->ceil->R, game->ceil->G, game->ceil->B);
+		for (int i = 0; game->map_arr[i] != NULL; i++)
+    	{
+        printf("%s\n", game->map_arr[i]);
+    	}
+		printf("player x: %d y: %d \n", game->p_x, game->p_y);
+}
 
 int main(int argc, char **argv)
 {
 	t_main game;
 	game = (t_main){0};
 	check_file(argc, argv, &game);
+	testchecker(&game);
 	{
-		// // game.mlx_ptr = NULL;
-		// // mlx_set_setting(MLX_MAXIMIZED, true);
-		// game.mlx_ptr = mlx_init(WIDTH, HEIGHT, "42Balls", false);
-		// if (!game.mlx_ptr)
+		// game.mlx_ptr = NULL;
+		// mlx_set_setting(MLX_MAXIMIZED, true);
+		game.mlx_ptr = mlx_init(WIDTH, HEIGHT, "42Balls", false);
+		if (!game.mlx_ptr)
+		{
+			errorhandler(&game, "mlxerror", true);
+		}
+		// game.window = malloc(sizeof(mlx_image_t));
+		// if (!game.window)
 		// {
-		// 	errorhandler(&game, "mlxerror", true);
+		// 	errorhandler(&game, "window malloc error", true);
 		// }
-		// // game.window = malloc(sizeof(mlx_image_t));
-		// // if (!game.window)
-		// // {
-		// // 	errorhandler(&game, "window malloc error", true);
-		// // }
-		// // game.window = mlx_new_image(game.mlx_ptr, WIDTH, HEIGHT);
-		// // if (!game.window)
-		// // {
-		// // 	errorhandler(&game, "image error", true);
-		// // }
+		// game.window = mlx_new_image(game.mlx_ptr, WIDTH, HEIGHT);
+		// if (!game.window)
+		// {
+		// 	errorhandler(&game, "image error", true);
+		// }
 		// initialize_grafics(&game);
-		// // if (mlx_image_to_window(game.mlx_ptr, game.imag->NO, HEIGHT, WIDTH) < 0)
-		// // {
-		// // 	errorhandler(&game, "image error", true);
-		// // }
-		// mlx_loop_hook(game.mlx_ptr, ft_hook, &game);
-		// mlx_loop(game.mlx_ptr);
-		// mlx_terminate(game.mlx_ptr);
-		ft_putstr("WOW\n");
-		printf("NO: %s\n", game.walls->NO);
-		printf("SO: %s\n", game.walls->SO);
-		printf("WE: %s\n", game.walls->WE);
-		printf("EA: %s\n", game.walls->EA);
-		printf("F: %d, %d, %d \n", game.floor->R, game.floor->G, game.floor->B);
-		printf("C: %d, %d, %d \n", game.ceil->R, game.ceil->G, game.ceil->B);
-		for (int i = 0; game.map_arr[i] != NULL; i++)
-    	{
-        printf("%s\n", game.map_arr[i]);
-    	}
-		printf("player x: %d y: %d \n", game.p_x, game.p_y);
+		// if (mlx_image_to_window(game.mlx_ptr, game.imag->NO, HEIGHT, WIDTH) < 0)
+		// {
+		// 	errorhandler(&game, "image error", true);
+		// }
+		mlx_loop_hook(game.mlx_ptr, ft_hook, &game);
+		mlx_loop(game.mlx_ptr);
+		mlx_terminate(game.mlx_ptr);
 	}
 	free_struct(&game);
     return 0;
