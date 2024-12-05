@@ -6,7 +6,7 @@
 #    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2024/11/30 17:39:06 by pbumidan         ###   ########.fr        #
+#    Updated: 2024/12/05 19:33:48 by pbumidan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ MLX42 = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 # -I include -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 SRCS = \
-	main.c \
+	maintest.c \
 	initialize.c \
 	extract_comp.c \
 	map_extract.c \
