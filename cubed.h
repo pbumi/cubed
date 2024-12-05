@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/05 18:41:38 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/05 21:35:04 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # include "./gnl/get_next_line.h"
 # include "./MLX42/include/MLX42/MLX42.h"
 
-# define WIDTH 500
-# define HEIGHT 500
+# define WIDTH 800
+# define HEIGHT 600
 
 typedef struct s_wall
 {
