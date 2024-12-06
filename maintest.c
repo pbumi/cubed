@@ -6,19 +6,13 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/05 21:32:43 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/06 21:21:51 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
 
-typedef struct s_vector
-{
-	double	x;
-	double	y;
-} t_vector;
-
-int ft_putpixel(mlx_image_t *img, float x, float y, int color)
+int ft_putpixel(mlx_image_t *img, double x, double y, unsigned int color)
 {
 
     // Check if the coordinates are within the bounds of the image
@@ -26,19 +20,25 @@ int ft_putpixel(mlx_image_t *img, float x, float y, int color)
         return -1;
 
     // Set the pixel at the given coordinates with the specified color and alpha
-    mlx_put_pixel(img, (int)x, (int)y, color);
+    mlx_put_pixel(img, x, y, color);
     
     return 0;
 }
 
-void draw_minimap_square(mlx_image_t *img, t_vector map_pt, size_t size, uint32_t color)
+void draw_minimap_square(mlx_image_t *img, t_vector map_pt, size_t size, size_t color)
 {
-    for (size_t y = map_pt.y; y < map_pt.y + size; y++)
+    size_t y;
+	y = map_pt.y;
+    while (y < map_pt.y + size)
     {
-        for (size_t x = map_pt.x; x < map_pt.x + size; x++)
+        size_t x;
+		x = map_pt.x;
+        while (x < map_pt.x + size)
         {
             ft_putpixel(img, x, y, color);  // Use ft_putpixel to set each pixel
+            x++;
         }
+        y++;
     }
 }
 
@@ -78,9 +78,7 @@ void draw_minimap_square(mlx_image_t *img, t_vector map_pt, size_t size, uint32_
 	
 // 	player_x = (int)(game->p_x * 15);
 // 	player_y = (int)(game->p_y * 15);
-//     draw_minimap_square(game, (t_vector){player_x - 10 / 2, \
-// 										player_y - 10 / 2}, \
-// 										10, 0x00ff2eff);
+//     draw_minimap_square(game, (t_vector){player_x - 10 / 2, player_y - 10 / 2}, 10, 0x00ff2eff);
 //     ray_end_x = player_x + (cub->player.dir.x * 10);
 //     ray_end_y = player_y + (cub->player.dir.y * 10);
 //     draw_line(cub, (t_vector){player_x, player_y}, (t_vector){ray_end_x, ray_end_y}, 0xFF0000ff);
@@ -88,14 +86,16 @@ void draw_minimap_square(mlx_image_t *img, t_vector map_pt, size_t size, uint32_
 
 uint32_t set_minimap_color(t_main *game, t_vector *pt)
 {
-    uint32_t color;
+    size_t color;
     int x = pt->x;
     int y = pt->y;
 
 	color = 0xFF000000 ; //space
     if (game->map_arr[y][x] == '1')
         color = 0xFFFFFFFF ; //0xffc100ff;  // Wall 
-    else if (game->map_arr[y][x] == '0')
+    else if (game->map_arr[y][x] == '0' || game->map_arr[y][x] == 'N' \
+		|| game->map_arr[y][x] == 'S' || game->map_arr[y][x] == 'E' \
+		|| game->map_arr[y][x] == 'W')
         color = 0x0000FFFF; //0xd75000ff;  // Floor
     return color;
 }
@@ -104,26 +104,24 @@ void draw_minimap(mlx_image_t *img, t_main *game)
 {
     t_vector pt;
     t_vector map_pt;
-    uint32_t color;
+    size_t color;
     size_t tile_size = 20;  // default tile size
-    
-    // Loop through all the map points
-    for (pt.y = 0; pt.y < game->h_map; pt.y++)
+
+    pt.y = 0;
+    while (pt.y < game->h_map)
     {
-        for (pt.x = 0; pt.x < game->w_map; pt.x++)
+        pt.x = 0;
+        while (pt.x < game->w_map)
         {
             map_pt.y = pt.y * tile_size;  // Scale the y position
             map_pt.x = pt.x * tile_size;  // Scale the x position
-
-            // Get the color for the current minimap point
-            color = set_minimap_color(game, &pt);
-            
-            // Draw the square on the minimap
-            draw_minimap_square(img, map_pt, tile_size, color);
+            color = set_minimap_color(game, &pt);  // Get the color for the current minimap point
+            draw_minimap_square(img, map_pt, tile_size, color); // Draw the square on the minimap
+            pt.x++;
         }
+        pt.y++;
     }
 }
-
 //___________________________________________________________________
 
 void	delete_textures(t_main *game)
@@ -217,7 +215,7 @@ static void ft_hook(void* param)
 	t_main *game;
 
 	game = (t_main *)param;
-	//draw_minimap(game->window, game);
+	draw_minimap(game->minimap, game);
 }
 
 void	key_hook_slow(mlx_key_data_t keydata, void *param)
@@ -260,18 +258,18 @@ int main(int argc, char **argv)
 		{
 			errorhandler(&game, "mlxerror", true);
 		}
-		game.window = malloc(sizeof(mlx_image_t));
-		if (!game.window)
+		game.minimap = malloc(sizeof(mlx_image_t));
+		if (!game.minimap)
 		{
 			errorhandler(&game, "window malloc error", true);
 		}
-		game.window = mlx_new_image(game.mlx_ptr, game.w_map * 20, game.h_map * 20);
-		if (!game.window)
+		game.minimap = mlx_new_image(game.mlx_ptr, game.w_map * 20, game.h_map * 20);
+		if (!game.minimap)
 		{
 			errorhandler(&game, "image error", true);
 		}
 		//initialize_grafics(&game);
-		if (mlx_image_to_window(game.mlx_ptr, game.window, 0, 0) < 0)
+		if (mlx_image_to_window(game.mlx_ptr, game.minimap, 0, 0) < 0)
 		{
 			errorhandler(&game, "image error", true);
 		}

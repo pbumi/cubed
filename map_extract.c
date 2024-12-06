@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:08:22 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/11/30 18:05:38 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/06 21:09:33 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,25 @@
 
 void    fill_map_dimensions(t_main *game)
 {
-    size_t x;
-    size_t y;
-    
-    x = 0;
-    y = 0;
-    game->w_map = ft_strlen(game->map_arr[y]);
-    while (game->map_arr[y])
+    t_xy r;
+
+    r.x = 0;
+    r.y = 0;
+    game->w_map = ft_strlen(game->map_arr[r.y]);
+    while (game->map_arr[r.y])
     {
-        while (game->map_arr[y][x])
+        while (game->map_arr[r.y][r.x])
         {
-            if (ft_strchr("NSWE", game->map_arr[y][x]))
+            if (ft_strchr("NSWE", game->map_arr[r.y][r.x]))
             {
-                game->p_x = x;
-                game->p_y = y;
+                game->p_x = r.x;
+                game->p_y = r.y;
             }
-            x++;
+            r.x++;
         }
-        y++;
-        game->h_map = y;
-        x = 0;
+        r.y++;
+        game->h_map = r.y;
+        r.x = 0;
     }
 }
 

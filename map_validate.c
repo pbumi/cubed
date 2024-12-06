@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:13:36 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/11/30 17:21:59 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/06 21:10:57 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,28 +64,27 @@ bool incorrect_mapcharacter(char *line)
 
 bool incorrect_mapsize(char *line)
 {
+	t_xy count;
 	size_t x;
-	size_t x_count;
-	size_t y_count;
 	
 	x = 0;
-	x_count = 0;
-	y_count	= 0;
+	count.x = 0;
+	count.y	= 0;
 	while (line[x])
     {
         if (line[x] == '\n')
         {
-			y_count++;
-			if (x_count < 2 || x_count > 500) // MIN MAX X
+			count.y++;
+			if (count.x < 2 || count.x > 500) // MIN MAX X
 			{
 				return true;
 			}
-			x_count = -1;
+			count.x = -1;
 		}
-		x_count++;
+		count.x++;
         x++;
     }
-	if (y_count < 2 || y_count > 500) // MIN MAX Y
+	if (count.y < 2 || count.y > 500) // MIN MAX Y
 	{
 		return true;
 	}

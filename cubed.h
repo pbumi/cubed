@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/05 21:35:04 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/06 21:24:13 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,20 @@
 # include "./gnl/get_next_line.h"
 # include "./MLX42/include/MLX42/MLX42.h"
 
-# define WIDTH 800
-# define HEIGHT 600
+# define WIDTH 1920
+# define HEIGHT 1080
+
+typedef struct s_xy
+{
+	size_t	x;
+	size_t	y;
+}	t_xy;
+
+typedef struct s_vector
+{
+	double	x;
+	double	y;
+}	t_vector;
 
 typedef struct s_wall
 {
@@ -75,6 +87,7 @@ typedef struct s_main
     t_textures  *textu;
     t_images    *imag;
     mlx_image_t *window;
+	mlx_image_t *minimap;
 }	t_main;
 
 //map
@@ -99,6 +112,5 @@ bool remove_spaces(char **colors);
 void	errorhandler(t_main *game, char *msg, bool fatal);
 void	error_exit(char *msg, bool fatal);
 size_t  arr_size(char **arr);
-
 
 #endif
