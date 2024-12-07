@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/06 21:24:13 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:35:54 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,14 @@
 
 # define WIDTH 1920
 # define HEIGHT 1080
+# define MINI_TILE 20
 
-typedef struct s_xy
-{
-	size_t	x;
-	size_t	y;
-}	t_xy;
 
-typedef struct s_vector
+typedef struct s_pt
 {
 	double	x;
 	double	y;
-}	t_vector;
+}	t_pt;
 
 typedef struct s_wall
 {
@@ -58,9 +54,7 @@ typedef struct s_textures
 	mlx_texture_t	*EA;
 	mlx_texture_t	*SO;
 	mlx_texture_t	*WE;
-	mlx_texture_t	*F;
-	mlx_texture_t	*C;
-}					t_textures;
+}	t_textures;
 
 typedef struct s_images
 {
@@ -68,9 +62,7 @@ typedef struct s_images
 	mlx_image_t	*EA;
 	mlx_image_t	*SO;
 	mlx_image_t	*WE;
-	mlx_image_t	*F;
-	mlx_image_t	*C;
-}				t_images;
+}			t_images;
 
 typedef struct s_main
 {
@@ -81,7 +73,7 @@ typedef struct s_main
     char    **map_arr;
     int		p_x;
 	int		p_y;
-	int		w_map;
+	int		*w_map;
 	int		h_map;
     mlx_t   *mlx_ptr;
     t_textures  *textu;

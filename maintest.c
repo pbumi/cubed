@@ -6,36 +6,36 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/06 21:21:51 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:45:07 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
 
-int ft_putpixel(mlx_image_t *img, double x, double y, unsigned int color)
-{
+// int ft_put_pixel(mlx_image_t *img, double x, double y, unsigned int color)
+// {
 
-    // Check if the coordinates are within the bounds of the image
-    if (x < 0 || y < 0 || x >= img->width || y >= img->height)
-        return -1;
+//     // Check if the coordinates are within the bounds of the image
+//     if (x < 0 || y < 0 || x >= img->width || y >= img->height)
+//         return -1;
 
-    // Set the pixel at the given coordinates with the specified color and alpha
-    mlx_put_pixel(img, x, y, color);
+//     // Set the pixel at the given coordinates with the specified color and alpha
+//     mlx_put_pixel(img, x, y, color);
     
-    return 0;
-}
+//     return 0;
+// }
 
-void draw_minimap_square(mlx_image_t *img, t_vector map_pt, size_t size, size_t color)
+void draw_minimap_square(mlx_image_t *img, t_pt *map_pt, size_t size, size_t color)
 {
     size_t y;
-	y = map_pt.y;
-    while (y < map_pt.y + size)
+	y = map_pt->y;
+    while (y < map_pt->y + size)
     {
         size_t x;
-		x = map_pt.x;
-        while (x < map_pt.x + size)
+		x = map_pt->x;
+        while (x < map_pt->x + size)
         {
-            ft_putpixel(img, x, y, color);  // Use ft_putpixel to set each pixel
+            mlx_put_pixel(img, x, y, color);  // Use ft_putpixel to set each pixel
             x++;
         }
         y++;
@@ -84,15 +84,15 @@ void draw_minimap_square(mlx_image_t *img, t_vector map_pt, size_t size, size_t 
 //     draw_line(cub, (t_vector){player_x, player_y}, (t_vector){ray_end_x, ray_end_y}, 0xFF0000ff);
 // }
 
-uint32_t set_minimap_color(t_main *game, t_vector *pt)
+uint32_t set_minimap_color(t_main *game, t_pt *pt)
 {
     size_t color;
     int x = pt->x;
     int y = pt->y;
 
-	color = 0xFF000000 ; //space
+	color = 0x00000000; //space
     if (game->map_arr[y][x] == '1')
-        color = 0xFFFFFFFF ; //0xffc100ff;  // Wall 
+        color = 0xFFFFFFFF ; //0xffc100ff;  // Wall
     else if (game->map_arr[y][x] == '0' || game->map_arr[y][x] == 'N' \
 		|| game->map_arr[y][x] == 'S' || game->map_arr[y][x] == 'E' \
 		|| game->map_arr[y][x] == 'W')
@@ -100,23 +100,22 @@ uint32_t set_minimap_color(t_main *game, t_vector *pt)
     return color;
 }
 
-void draw_minimap(mlx_image_t *img, t_main *game)
+void draw_minimap(t_main *game, mlx_image_t *img)
 {
-    t_vector pt;
-    t_vector map_pt;
+    t_pt pt;
+    t_pt map_pt;
     size_t color;
-    size_t tile_size = 20;  // default tile size
 
     pt.y = 0;
     while (pt.y < game->h_map)
     {
         pt.x = 0;
-        while (pt.x < game->w_map)
+        while (pt.x < game->w_map[(int)pt.y])
         {
-            map_pt.y = pt.y * tile_size;  // Scale the y position
-            map_pt.x = pt.x * tile_size;  // Scale the x position
+            map_pt.y = pt.y * MINI_TILE;
+            map_pt.x = pt.x * MINI_TILE;
             color = set_minimap_color(game, &pt);  // Get the color for the current minimap point
-            draw_minimap_square(img, map_pt, tile_size, color); // Draw the square on the minimap
+            draw_minimap_square(img, &map_pt, MINI_TILE, color); // Draw the square on the minimap
             pt.x++;
         }
         pt.y++;
@@ -210,12 +209,12 @@ void	initialize_grafics(t_main *game)
 	return ;
 }
 
-static void ft_hook(void* param)
+static void gamehook(void* param)
 {
 	t_main *game;
 
 	game = (t_main *)param;
-	draw_minimap(game->minimap, game);
+	draw_minimap(game, game->minimap);
 }
 
 void	key_hook_slow(mlx_key_data_t keydata, void *param)
@@ -225,29 +224,52 @@ void	key_hook_slow(mlx_key_data_t keydata, void *param)
 	game = (t_main *)param;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
 		mlx_close_window(game->mlx_ptr);
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
+		move_left(game);
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
+		move_right(game);
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
+		move_up(game);
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
+		move_down(game);
 }
 
 void testchecker(t_main *game) //TESTER DELETE
 {
-	ft_putstr("WOW\n");
-	printf("NO: %s\n", game->walls->NO);
-	printf("SO: %s\n", game->walls->SO);
-	printf("WE: %s\n", game->walls->WE);
-	printf("EA: %s\n", game->walls->EA);
-	printf("F: %d, %d, %d \n", game->floor->R, game->floor->G, game->floor->B);
-	printf("C: %d, %d, %d \n", game->ceil->R, game->ceil->G, game->ceil->B);
+	// ft_putstr("WOW\n");
+	// printf("NO: %s\n", game->walls->NO);
+	// printf("SO: %s\n", game->walls->SO);
+	// printf("WE: %s\n", game->walls->WE);
+	// printf("EA: %s\n", game->walls->EA);
+	// printf("F: %d, %d, %d \n", game->floor->R, game->floor->G, game->floor->B);
+	// printf("C: %d, %d, %d \n", game->ceil->R, game->ceil->G, game->ceil->B);
 	for (int i = 0; game->map_arr[i] != NULL; i++)
     {
         printf("%s\n", game->map_arr[i]);
     }
-	printf("player x: %d y: %d \n", game->p_x, game->p_y);
+	for (int i = 0; i < game->h_map; i++)
+    {
+        printf("%d ", game->w_map[i]);
+    }
+	printf("\n player x: %d y: %d \n", game->p_x, game->p_y);
+}
+
+int find_max(int arr[], int size)
+{
+    int max = arr[0];  // Assume the first element is the max initially
+
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > max) {
+            max = arr[i];  // Update max if current element is greater
+        }
+    }
+    return max;
 }
 
 int main(int argc, char **argv)
 {
 	t_main game;
 	game = (t_main){0};
-    ft_putstr("MAINTEST\n");
 	check_file(argc, argv, &game);
 	testchecker(&game);
 	{
@@ -263,7 +285,8 @@ int main(int argc, char **argv)
 		{
 			errorhandler(&game, "window malloc error", true);
 		}
-		game.minimap = mlx_new_image(game.mlx_ptr, game.w_map * 20, game.h_map * 20);
+		int temp = find_max(game.w_map, game.h_map);
+		game.minimap = mlx_new_image(game.mlx_ptr, temp * MINI_TILE, game.h_map * MINI_TILE);
 		if (!game.minimap)
 		{
 			errorhandler(&game, "image error", true);
@@ -274,7 +297,7 @@ int main(int argc, char **argv)
 			errorhandler(&game, "image error", true);
 		}
 		mlx_key_hook(game.mlx_ptr, &key_hook_slow, &game);
-		mlx_loop_hook(game.mlx_ptr, ft_hook, &game);
+		mlx_loop_hook(game.mlx_ptr, gamehook, &game);
 		mlx_loop(game.mlx_ptr);
 		mlx_terminate(game.mlx_ptr);
 	}

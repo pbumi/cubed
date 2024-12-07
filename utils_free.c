@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:16:51 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/10/31 17:18:59 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/07 16:51:43 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void free_struct(t_main *game)
 		safe_free((void **)&game->floor);
 		safe_free((void **)&game->ceil);
 		safe_free((void **)&game->map);
+		safe_free((void **)&game->w_map);
 		free_arr(game->map_arr);
 	}
 }

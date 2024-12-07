@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/06 21:09:06 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:37:03 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,25 @@
 
 bool check_range(char **colors)
 {
-	t_xy r;
+	t_pt pt;
 
-	r.x = 0;
-	while (colors[r.x])
+	pt.x = 0;
+	while (colors[(int)pt.x])
 	{
-		r.y = 0;
-		while (colors[r.x][r.y])
+		pt.y = 0;
+		while (colors[(int)pt.x][(int)pt.y])
 		{
-			if (ft_isdigit(colors[r.x][r.y]) == 0)
+			if (ft_isdigit(colors[(int)pt.x][(int)pt.y]) == 0)
 			{
 				return false;
 			}
-			r.y++;
+			pt.y++;
 		}
-		if (ft_atoi(colors[r.x]) < 0 || ft_atoi(colors[r.x]) > 255)
+		if (ft_atoi(colors[(int)pt.x]) < 0 || ft_atoi(colors[(int)pt.x]) > 255)
 		{
 			return false;
 		}
-		r.x++;
+		pt.x++;
 	}
     return true;
 }
