@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/07 17:35:54 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/07 22:39:36 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,17 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdbool.h>
+# include <math.h>
 # include "./libft/libft.h"
 # include "./gnl/get_next_line.h"
 # include "./MLX42/include/MLX42/MLX42.h"
 
 # define WIDTH 1920
 # define HEIGHT 1080
-# define MINI_TILE 20
+# define MINI_TILE 60
 
+# define PLAYER_SPEED 0.1
+# define PLAYER_TILE 10
 
 typedef struct s_pt
 {
@@ -71,8 +74,8 @@ typedef struct s_main
     t_fc    *ceil;
     char    *map;
     char    **map_arr;
-    int		p_x;
-	int		p_y;
+    double		p_x;
+	double		p_y;
 	int		*w_map;
 	int		h_map;
     mlx_t   *mlx_ptr;
@@ -104,5 +107,7 @@ bool remove_spaces(char **colors);
 void	errorhandler(t_main *game, char *msg, bool fatal);
 void	error_exit(char *msg, bool fatal);
 size_t  arr_size(char **arr);
+//moves
+void	key_hook_slow(mlx_key_data_t keydata, void *param);
 
 #endif

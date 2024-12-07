@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/07 17:45:07 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/07 21:13:00 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,19 +69,36 @@ void draw_minimap_square(mlx_image_t *img, t_pt *map_pt, size_t size, size_t col
 //     }
 // }
 
+void draw_player(t_main *game, mlx_image_t *img)
+{
+	t_pt player;
+    // int player_x;
+    // int player_y; 
+    // int ray_end_x;
+    // int ray_end_y; 
+	
+	player.x = (game->p_x * MINI_TILE);
+	player.y = (game->p_y * MINI_TILE);
+	draw_minimap_square(img, &player, PLAYER_TILE, 0x00ff2eff);
+
+    // ray_end_x = player_x + (cub->player.dir.x * 10);
+    // ray_end_y = player_y + (cub->player.dir.y * 10);
+    // draw_line(cub, (t_vector){player_x, player_y}, (t_vector){ray_end_x, ray_end_y}, RED);
+}
 // void draw_player(t_main *game)
 // {
-//     int player_x;
-//     int player_y; 
-//     int ray_end_x;
-//     int ray_end_y; 
+// 	t_pt player;
+//     // int player_x;
+//     // int player_y; 
+//     // int ray_end_x;
+//     // int ray_end_y; 
 	
-// 	player_x = (int)(game->p_x * 15);
-// 	player_y = (int)(game->p_y * 15);
-//     draw_minimap_square(game, (t_vector){player_x - 10 / 2, player_y - 10 / 2}, 10, 0x00ff2eff);
-//     ray_end_x = player_x + (cub->player.dir.x * 10);
-//     ray_end_y = player_y + (cub->player.dir.y * 10);
-//     draw_line(cub, (t_vector){player_x, player_y}, (t_vector){ray_end_x, ray_end_y}, 0xFF0000ff);
+// 	player.x = (int)(game->p_x * 4);
+// 	player.y = (int)(game->p_y * 4);
+//     draw_minimap_square(game->minimap, &player, MINI_TILE, 0x00ff2eff);
+//     // ray_end_x = player_x + (cub->player.dir.x * 10);
+//     // ray_end_y = player_y + (cub->player.dir.y * 10);
+//     // draw_line(cub, (t_vector){player_x, player_y}, (t_vector){ray_end_x, ray_end_y}, 0xFF0000ff);
 // }
 
 uint32_t set_minimap_color(t_main *game, t_pt *pt)
@@ -215,24 +232,25 @@ static void gamehook(void* param)
 
 	game = (t_main *)param;
 	draw_minimap(game, game->minimap);
+	draw_player(game, game->minimap);
 }
 
-void	key_hook_slow(mlx_key_data_t keydata, void *param)
-{
-	t_main	*game;
+// void	key_hook_slow(mlx_key_data_t keydata, void *param)
+// {
+// 	t_main	*game;
 
-	game = (t_main *)param;
-	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
-		mlx_close_window(game->mlx_ptr);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
-		move_left(game);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
-		move_right(game);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
-		move_up(game);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
-		move_down(game);
-}
+// 	game = (t_main *)param;
+// 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
+// 		mlx_close_window(game->mlx_ptr);
+// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
+// 		move_left(game);
+// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
+// 		move_right(game);
+// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
+// 		move_up(game);
+// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
+// 		move_down(game);
+// }
 
 void testchecker(t_main *game) //TESTER DELETE
 {
@@ -251,7 +269,7 @@ void testchecker(t_main *game) //TESTER DELETE
     {
         printf("%d ", game->w_map[i]);
     }
-	printf("\n player x: %d y: %d \n", game->p_x, game->p_y);
+	printf("\n player x: %f y: %f \n", game->p_x, game->p_y);
 }
 
 int find_max(int arr[], int size)
