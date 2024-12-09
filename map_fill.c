@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/05 21:27:32 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/09 15:28:39 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,25 @@ void mark_zeroes(char **array, int x, int y, int rows, int cols)
     mark_zeroes(array, x + 1, y, rows, cols);
     mark_zeroes(array, x, y - 1, rows, cols);
     mark_zeroes(array, x, y + 1, rows, cols);
+}
+
+void   mark_player(t_main *game, char **array, int rows, int *cols)
+{
+    int x;
+    int y;
+    
+    x = game->p_x;
+    y = game->p_y;
+    
+    if (x == cols[y] - 1)
+        array[y][x] = 'X';
+    if ((y > 0 && array[y - 1][x] == ' ') ||
+        (y < rows - 1 && array[y + 1][x] == ' ') ||
+        (x > 0 && array[y][x - 1] == ' ') ||
+        (x < cols[y] - 1 && array[y][x + 1] == ' '))
+    {
+        array[y][x] = 'X';
+    }
 }
 
 void mark_tbborders(char **array, int rows, int *cols)
@@ -122,16 +141,17 @@ bool    check_for_X(char **tmp_arr, int rows, int *cols)
 }
 
 // Main function to check the floodfill and update the map
-bool check_floodfill(char **tmp_arr, int rows, int* cols) 
+bool check_floodfill(t_main *game, char **tmp_arr, int rows, int* cols) 
 {
     mark_lrborders(tmp_arr, rows, cols);
     mark_tbborders(tmp_arr, rows, cols);
     mark_spaces(tmp_arr, rows, cols);
-    // printf("After marking border and space-connected '0's:\n");
-    // for (int i = 0; i < rows; i++)
-    // {
-    //     printf("%s\n", tmp_arr[i]);
-    // }
+    mark_player(game, tmp_arr, rows, cols);
+    printf("After marking border and space-connected '0's:\n");
+    for (int i = 0; i < rows; i++)
+    {
+        printf("%s\n", tmp_arr[i]);
+    }
     if (check_for_X(tmp_arr, rows, cols) == true)
         return false;
     return true;
@@ -164,7 +184,9 @@ bool check_fill(t_main *game)
 {
     char **tmp_arr;
     char *tmp;
+    bool res;
     
+    res = true;
     tmp = ft_strdup(game->map);
     if (!tmp)
         return false;
@@ -176,13 +198,9 @@ bool check_fill(t_main *game)
     int rows;
     if (!prepare_map_data(&tmp_arr, &cols, &rows))
         return false;
-    if (check_floodfill(tmp_arr, rows, cols) == false)
-    {
-        free(cols);
-        free_arr(tmp_arr);
-        return false;
-    }
+    if (check_floodfill(game, tmp_arr, rows, cols) == false)
+        res = false;
     free(cols);
     free_arr(tmp_arr);
-    return true;
+    return res;
 }

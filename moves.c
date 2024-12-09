@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 17:46:09 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/07 22:45:46 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:29:25 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 bool wall_collision(t_main *game, double x, double y)
 {
     // Ensure that x and y are within the bounds of the map
-    int map_x = (int)x;
-    int map_y = (int)y;
+    int map_x = (int)(x + 0.5);
+    int map_y = (int)(y + 0.5);
 
     printf("Checking collision at: (%d, %d)\n", map_x, map_y); // Debugging print
 
@@ -44,8 +44,8 @@ bool check_player_collision(t_main *game, double x, double y)
     // Debugging print to see the future position being checked
     printf("Checking future position: (%f, %f)\n", x, y);
 
-    // Check the four corners of the player's bounding box
-    if (     // Center
+    //Check the four corners of the player's bounding box
+    if (
         wall_collision(game, x + PLAYER_SPEED, y) || // Right side
         wall_collision(game, x - PLAYER_SPEED, y) || // Left side
         wall_collision(game, x, y + PLAYER_SPEED) || // Down side
