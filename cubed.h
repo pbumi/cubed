@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/09 14:30:42 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:35:37 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,9 @@ typedef struct s_main
     t_wall  *walls;
 	t_fc	*floor;
     t_fc    *ceil;
+	t_pt	plane;
+	t_pt	dir;
+	t_pt	player;
     char    *map;
     char    **map_arr;
     double		p_x;
