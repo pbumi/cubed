@@ -1,22 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   moves2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/16 15:47:50 by pbumidan          #+#    #+#             */
+/*   Updated: 2024/12/16 15:51:12 by pbumidan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cubed.h"
 
-# define ROT_SPEED 0.045
+# define THETA 0.045 // angle theta in radians about 3 deg.
 
+/* this uses the 2D rotation formula
+x′= x⋅cos(θ)−y⋅sin(θ)
+y′= x⋅sin(θ)+y⋅cos(θ)
+where θ is in radians, 
+degrees = rad x (180/pi)
+THETA 0.045 rads about 3 deg
+*/
 void    right_key(t_main *cub)
 {
     double  old_dirX;
     double  old_planeX;
     
     old_dirX = cub->dir.x;
-    cub->dir.x = cub->dir.x * cos(ROT_SPEED)
-                            - cub->dir.y * sin(ROT_SPEED);
-    cub->dir.y = old_dirX * sin(ROT_SPEED) + cub->dir.y
-                            *cos(ROT_SPEED);
+    cub->dir.x = cub->dir.x * cos(THETA) - cub->dir.y * sin(THETA);
+    cub->dir.y = old_dirX * sin(THETA) + cub->dir.y * cos(THETA);
     old_planeX = cub->plane.x;
-    cub->plane.x = cub->plane.x * cos(ROT_SPEED) 
-                            - cub->plane.y * sin(ROT_SPEED);
-    cub->plane.y = old_planeX * sin(ROT_SPEED) 
-                            + cub->plane.y * cos(ROT_SPEED);
+    cub->plane.x = cub->plane.x * cos(THETA) - cub->plane.y * sin(THETA);
+    cub->plane.y = old_planeX * sin(THETA) + cub->plane.y * cos(THETA);
 }
 
 void    left_key(t_main *cub)
@@ -26,15 +41,11 @@ void    left_key(t_main *cub)
     double  old_planeX;
     
     old_dirX = cub->dir.x;
-    cub->dir.x = cub->dir.x * cos(-ROT_SPEED)
-                            - cub->dir.y * sin(-ROT_SPEED);
-    cub->dir.y = old_dirX * sin(-ROT_SPEED) + cub->dir.y
-                            *cos(-ROT_SPEED);
+    cub->dir.x = cub->dir.x * cos(-THETA) - cub->dir.y * sin(-THETA);
+    cub->dir.y = old_dirX * sin(-THETA) + cub->dir.y * cos(-THETA);
     old_planeX = cub->plane.x;
-    cub->plane.x = cub->plane.x * cos(-ROT_SPEED) 
-                            - cub->plane.y * sin(-ROT_SPEED);
-    cub->plane.y = old_planeX * sin(-ROT_SPEED) 
-                            + cub->plane.y * cos(-ROT_SPEED);
+    cub->plane.x = cub->plane.x * cos(-THETA) - cub->plane.y * sin(-THETA);
+    cub->plane.y = old_planeX * sin(-THETA) + cub->plane.y * cos(-THETA);
 }
 
 void    move_up(t_main *cub)
@@ -45,8 +56,6 @@ void    move_up(t_main *cub)
     
     next_x = cub->p_x + cub->dir.x * PLAYER_SPEED;
     next_y = cub->p_y + cub->dir.y * PLAYER_SPEED;
-    
-
     if (cub->map_arr[(int)(next_x)][(int)(cub->p_y)] == '0')
         cub->p_x = next_x;
     if (cub->map_arr[(int)(cub->p_x)][(int)(next_y)] == '0')
