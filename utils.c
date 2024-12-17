@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:25:27 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/11/29 17:45:07 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:08:49 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,30 @@ size_t  arr_size(char **arr)
         count++;
     }
     return (count);
+}
+
+char** allocate2DCharArray(int y, int x)
+{
+    char **arr = (char**)malloc(y * sizeof(char*));
+    if (arr == NULL)
+	{
+        return NULL;
+    }
+    int i = 0;
+    while (i < y) 
+	{
+        arr[i] = (char*)malloc(x + 1 * sizeof(char));
+        if (arr[i] == NULL) 
+		{
+            int j = 0;
+            while (j < i) {
+                free(arr[j]);
+                j++;
+            }
+            free(arr);
+            return NULL;
+        }
+        i++;
+    }
+    return arr;
 }

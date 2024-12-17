@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/12 16:35:37 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:34:11 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@
 # include "./gnl/get_next_line.h"
 # include "./MLX42/include/MLX42/MLX42.h"
 
-# define WIDTH 1920
-# define HEIGHT 1080
-# define MINI_TILE 60
+# define WIDTH 480
+# define HEIGHT 480
+# define MINI_TILE 15
 
-# define PLAYER_SPEED 0.1
+# define PLAYER_SPEED 0.045
 # define PLAYER_TILE 10
 
 typedef struct s_pt
@@ -77,10 +77,12 @@ typedef struct s_main
 	t_pt	player;
     char    *map;
     char    **map_arr;
+	char	**sq_map;
     double		p_x;
 	double		p_y;
-	int		*w_map;
+	int		*wx_map;
 	int		h_map;
+	int		w_map;
     mlx_t   *mlx_ptr;
     t_textures  *textu;
     t_images    *imag;
@@ -110,7 +112,9 @@ bool remove_spaces(char **colors);
 void	errorhandler(t_main *game, char *msg, bool fatal);
 void	error_exit(char *msg, bool fatal);
 size_t  arr_size(char **arr);
+int find_max(int *arr, int size);
+char** allocate2DCharArray(int x, int y);
 //moves
-void	key_hook_slow(mlx_key_data_t keydata, void *param);
+void	key_hook_slow(void *param);
 
 #endif

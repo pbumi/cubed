@@ -6,7 +6,7 @@
 #    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2024/12/12 16:55:09 by pbumidan         ###   ########.fr        #
+#    Updated: 2024/12/16 20:15:22 by pbumidan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,6 @@ SRCS = \
 	utils_space.c \
 	utils.c \
 	moves2.c \
-	#moves.c \
 
 SRCS_SHARED = \
 

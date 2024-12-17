@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/09 15:28:39 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:09:15 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,11 +147,11 @@ bool check_floodfill(t_main *game, char **tmp_arr, int rows, int* cols)
     mark_tbborders(tmp_arr, rows, cols);
     mark_spaces(tmp_arr, rows, cols);
     mark_player(game, tmp_arr, rows, cols);
-    printf("After marking border and space-connected '0's:\n");
-    for (int i = 0; i < rows; i++)
-    {
-        printf("%s\n", tmp_arr[i]);
-    }
+    // printf("After marking border and space-connected '0's:\n");
+    // for (int i = 0; i < rows; i++)
+    // {
+    //     printf("%s\n", tmp_arr[i]);
+    // }
     if (check_for_X(tmp_arr, rows, cols) == true)
         return false;
     return true;

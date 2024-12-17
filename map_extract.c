@@ -6,11 +6,43 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:08:22 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/07 17:36:05 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:36:51 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
+
+void    fill_plane_dir(t_main *game)
+{
+    if (game->map_arr[(int)game->p_y][(int)game->p_x] == 'N')
+    {
+        game->dir.x = 0.0;
+        game->dir.y = -1.0;
+        game->plane.x = 0.66;
+        game->plane.y = 0.0;
+    }
+    else if (game->map_arr[(int)game->p_y][(int)game->p_x] == 'S')
+    {
+        game->dir.x = 0.0;
+        game->dir.y = 1.0;
+        game->plane.x = -0.66;
+        game->plane.y = 0.0;
+    }
+    else if (game->map_arr[(int)game->p_y][(int)game->p_x] == 'E')
+    {
+        game->dir.x = 1.0;
+        game->dir.y = 0.0;
+        game->plane.x = 0.0;
+        game->plane.y = 0.66;
+    }
+    else if (game->map_arr[(int)game->p_y][(int)game->p_x] == 'W')
+    {
+        game->dir.x = -1.0;
+        game->dir.y = 0.0;
+        game->plane.x = 0.0;
+        game->plane.y = -0.66;
+    }
+}
 
 void fill_map_dimensions(t_main *game)
 {
@@ -21,17 +53,18 @@ void fill_map_dimensions(t_main *game)
         pt.y++;
     }
     game->h_map = pt.y;
-    game->w_map = malloc(sizeof(int) * game->h_map);
-    if (game->w_map == NULL) 
+    game->wx_map = malloc(sizeof(int) * game->h_map);
+    if (game->wx_map == NULL) 
     {
         return;
     }
     pt.x = 0;
     while (pt.x < game->h_map)
     {
-        game->w_map[(int)pt.x] = ft_strlen(game->map_arr[(int)pt.x]);  // Store the width of each row
+        game->wx_map[(int)pt.x] = ft_strlen(game->map_arr[(int)pt.x]);  // Store the width of each row
         pt.x++;
     }
+    game->w_map = find_max(game->wx_map, game->h_map);
 }
 
 void fill_player_position(t_main *game)
@@ -108,7 +141,6 @@ bool extract_map1(int fd, t_main *game)
     game->map = ft_strtrim(map_content,"\n");
 	free(map_content);
 	map_content = NULL;
-	//change_space_to1(game->map);
 	if (!validate_map(game))
 		return false;
 	else
@@ -120,6 +152,7 @@ bool extract_map1(int fd, t_main *game)
 		}
         fill_map_dimensions(game);
         fill_player_position(game);
+        fill_plane_dir(game);
 	}
     return true;
 }

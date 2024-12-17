@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/07 17:37:03 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:25:30 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,34 @@ bool check_contents(char *line, t_main *game)
 		return true;
 }
 
+bool	create_sqmap(t_main *game)
+{
+	t_pt pt;
+	
+	game->sq_map = allocate2DCharArray(game->h_map + 1, game->w_map);
+	pt.y = 0;
+	while(pt.y < game->h_map)
+	{
+		pt.x = 0;
+		while (pt.x < game->w_map)
+		{
+			if (pt.x < game->wx_map[(int)pt.y])
+			{
+				game->sq_map[(int)pt.y][(int)pt.x] = game->map_arr[(int)pt.y][(int)pt.x];
+			}
+			else
+			{
+				game->sq_map[(int)pt.y][(int)pt.x] = '_';
+			}
+			pt.x++;
+		}
+		game->sq_map[(int)pt.y][(int)pt.x] = '\0';
+		pt.y++;
+	}
+	game->sq_map[(int)pt.y] = NULL;
+	return true;
+}
+
 bool	extract_components(int fd, char *line, t_main *game)
 {
 	if (check_contents(line, game) == false)
@@ -149,6 +177,10 @@ bool	extract_components(int fd, char *line, t_main *game)
 		{
 			errorhandler(game,"* Invalid map *", false);
 			return false;
+		}
+		if (create_sqmap(game) == false)
+		{
+			return false;	
 		}
 	}
 	return true;

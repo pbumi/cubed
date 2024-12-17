@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:47:50 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/16 15:51:12 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:28:18 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,67 +51,197 @@ void    left_key(t_main *cub)
 void    move_up(t_main *cub)
 {
 
-    double next_x;
-    double next_y;
+   double x;
+    double y;
     
-    next_x = cub->p_x + cub->dir.x * PLAYER_SPEED;
-    next_y = cub->p_y + cub->dir.y * PLAYER_SPEED;
-    if (cub->map_arr[(int)(next_x)][(int)(cub->p_y)] == '0')
-        cub->p_x = next_x;
-    if (cub->map_arr[(int)(cub->p_x)][(int)(next_y)] == '0')
-        cub->p_y = next_y;
+    
+    x = cub->p_x + cub->dir.x * PLAYER_SPEED;
+    y = cub->p_y + cub->dir.y * PLAYER_SPEED;
+    printf("press up\n");
+    printf("Current position: (%f, %f)\n", cub->p_x, cub->p_y);
+    printf("Next position: (%f, %f)\n", x, y);
+    if (cub->map_arr[(int)(cub->p_y)][(int)(x)] == '0')
+        cub->p_x = x;
+    if (cub->map_arr[(int)(y)][(int)(cub->p_x)] == '0')
+        cub->p_y = y;
+    printf("New position: (%f, %f)\n", x, y);
 
 }
 
 void    move_down(t_main *cub)
 {
 
-    double prev_x;
-    double prev_y;
+   double x;
+    double y;
     
-    prev_x = cub->p_x - cub->dir.x * PLAYER_SPEED;
-    prev_y = cub->p_y - cub->dir.y * PLAYER_SPEED;
-    if (cub->map_arr[(int)(prev_x)][(int)(cub->p_y)] == '0')
-        cub->p_x = prev_x;
-    if (cub->map_arr[(int)(cub->p_x)][(int)(prev_y)] == '0')
-        cub->p_y = prev_y;
+    x = cub->p_x - cub->dir.x * PLAYER_SPEED;
+    y = cub->p_y - cub->dir.y * PLAYER_SPEED;
+    printf("press down\n");
+    printf("Current position: (%f, %f)\n", cub->p_x, cub->p_y);
+    printf("Next position: (%f, %f)\n", x, y);
+    if (cub->map_arr[(int)(cub->p_y)][(int)(x)] == '0')
+    {
+        printf("XXX");
+        cub->p_x = x;
+    }
+    if (cub->map_arr[(int)(y)][(int)(cub->p_x)] == '0')
+    {
+         printf("XXX");
+        cub->p_y = y;
+    }
+    printf("New position: (%f, %f)\n", x, y);
 }
 
 void    move_left(t_main *cub)
 {
 
-    double left_x;
-    double left_y;
+    double x;
+    double y;
     
-    left_x = cub->p_x - cub->plane.x * PLAYER_SPEED;
-    left_y = cub->p_y - cub->plane.y * PLAYER_SPEED;
-    if (cub->map_arr[(int)(left_x)][(int)(cub->p_y)] == '0')
-        cub->p_x = left_x;
-    if (cub->map_arr[(int)(cub->p_x)][(int)(left_y)] == '0')
-        cub->p_y = left_y;
+    x = cub->p_x - cub->plane.x * PLAYER_SPEED;
+    y = cub->p_y - cub->plane.y * PLAYER_SPEED;
+
+    printf("press left\n");
+    printf("Current position: (%f, %f)\n", cub->p_x, cub->p_y);
+    printf("Next position: (%f, %f)\n", x, y);
+    printf("Map value now: %c\n", cub->map_arr[(int)x][(int)cub->p_y]);
+    if (cub->map_arr[(int)(cub->p_y)][(int)(x)] == '0')
+        cub->p_x = x;
+    if (cub->map_arr[(int)(y)][(int)(cub->p_x)] == '0')
+        cub->p_y = y;
+    printf("New position: (%f, %f)\n", x, y);
 }
 
 void    move_right(t_main *cub)
 {
-    double right_x;
-    double right_y;
+    double x;
+    double y;
     
-    right_x = cub->p_x + cub->plane.x * PLAYER_SPEED;
-    right_y = cub->p_y + cub->plane.y * PLAYER_SPEED;
-    if (cub->map_arr[(int)(right_x)][(int)(cub->p_y)] == '0')
-        cub->p_x = right_x;
-    if (cub->map_arr[(int)(cub->p_x)][(int)(right_y)] == '0')
-        cub->p_y = right_y;
+    
+    x = cub->p_x + cub->plane.x * PLAYER_SPEED;
+    y = cub->p_y + cub->plane.y * PLAYER_SPEED;
+    printf("press right\n");
+    printf("Current position: (%f, %f)\n", cub->p_x, cub->p_y);
+    printf("Next position: (%f, %f)\n", x, y);
+    if (cub->map_arr[(int)(cub->p_y)][(int)(x)] == '0')
+        cub->p_x = x;
+    if (cub->map_arr[(int)(y)][(int)(cub->p_x)] == '0')
+        cub->p_y = y;
+    printf("New position: (%f, %f)\n", x, y);
 }
 
+// void    right_key(t_main *cub)
+// {
+//     printf("right key pressed\n");
+//     double  old_dirX;
+//     double  old_planeX;
+    
+//     old_dirX = cub->dir.x;
+//     cub->dir.x = cub->dir.x * cos(THETA)
+//                             - cub->dir.y * sin(THETA);
+//     cub->dir.y = old_dirX * sin(THETA) + cub->dir.y
+//                             *cos(THETA);
+//     old_planeX = cub->plane.x;
+//     cub->plane.x = cub->plane.x * cos(THETA) 
+//                             - cub->plane.y * sin(THETA);
+//     cub->plane.y = old_planeX * sin(THETA) 
+//                             + cub->plane.y * cos(THETA);
+// }
 
-void	key_hook_slow(mlx_key_data_t keydata, void *param)
+// void    left_key(t_main *cub)
+// {
+//     printf("left key pressed\n");
+
+//     double  old_dirX;
+//     double  old_planeX;
+    
+//     old_dirX = cub->dir.x;
+//     cub->dir.x = cub->dir.x * cos(-THETA)
+//                             - cub->dir.y * sin(-THETA);
+//     cub->dir.y = old_dirX * sin(-THETA) + cub->dir.y
+//                             *cos(-THETA);
+//     old_planeX = cub->plane.x;
+//     cub->plane.x = cub->plane.x * cos(-THETA) 
+//                             - cub->plane.y * sin(-THETA);
+//     cub->plane.y = old_planeX * sin(-THETA) 
+//                             + cub->plane.y * cos(-THETA);
+// }
+
+// void    move_up(t_main *cub)
+// {
+//     printf("w key pressed\n");
+
+//     double next_x;
+//     double next_y;
+    
+//     next_x = cub->p_x + cub->dir.x * PLAYER_SPEED;
+//     next_y = cub->p_y + cub->dir.y * PLAYER_SPEED;
+    
+//     printf("Next position: (%f, %f)\n", next_x, next_y);
+//     printf("Map value at next_x: %c\n", cub->map_arr[(int)next_x][(int)cub->p_y]);
+//     printf("Map value at next_y: %c\n", cub->map_arr[(int)cub->p_x][(int)next_y]);
+
+//     if (cub->map_arr[(int)(next_x)][(int)(cub->p_y)] == '0')
+//         cub->p_x = next_x;
+//     if (cub->map_arr[(int)(cub->p_x)][(int)(next_y)] == '0')
+//         cub->p_y = next_y;
+
+//     printf("Updated position: (%f, %f)\n", cub->p_x, cub->p_y);
+
+// }
+
+// void    move_down(t_main *cub)
+// {
+//     printf("s key pressed\n");
+
+//     double prev_x;
+//     double prev_y;
+    
+//     prev_x = cub->p_x - cub->dir.x * PLAYER_SPEED;
+//     prev_y = cub->p_y - cub->dir.y * PLAYER_SPEED;
+//     if (cub->map_arr[(int)(prev_x)][(int)(cub->p_y)] == '0')
+//         cub->p_x = prev_x;
+//     if (cub->map_arr[(int)(cub->p_x)][(int)(prev_y)] == '0')
+//         cub->p_y = prev_y;
+// }
+
+// void    move_left(t_main *cub)
+// {
+//     printf("a key pressed\n");
+
+//     double left_x;
+//     double left_y;
+    
+//     left_x = cub->p_x - cub->plane.x * PLAYER_SPEED;
+//     left_y = cub->p_y - cub->plane.y * PLAYER_SPEED;
+//     if (cub->map_arr[(int)(left_x)][(int)(cub->p_y)] == '0')
+//         cub->p_x = left_x;
+//     if (cub->map_arr[(int)(cub->p_x)][(int)(left_y)] == '0')
+//         cub->p_y = left_y;
+// }
+
+// void    move_right(t_main *cub)
+// {
+//     printf("d key pressed\n");
+
+//     double right_x;
+//     double right_y;
+    
+//     right_x = cub->p_x + cub->plane.x * PLAYER_SPEED;
+//     right_y = cub->p_y + cub->plane.y * PLAYER_SPEED;
+//     if (cub->map_arr[(int)(right_x)][(int)(cub->p_y)] == '0')
+//         cub->p_x = right_x;
+//     if (cub->map_arr[(int)(cub->p_x)][(int)(right_y)] == '0')
+//         cub->p_y = right_y;
+// }
+
+void	key_hook_slow(void *param)
 {
 	t_main	*game;
 
 	game = (t_main *)param;
 
-	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
+    if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
 		mlx_close_window(game->mlx_ptr);
 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
 		move_left(game);

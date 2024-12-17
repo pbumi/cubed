@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/11/29 17:46:36 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/17 18:27:52 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	initialize_struct(t_main *game)
 	game->ceil->OK = false;
 	game->floor->OK = false;
 	game->map_arr = NULL;
+	game->sq_map = NULL;
 }
 
 void initialize_game(char *cubfile, t_main *game)
