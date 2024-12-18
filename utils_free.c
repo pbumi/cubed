@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:16:51 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 19:26:12 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:31:53 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void safe_free(void **ptr)
     }
 }
 
-void free_arr(char **arr)
+void safe_free_arr(char **arr)
 {
     if (arr == NULL) // Check if the array is NULL to avoid dereferencing a NULL pointer
         return;
@@ -35,31 +35,18 @@ void free_arr(char **arr)
     safe_free((void **)&arr); // Free the array itself (pointer to the array) safely
 }
 
-// void free_arr(char **arr)
-// {
-//     if (!arr)
-//         return;
-//     size_t x = 0;
-//     while (arr[x])
-//     {
-//         safe_free((void **)&arr[x]);  // Use safe_free for each element
-//         x++;
-//     }
-//     safe_free((void **)&arr);  // Free the array itself
-// }
-
-// void free_arr(char **arr)
-// {
-//     if (arr == NULL) // Check if the array is NULL to avoid dereferencing a NULL pointer
-//         return;
-//     int i = 0;
-//     while (arr[i] != NULL)   // Loop through the array of strings
-//     {
-//         free(arr[i]);         // Free each string (element) in the array
-//         i++;
-//     }
-//     free(arr);                 // Free the array itself (pointer to the array)
-// }
+void free_arr(char **arr)
+{
+    if (arr == NULL) // Check if the array is NULL to avoid dereferencing a NULL pointer
+        return;
+    int i = 0;
+    while (arr[i] != NULL)   // Loop through the array of strings
+    {
+        free(arr[i]);         // Free each string (element) in the array
+        i++;
+    }
+    free(arr);                 // Free the array itself (pointer to the array)
+}
 
 
 

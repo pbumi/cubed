@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:25:27 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 18:35:45 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:54:08 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ size_t  arr_size(char **arr)
 
 char** allocate2DCharArray(int y, int x)
 {
-    char **arr = (char**)malloc(y * sizeof(char*));
+    char **arr = ft_calloc(y + 1, sizeof(char *)); //(char**)malloc((sizeof(char*) * y + 1));
     if (arr == NULL)
 	{
         return NULL;
@@ -64,7 +64,7 @@ char** allocate2DCharArray(int y, int x)
     int i = 0;
     while (i < y) 
 	{
-        arr[i] = (char*)malloc(x + 1 * sizeof(char));
+        arr[i] = ft_calloc(x + 1, sizeof(char)); //(char*)malloc(sizeof(char) * x + 1);
         if (arr[i] == NULL) 
 		{
             int j = 0;

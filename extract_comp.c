@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 18:33:26 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:49:30 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,7 +267,8 @@ void fill_maparray(t_main *game, int *tmp_wx, char **tmp_arr)
 		game->sq_map[pt.y][pt.x] = '\0';
 		pt.y++;
 	}
-	game->sq_map[pt.y] = NULL;
+	printf("pty %d,g_h %d\n", pt.y, game->h_map);
+	game->sq_map[game->h_map] = NULL;
 }
 
 void get_widthx(t_main *game, char **tmp_arr, int *tmp_wx)
@@ -311,7 +312,7 @@ bool create_sqmap(t_main *game)
         return false;  
     }
     get_widthx(game, tmp_arr, tmp_wx);
-    game->sq_map = allocate2DCharArray(game->h_map + 1, game->w_map);
+    game->sq_map = allocate2DCharArray(game->h_map, game->w_map);
     if (!game->sq_map)
     {
         free_arr(tmp_arr);  // Free tmp_arr on failure

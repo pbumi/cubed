@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 19:27:32 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:55:48 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,14 +243,14 @@ void draw_minimap(t_main *game, mlx_image_t *minimap)
 // 	return ;
 // }
 
-// static void gamehook(void* param)
-// {
-// 	t_main *game;
+static void gamehook(void* param)
+{
+	t_main *game;
 
-// 	game = (t_main *)param;
-// 	draw_minimap(game, game->minimap);
-// 	draw_player(game, game->minimap);
-// }
+	game = (t_main *)param;
+	draw_minimap(game, game->minimap);
+	draw_player(game, game->minimap);
+}
 
 // void	key_hook_slow(mlx_key_data_t keydata, void *param)
 // {
@@ -282,7 +282,6 @@ void testchecker(t_main *game) //TESTER DELETE
     {
         printf("%s\n", game->sq_map[i]);
     }
-	printf("h_map: %d", game->h_map);
 	printf("\n player x: %f y: %f \n", game->p_x, game->p_y);
 	printf("\n plane x: %f y: %f \n", game->plane.x, game->plane.y);
 	printf("\n dir x: %f y: %f \n", game->dir.x, game->dir.y);
@@ -310,32 +309,32 @@ int main(int argc, char **argv)
 	check_file(argc, argv, &game);
 	testchecker(&game);
 	{
-		// game.mlx_ptr = NULL;
-		// mlx_set_setting(MLX_MAXIMIZED, true);
-		// game.mlx_ptr = mlx_init(WIDTH, HEIGHT, "CUB3D", true);
-		// if (!game.mlx_ptr)
-		// {
-		// 	errorhandler(&game, "mlxerror", true);
-		// }
-		// game.minimap = malloc(sizeof(mlx_image_t));
-		// if (!game.minimap)
-		// {
-		// 	errorhandler(&game, "window malloc error", true);
-		// }
-		// game.minimap = mlx_new_image(game.mlx_ptr, game.w_map * MINI_TILE, game.h_map * MINI_TILE);
-		// if (!game.minimap)
-		// {
-		// 	errorhandler(&game, "image error", true);
-		// }
-		// //initialize_grafics(&game);
-		// if (mlx_image_to_window(game.mlx_ptr, game.minimap, 0, 0) < 0)
-		// {
-		// 	errorhandler(&game, "image error", true);
-		// }
-		// mlx_loop_hook(game.mlx_ptr, &key_hook_slow, &game);
-		// mlx_loop_hook(game.mlx_ptr, &gamehook, &game);
-		// mlx_loop(game.mlx_ptr);
-		// mlx_terminate(game.mlx_ptr);
+		game.mlx_ptr = NULL;
+		mlx_set_setting(MLX_MAXIMIZED, true);
+		game.mlx_ptr = mlx_init(WIDTH, HEIGHT, "CUB3D", true);
+		if (!game.mlx_ptr)
+		{
+			errorhandler(&game, "mlxerror", true);
+		}
+		game.minimap = malloc(sizeof(mlx_image_t));
+		if (!game.minimap)
+		{
+			errorhandler(&game, "window malloc error", true);
+		}
+		game.minimap = mlx_new_image(game.mlx_ptr, game.w_map * MINI_TILE, game.h_map * MINI_TILE);
+		if (!game.minimap)
+		{
+			errorhandler(&game, "image error", true);
+		}
+		//initialize_grafics(&game);
+		if (mlx_image_to_window(game.mlx_ptr, game.minimap, 0, 0) < 0)
+		{
+			errorhandler(&game, "image error", true);
+		}
+		mlx_loop_hook(game.mlx_ptr, &key_hook_slow, &game);
+		mlx_loop_hook(game.mlx_ptr, &gamehook, &game);
+		mlx_loop(game.mlx_ptr);
+		mlx_terminate(game.mlx_ptr);
 	}
 	free_struct(&game);
     return 0;

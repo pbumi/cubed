@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:47:50 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 19:32:21 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 20:58:44 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,20 +235,20 @@ void    move_right(t_main *cub)
 //         cub->p_y = right_y;
 // }
 
-// void	key_hook_slow(void *param)
-// {
-// 	t_main	*game;
+void	key_hook_slow(void *param)
+{
+	t_main	*game;
 
-// 	game = (t_main *)param;
+	game = (t_main *)param;
 
-//     if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
-// 		mlx_close_window(game->mlx_ptr);
-// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
-// 		move_left(game);
-// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
-// 		move_right(game);
-// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
-// 		move_up(game);
-// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
-// 		move_down(game);
-// }
+    if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
+		mlx_close_window(game->mlx_ptr);
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
+		move_left(game);
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
+		move_right(game);
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
+		move_up(game);
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
+		move_down(game);
+}
