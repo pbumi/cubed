@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:13:36 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/07 17:37:14 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 14:50:06 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ bool incorrect_mapcharacter(char *line)
 
 bool incorrect_mapsize(char *line)
 {
-	t_pt count;
+	t_int_pt count;
 	size_t x;
 	
 	x = 0;

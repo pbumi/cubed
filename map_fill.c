@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/17 17:09:15 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:19:47 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,97 +20,77 @@ void mark_zeroes(char **array, int x, int y, int rows, int cols)
         return;
     }
     array[y][x] = 'X';
-    mark_zeroes(array, x - 1, y, rows, cols);
-    mark_zeroes(array, x + 1, y, rows, cols);
-    mark_zeroes(array, x, y - 1, rows, cols);
-    mark_zeroes(array, x, y + 1, rows, cols);
+    mark_zeroes(array, x - 1, y, rows, cols); // left
+    mark_zeroes(array, x + 1, y, rows, cols); // right
+    mark_zeroes(array, x, y - 1, rows, cols); // up
+    mark_zeroes(array, x, y + 1, rows, cols); // down
 }
 
-void   mark_player(t_main *game, char **array, int rows, int *cols)
+void mark_player(t_main *game, char **array, int rows, int cols)
 {
-    int x;
-    int y;
+    int x = game->p_x;
+    int y = game->p_y;
     
-    x = game->p_x;
-    y = game->p_y;
-    
-    if (x == cols[y] - 1)
-        array[y][x] = 'X';
     if ((y > 0 && array[y - 1][x] == ' ') ||
         (y < rows - 1 && array[y + 1][x] == ' ') ||
         (x > 0 && array[y][x - 1] == ' ') ||
-        (x < cols[y] - 1 && array[y][x + 1] == ' '))
+        (x < cols - 1 && array[y][x + 1] == ' '))
     {
         array[y][x] = 'X';
     }
 }
 
-void mark_tbborders(char **array, int rows, int *cols)
+void mark_lrborders(char **array, int rows, int cols)
 {
-    int x;
+    int y = 0;
     
-    if (rows > 0)    // Check top and bottom borders
+    // Mark '0's connected to the left and right borders
+    while (y < rows) 
     {
-        x = 0;
-        if (array[0] != NULL && cols[0] > 0)         // Ensure top row exists and is valid
-        {
-            while (x < cols[0])
-            {
-                if (array[0][x] == '0') // Check the top border
-                    mark_zeroes(array, x, 0, rows, cols[0]);
-                x++;
-            }
-        }
-        if (array[rows - 1] != NULL && cols[rows - 1] > 0)         // Ensure bottom row exists and is valid
-        {
-            x = 0;
-            while (x < cols[rows - 1])
-            {
-                if (array[rows - 1][x] == '0') // Check the bottom border
-                    mark_zeroes(array, x, rows - 1, rows, cols[rows - 1]);
-                x++;
-            }
-        }
-    }
-}
-
-void mark_lrborders(char **array, int rows, int *cols)
-{
-    int y;
-    
-    y = 0;
-    while (y < rows)
-    {
-        if (array[y] != NULL && cols[y] > 0) // Ensure the row has valid columns and is not NULL
-        {
-            if (array[y][0] == '0')             // Check the left border
-                mark_zeroes(array, 0, y, rows, cols[y]);
-            if (array[y][cols[y] - 1] == '0')             // Check the right borde
-                mark_zeroes(array, cols[y] - 1, y, rows, cols[y]);
-        }
+        if (array[y][0] == '0') 
+            mark_zeroes(array, 0, y, rows, cols);  // Left border
+        if (array[y][cols - 1] == '0') 
+            mark_zeroes(array, cols - 1, y, rows, cols);  // Right border
         y++;
     }
 }
 
-void   mark_spaces(char **array, int rows, int *cols)
+
+void mark_tbborders(char **array, int rows, int cols)
 {
-    int y;
-    int x;
-    y = 0;
-    while (y < rows)
+    int x = 0;
+    
+    // Mark '0's connected to the top and bottom borders
+    while (x < cols) 
     {
-        x = 0;
-        while (x < cols[y])
+        if (array[0][x] == '0') 
+            mark_zeroes(array, x, 0, rows, cols);  // Top border
+        if (array[rows - 1][x] == '0') 
+            mark_zeroes(array, x, rows - 1, rows, cols);  // Bottom border
+        x++;
+    }
+}
+
+
+void mark_spaces(char **array, int rows, int cols)
+{
+    int y = 0;
+    
+    // Mark '0's connected to spaces
+    while (y < rows) 
+    {
+        int x = 0;
+        while (x < cols) 
         {
-            // If a '0' is adjacent to a space, mark it
-            if (array[y][x] == '0')
+            if (array[y][x] == '0') 
             {
+                // Check if adjacent to a space
                 if ((y > 0 && array[y - 1][x] == ' ') ||
                     (y < rows - 1 && array[y + 1][x] == ' ') ||
                     (x > 0 && array[y][x - 1] == ' ') ||
-                    (x < cols[y] - 1 && array[y][x + 1] == ' ')) 
+                    (x < cols - 1 && array[y][x + 1] == ' ')) 
                 {
-                    mark_zeroes(array, x, y, rows, cols[y]);
+                    mark_zeroes(array, x, y, rows, cols);  // Mark the '0' connected to a space
                 }
             }
             x++;
@@ -119,20 +99,18 @@ void   mark_spaces(char **array, int rows, int *cols)
     }
 }
 
-bool    check_for_X(char **tmp_arr, int rows, int *cols)
+bool check_for_X(char **tmp_arr, int rows, int cols)
 {
-    int y;
-    int x;
-    y = 0;
+    int y = 0, x;
+    
+    // Check if any 'X' exists in the array
     while (y < rows) 
     {
         x = 0;
-        while (x < cols[y])
+        while (x < cols) 
         {
-            if (tmp_arr[y][x] == 'X')
-            {
+            if (tmp_arr[y][x] == 'X') 
                 return true;
-            }
             x++;
         }
         y++;
@@ -140,67 +118,68 @@ bool    check_for_X(char **tmp_arr, int rows, int *cols)
     return false;
 }
 
-// Main function to check the floodfill and update the map
-bool check_floodfill(t_main *game, char **tmp_arr, int rows, int* cols) 
+
+bool check_floodfill(t_main *game, char **tmp_arr, int rows, int cols) 
 {
+    // Print array before marking
+    // printf("Before marking border and space-connected '0's:\n");
+    // for (int i = 0; i < rows; i++) 
+    // {
+    //     printf("%s\n", tmp_arr[i]);
+    // }
+
+    // Mark the borders and space-connected '0's
     mark_lrborders(tmp_arr, rows, cols);
     mark_tbborders(tmp_arr, rows, cols);
     mark_spaces(tmp_arr, rows, cols);
     mark_player(game, tmp_arr, rows, cols);
+
+    // // Print array after marking
     // printf("After marking border and space-connected '0's:\n");
-    // for (int i = 0; i < rows; i++)
+    // for (int i = 0; i < rows; i++) 
     // {
     //     printf("%s\n", tmp_arr[i]);
     // }
-    if (check_for_X(tmp_arr, rows, cols) == true)
-        return false;
-    return true;
-}
 
-bool prepare_map_data(char ***tmp_arr, int **cols, int *rows)
-{
-    *rows = 0;
-    while ((*tmp_arr)[*rows] != NULL)
-    {
-        (*rows)++;
-    }
-    *cols = malloc(sizeof(int) * (*rows));
-    if (!(*cols))
-    {
-        free_arr(*tmp_arr);
+    // If any 'X' was marked, return false
+    if (check_for_X(tmp_arr, rows, cols)) 
         return false;
-    }
-    int y;
-    y = 0;
-    while (y < *rows)
-    {
-        (*cols)[y] = ft_strlen((*tmp_arr)[y]);
-        y++;
-    }
+
     return true;
 }
 
 bool check_fill(t_main *game)
 {
     char **tmp_arr;
-    char *tmp;
-    bool res;
+    t_int_pt pt;
     
-    res = true;
-    tmp = ft_strdup(game->map);
-    if (!tmp)
+    tmp_arr = malloc(sizeof(char *) * (game->h_map + 1));
+    if (!tmp_arr)
+    {
         return false;
-    tmp_arr = ft_split(tmp, '\n');
-    free(tmp);
-    if (!(tmp_arr))
+    }
+    pt.y = 0;
+    while (pt.y < game->h_map)
+    {
+        tmp_arr[pt.y] = ft_strdup(game->sq_map[pt.y]);
+        if (!tmp_arr[pt.y])
+        {
+            while (pt.y > 0)
+            {
+                free(tmp_arr[pt.y - 1]);
+                pt.y--;
+            }
+            free(tmp_arr); 
+            return false;
+        }
+        pt.y++;
+    }
+    tmp_arr[pt.y] = NULL;
+    if (check_floodfill(game, tmp_arr, game->h_map, game->w_map) == false)
+    {
+        free_arr(tmp_arr);
         return false;
-    int *cols;
-    int rows;
-    if (!prepare_map_data(&tmp_arr, &cols, &rows))
-        return false;
-    if (check_floodfill(game, tmp_arr, rows, cols) == false)
-        res = false;
-    free(cols);
+    }
     free_arr(tmp_arr);
-    return res;
+    return true;
 }

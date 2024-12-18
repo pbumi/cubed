@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/17 18:27:52 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 18:51:59 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,29 @@
 
 bool check_components(int fd, t_main *game)
 {
-    char *line = NULL;
-
-    while ((line = get_next_line(fd)) != NULL)
+    char *line;
+	
+	line = get_next_line(fd);
+    while (line != NULL)
     {
 		if (extract_components(fd, line, game) == false)
 		{
-			free_and_close (line, fd);
+			free_and_close(line, fd);
 			return false;
 		}
 		else
+		{
         	free(line);
+			line = get_next_line(fd);
+		}
     }
 	if (!game->walls->walls_OK || !game->ceil->OK || !game->floor->OK)
 	{
 		errorhandler(game,"* Missing components *", false);
-		free_and_close (line, fd);
+		free_and_close(line,fd);
 		return false;
 	}
-	free_and_close (line, fd);
+	free_and_close(line, fd);
 	return true;
 }
 
@@ -56,14 +60,13 @@ void	initialize_struct(t_main *game)
     }
 	game->ceil->OK = false;
 	game->floor->OK = false;
-	game->map_arr = NULL;
 	game->sq_map = NULL;
 }
 
 void initialize_game(char *cubfile, t_main *game)
 {
 	int fd;
-    initialize_struct(game);
+	initialize_struct(game);
 	fd = open(cubfile, O_RDONLY);
     if (fd < 0)
     {

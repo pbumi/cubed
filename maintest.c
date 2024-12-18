@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/17 18:26:01 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:27:32 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 //     return 0;
 // }
 
-void draw_minimap_square(mlx_image_t *img, t_pt *map_pt, size_t size, size_t color)
+void draw_minimap_square(mlx_image_t *img, t_int_pt *map_pt, size_t size, size_t color)
 {
     size_t y;
 	y = (size_t)map_pt->y;
@@ -34,6 +34,23 @@ void draw_minimap_square(mlx_image_t *img, t_pt *map_pt, size_t size, size_t col
         size_t x;
 		x = (size_t)map_pt->x;
         while (x < map_pt->x + size)
+        {
+            mlx_put_pixel(img, x, y, color);  // Use ft_putpixel to set each pixel
+            x++;
+        }
+        y++;
+    }
+}
+
+void draw_player_square(mlx_image_t *img, int px, int py, size_t color)
+{
+    int y;
+	y = py;
+    while (y < py + PLAYER_TILE)
+    {
+        int x;
+		x = px;
+        while (x < px + PLAYER_TILE)
         {
             mlx_put_pixel(img, x, y, color);  // Use ft_putpixel to set each pixel
             x++;
@@ -71,15 +88,15 @@ void draw_minimap_square(mlx_image_t *img, t_pt *map_pt, size_t size, size_t col
 
 void draw_player(t_main *game, mlx_image_t *img)
 {
-	t_pt player;
+	t_dbl_pt player;
     // int player_x;
     // int player_y; 
     // int ray_end_x;
     // int ray_end_y; 
 	
-	player.x = (int)(game->p_x * MINI_TILE) - PLAYER_TILE/2;
-	player.y = (int)(game->p_y * MINI_TILE) - PLAYER_TILE/2;
-	draw_minimap_square(img, &player, PLAYER_TILE, 0x00ff2eff);
+	player.x = (int)(game->p_x * MINI_TILE);
+	player.y = (int)(game->p_y * MINI_TILE);
+	draw_player_square(img, player.x - PLAYER_TILE / 2, player.y - PLAYER_TILE / 2, 0x00ff2eff);
 
     // ray_end_x = player_x + (cub->player.dir.x * 10);
     // ray_end_y = player_y + (cub->player.dir.y * 10);
@@ -101,7 +118,7 @@ void draw_player(t_main *game, mlx_image_t *img)
 //     // draw_line(cub, (t_vector){player_x, player_y}, (t_vector){ray_end_x, ray_end_y}, 0xFF0000ff);
 // }
 
-uint32_t set_minimap_color(t_main *game, t_pt *pt)
+uint32_t set_minimap_color(t_main *game, t_int_pt *pt)
 {
     size_t color;
     int x = pt->x;
@@ -119,8 +136,8 @@ uint32_t set_minimap_color(t_main *game, t_pt *pt)
 
 void draw_minimap(t_main *game, mlx_image_t *minimap)
 {
-    t_pt pt;
-    t_pt map_pt;
+    t_int_pt pt;
+    t_int_pt map_pt;
     size_t color;
 
     pt.y = 0;
@@ -140,100 +157,100 @@ void draw_minimap(t_main *game, mlx_image_t *minimap)
 }
 //___________________________________________________________________
 
-void	delete_textures(t_main *game)
-{
-	if (game->textu->NO)
-		mlx_delete_texture(game->textu->NO);
-	if (game->textu->EA)
-		mlx_delete_texture(game->textu->EA);
-	if (game->textu->SO)
-		mlx_delete_texture(game->textu->SO);
-	if (game->textu->WE)
-		mlx_delete_texture(game->textu->WE);
-}
+// void	delete_textures(t_main *game)
+// {
+// 	if (game->textu->NO)
+// 		mlx_delete_texture(game->textu->NO);
+// 	if (game->textu->EA)
+// 		mlx_delete_texture(game->textu->EA);
+// 	if (game->textu->SO)
+// 		mlx_delete_texture(game->textu->SO);
+// 	if (game->textu->WE)
+// 		mlx_delete_texture(game->textu->WE);
+// }
 
-void	image_fail(t_main *game)
-{
-	ft_putstr_fd("Error\n*  MLX42: fail to load texture *\n\n", 2);
-	if (game->mlx_ptr)
-		mlx_terminate(game->mlx_ptr);
-	delete_textures(game);
-	if (game->imag)
-		free(game->imag);
-	if (game->textu)
-		free(game->textu);
-	free_struct(game);
-	exit(1);
-}
+// void	image_fail(t_main *game)
+// {
+// 	ft_putstr_fd("Error\n*  MLX42: fail to load texture *\n\n", 2);
+// 	if (game->mlx_ptr)
+// 		mlx_terminate(game->mlx_ptr);
+// 	delete_textures(game);
+// 	if (game->imag)
+// 		free(game->imag);
+// 	if (game->textu)
+// 		free(game->textu);
+// 	free_struct(game);
+// 	exit(1);
+// }
 
-void	load_images(t_main *game)
-{
-	game->imag = ft_calloc(1, sizeof(t_images));
-	if (!game->imag)
-		errorhandler(game, "mallocfail", true);
-	game->imag->NO = mlx_texture_to_image(game->mlx_ptr, game->textu->NO);
-	if (!game->imag->NO)
-		image_fail(game);
-	game->imag->EA = mlx_texture_to_image(game->mlx_ptr, game->textu->EA);
-	if (!game->imag->EA)
-		image_fail(game);
-	game->imag->SO = mlx_texture_to_image(game->mlx_ptr, game->textu->SO);
-	if (!game->imag->SO)
-		image_fail(game);
-	game->imag->WE = mlx_texture_to_image(game->mlx_ptr, game->textu->WE);
-	if (!game->imag->WE)
-		image_fail(game);
-}
+// void	load_images(t_main *game)
+// {
+// 	game->imag = ft_calloc(1, sizeof(t_images));
+// 	if (!game->imag)
+// 		errorhandler(game, "mallocfail", true);
+// 	game->imag->NO = mlx_texture_to_image(game->mlx_ptr, game->textu->NO);
+// 	if (!game->imag->NO)
+// 		image_fail(game);
+// 	game->imag->EA = mlx_texture_to_image(game->mlx_ptr, game->textu->EA);
+// 	if (!game->imag->EA)
+// 		image_fail(game);
+// 	game->imag->SO = mlx_texture_to_image(game->mlx_ptr, game->textu->SO);
+// 	if (!game->imag->SO)
+// 		image_fail(game);
+// 	game->imag->WE = mlx_texture_to_image(game->mlx_ptr, game->textu->WE);
+// 	if (!game->imag->WE)
+// 		image_fail(game);
+// }
 
 
-void	texture_fail(t_main *game)
-{
-	ft_putstr_fd("Error\n*  MLX42: fail to load texture *\n\n", 2);
-	if (game->mlx_ptr)
-		mlx_terminate(game->mlx_ptr);
-	delete_textures(game);
-	if (game->imag)
-		free(game->imag);
-	if (game->textu)
-		free(game->textu);
-	free_struct(game);
-	exit(1);
-}
+// void	texture_fail(t_main *game)
+// {
+// 	ft_putstr_fd("Error\n*  MLX42: fail to load texture *\n\n", 2);
+// 	if (game->mlx_ptr)
+// 		mlx_terminate(game->mlx_ptr);
+// 	delete_textures(game);
+// 	if (game->imag)
+// 		free(game->imag);
+// 	if (game->textu)
+// 		free(game->textu);
+// 	free_struct(game);
+// 	exit(1);
+// }
 
-void	load_textures(t_main *game)
-{
-	game->textu = ft_calloc(1, sizeof(t_textures));
-	if (!game->textu)
-		errorhandler(game, "malloc fail", true);
-	game->textu->NO = mlx_load_png(game->walls->NO);
-	if (!game->textu->NO)
-		texture_fail(game);
-	game->textu->EA = mlx_load_png(game->walls->EA);
-	if (!game->textu->EA)
-		texture_fail(game);
-	game->textu->SO = mlx_load_png(game->walls->SO);
-	if (!game->textu->SO)
-		texture_fail(game);
-	game->textu->WE = mlx_load_png(game->walls->WE);
-	if (!game->textu->WE)
-		texture_fail(game);
-}
-void	initialize_grafics(t_main *game)
-{
-	load_textures(game);
-	load_images(game);
-	delete_textures(game);
-	return ;
-}
+// void	load_textures(t_main *game)
+// {
+// 	game->textu = ft_calloc(1, sizeof(t_textures));
+// 	if (!game->textu)
+// 		errorhandler(game, "malloc fail", true);
+// 	game->textu->NO = mlx_load_png(game->walls->NO);
+// 	if (!game->textu->NO)
+// 		texture_fail(game);
+// 	game->textu->EA = mlx_load_png(game->walls->EA);
+// 	if (!game->textu->EA)
+// 		texture_fail(game);
+// 	game->textu->SO = mlx_load_png(game->walls->SO);
+// 	if (!game->textu->SO)
+// 		texture_fail(game);
+// 	game->textu->WE = mlx_load_png(game->walls->WE);
+// 	if (!game->textu->WE)
+// 		texture_fail(game);
+// }
+// void	initialize_grafics(t_main *game)
+// {
+// 	load_textures(game);
+// 	load_images(game);
+// 	delete_textures(game);
+// 	return ;
+// }
 
-static void gamehook(void* param)
-{
-	t_main *game;
+// static void gamehook(void* param)
+// {
+// 	t_main *game;
 
-	game = (t_main *)param;
-	draw_minimap(game, game->minimap);
-	draw_player(game, game->minimap);
-}
+// 	game = (t_main *)param;
+// 	draw_minimap(game, game->minimap);
+// 	draw_player(game, game->minimap);
+// }
 
 // void	key_hook_slow(mlx_key_data_t keydata, void *param)
 // {
@@ -254,26 +271,16 @@ static void gamehook(void* param)
 
 void testchecker(t_main *game) //TESTER DELETE
 {
-	// ft_putstr("WOW\n");
-	// printf("NO: %s\n", game->walls->NO);
-	// printf("SO: %s\n", game->walls->SO);
-	// printf("WE: %s\n", game->walls->WE);
-	// printf("EA: %s\n", game->walls->EA);
-	// printf("F: %d, %d, %d \n", game->floor->R, game->floor->G, game->floor->B);
-	// printf("C: %d, %d, %d \n", game->ceil->R, game->ceil->G, game->ceil->B);
-	// printf("map_arr\n");
-	// for (int i = 0; game->map_arr[i] != NULL; i++)
-    // {
-    //     printf("%s\n", game->map_arr[i]);
-    // }
+	printf("NO: %s\n", game->walls->NO);
+	printf("SO: %s\n", game->walls->SO);
+	printf("WE: %s\n", game->walls->WE);
+	printf("EA: %s\n", game->walls->EA);
+	printf("F: %d, %d, %d \n", game->floor->R, game->floor->G, game->floor->B);
+	printf("C: %d, %d, %d \n", game->ceil->R, game->ceil->G, game->ceil->B);
 	printf("sqmap\n");
 	for (int i = 0; game->sq_map[i] != NULL; i++)
     {
         printf("%s\n", game->sq_map[i]);
-    }
-	for (int i = 0; i < game->h_map; i++)
-    {
-        printf("%d ", game->wx_map[i]);
     }
 	printf("h_map: %d", game->h_map);
 	printf("\n player x: %f y: %f \n", game->p_x, game->p_y);
@@ -294,6 +301,8 @@ int find_max(int *arr, int size)
     return max;
 }
 
+
+
 int main(int argc, char **argv)
 {
 	t_main game;
@@ -301,32 +310,32 @@ int main(int argc, char **argv)
 	check_file(argc, argv, &game);
 	testchecker(&game);
 	{
-		game.mlx_ptr = NULL;
-		mlx_set_setting(MLX_MAXIMIZED, true);
-		game.mlx_ptr = mlx_init(WIDTH, HEIGHT, "CUB3D", true);
-		if (!game.mlx_ptr)
-		{
-			errorhandler(&game, "mlxerror", true);
-		}
-		game.minimap = malloc(sizeof(mlx_image_t));
-		if (!game.minimap)
-		{
-			errorhandler(&game, "window malloc error", true);
-		}
-		game.minimap = mlx_new_image(game.mlx_ptr, game.w_map * MINI_TILE, game.h_map * MINI_TILE);
-		if (!game.minimap)
-		{
-			errorhandler(&game, "image error", true);
-		}
-		//initialize_grafics(&game);
-		if (mlx_image_to_window(game.mlx_ptr, game.minimap, 0, 0) < 0)
-		{
-			errorhandler(&game, "image error", true);
-		}
-		mlx_loop_hook(game.mlx_ptr, &key_hook_slow, &game);
-		mlx_loop_hook(game.mlx_ptr, &gamehook, &game);
-		mlx_loop(game.mlx_ptr);
-		mlx_terminate(game.mlx_ptr);
+		// game.mlx_ptr = NULL;
+		// mlx_set_setting(MLX_MAXIMIZED, true);
+		// game.mlx_ptr = mlx_init(WIDTH, HEIGHT, "CUB3D", true);
+		// if (!game.mlx_ptr)
+		// {
+		// 	errorhandler(&game, "mlxerror", true);
+		// }
+		// game.minimap = malloc(sizeof(mlx_image_t));
+		// if (!game.minimap)
+		// {
+		// 	errorhandler(&game, "window malloc error", true);
+		// }
+		// game.minimap = mlx_new_image(game.mlx_ptr, game.w_map * MINI_TILE, game.h_map * MINI_TILE);
+		// if (!game.minimap)
+		// {
+		// 	errorhandler(&game, "image error", true);
+		// }
+		// //initialize_grafics(&game);
+		// if (mlx_image_to_window(game.mlx_ptr, game.minimap, 0, 0) < 0)
+		// {
+		// 	errorhandler(&game, "image error", true);
+		// }
+		// mlx_loop_hook(game.mlx_ptr, &key_hook_slow, &game);
+		// mlx_loop_hook(game.mlx_ptr, &gamehook, &game);
+		// mlx_loop(game.mlx_ptr);
+		// mlx_terminate(game.mlx_ptr);
 	}
 	free_struct(&game);
     return 0;

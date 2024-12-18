@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/17 17:34:11 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:41:55 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,22 @@
 
 # define WIDTH 480
 # define HEIGHT 480
-# define MINI_TILE 15
+# define MINI_TILE 30
 
 # define PLAYER_SPEED 0.045
 # define PLAYER_TILE 10
 
-typedef struct s_pt
+typedef struct s_dbl_pt
 {
 	double	x;
 	double	y;
-}	t_pt;
+}	t_dbl_pt;
+
+typedef struct s_int_pt
+{
+	int	x;
+	int	y;
+}	t_int_pt;
 
 typedef struct s_wall
 {
@@ -51,14 +57,6 @@ typedef struct s_fc
     bool OK;
 }   t_fc;
 
-typedef struct s_textures
-{
-	mlx_texture_t	*NO;
-	mlx_texture_t	*EA;
-	mlx_texture_t	*SO;
-	mlx_texture_t	*WE;
-}	t_textures;
-
 typedef struct s_images
 {
 	mlx_image_t	*NO;
@@ -67,26 +65,22 @@ typedef struct s_images
 	mlx_image_t	*WE;
 }			t_images;
 
+
 typedef struct s_main
 {
     t_wall  *walls;
 	t_fc	*floor;
     t_fc    *ceil;
-	t_pt	plane;
-	t_pt	dir;
-	t_pt	player;
+	t_dbl_pt	plane;
+	t_dbl_pt	dir;
+	t_dbl_pt	player;
     char    *map;
-    char    **map_arr;
 	char	**sq_map;
     double		p_x;
 	double		p_y;
-	int		*wx_map;
 	int		h_map;
 	int		w_map;
     mlx_t   *mlx_ptr;
-    t_textures  *textu;
-    t_images    *imag;
-    mlx_image_t *window;
 	mlx_image_t *minimap;
 }	t_main;
 

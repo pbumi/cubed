@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:47:50 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/17 18:28:18 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:32:21 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void    move_up(t_main *cub)
     printf("press up\n");
     printf("Current position: (%f, %f)\n", cub->p_x, cub->p_y);
     printf("Next position: (%f, %f)\n", x, y);
-    if (cub->map_arr[(int)(cub->p_y)][(int)(x)] == '0')
+    if (cub->sq_map[(int)(cub->p_y)][(int)(x)] == '0')
         cub->p_x = x;
-    if (cub->map_arr[(int)(y)][(int)(cub->p_x)] == '0')
+    if (cub->sq_map[(int)(y)][(int)(cub->p_x)] == '0')
         cub->p_y = y;
     printf("New position: (%f, %f)\n", x, y);
 
@@ -79,12 +79,12 @@ void    move_down(t_main *cub)
     printf("press down\n");
     printf("Current position: (%f, %f)\n", cub->p_x, cub->p_y);
     printf("Next position: (%f, %f)\n", x, y);
-    if (cub->map_arr[(int)(cub->p_y)][(int)(x)] == '0')
+    if (cub->sq_map[(int)(cub->p_y)][(int)(x)] == '0')
     {
         printf("XXX");
         cub->p_x = x;
     }
-    if (cub->map_arr[(int)(y)][(int)(cub->p_x)] == '0')
+    if (cub->sq_map[(int)(y)][(int)(cub->p_x)] == '0')
     {
          printf("XXX");
         cub->p_y = y;
@@ -104,10 +104,10 @@ void    move_left(t_main *cub)
     printf("press left\n");
     printf("Current position: (%f, %f)\n", cub->p_x, cub->p_y);
     printf("Next position: (%f, %f)\n", x, y);
-    printf("Map value now: %c\n", cub->map_arr[(int)x][(int)cub->p_y]);
-    if (cub->map_arr[(int)(cub->p_y)][(int)(x)] == '0')
+    printf("Map value now: %c\n", cub->sq_map[(int)x][(int)cub->p_y]);
+    if (cub->sq_map[(int)(cub->p_y)][(int)(x)] == '0')
         cub->p_x = x;
-    if (cub->map_arr[(int)(y)][(int)(cub->p_x)] == '0')
+    if (cub->sq_map[(int)(y)][(int)(cub->p_x)] == '0')
         cub->p_y = y;
     printf("New position: (%f, %f)\n", x, y);
 }
@@ -123,9 +123,9 @@ void    move_right(t_main *cub)
     printf("press right\n");
     printf("Current position: (%f, %f)\n", cub->p_x, cub->p_y);
     printf("Next position: (%f, %f)\n", x, y);
-    if (cub->map_arr[(int)(cub->p_y)][(int)(x)] == '0')
+    if (cub->sq_map[(int)(cub->p_y)][(int)(x)] == '0')
         cub->p_x = x;
-    if (cub->map_arr[(int)(y)][(int)(cub->p_x)] == '0')
+    if (cub->sq_map[(int)(y)][(int)(cub->p_x)] == '0')
         cub->p_y = y;
     printf("New position: (%f, %f)\n", x, y);
 }
@@ -178,12 +178,12 @@ void    move_right(t_main *cub)
 //     next_y = cub->p_y + cub->dir.y * PLAYER_SPEED;
     
 //     printf("Next position: (%f, %f)\n", next_x, next_y);
-//     printf("Map value at next_x: %c\n", cub->map_arr[(int)next_x][(int)cub->p_y]);
-//     printf("Map value at next_y: %c\n", cub->map_arr[(int)cub->p_x][(int)next_y]);
+//     printf("Map value at next_x: %c\n", cub->sq_map[(int)next_x][(int)cub->p_y]);
+//     printf("Map value at next_y: %c\n", cub->sq_map[(int)cub->p_x][(int)next_y]);
 
-//     if (cub->map_arr[(int)(next_x)][(int)(cub->p_y)] == '0')
+//     if (cub->sq_map[(int)(next_x)][(int)(cub->p_y)] == '0')
 //         cub->p_x = next_x;
-//     if (cub->map_arr[(int)(cub->p_x)][(int)(next_y)] == '0')
+//     if (cub->sq_map[(int)(cub->p_x)][(int)(next_y)] == '0')
 //         cub->p_y = next_y;
 
 //     printf("Updated position: (%f, %f)\n", cub->p_x, cub->p_y);
@@ -199,9 +199,9 @@ void    move_right(t_main *cub)
     
 //     prev_x = cub->p_x - cub->dir.x * PLAYER_SPEED;
 //     prev_y = cub->p_y - cub->dir.y * PLAYER_SPEED;
-//     if (cub->map_arr[(int)(prev_x)][(int)(cub->p_y)] == '0')
+//     if (cub->sq_map[(int)(prev_x)][(int)(cub->p_y)] == '0')
 //         cub->p_x = prev_x;
-//     if (cub->map_arr[(int)(cub->p_x)][(int)(prev_y)] == '0')
+//     if (cub->sq_map[(int)(cub->p_x)][(int)(prev_y)] == '0')
 //         cub->p_y = prev_y;
 // }
 
@@ -214,9 +214,9 @@ void    move_right(t_main *cub)
     
 //     left_x = cub->p_x - cub->plane.x * PLAYER_SPEED;
 //     left_y = cub->p_y - cub->plane.y * PLAYER_SPEED;
-//     if (cub->map_arr[(int)(left_x)][(int)(cub->p_y)] == '0')
+//     if (cub->sq_map[(int)(left_x)][(int)(cub->p_y)] == '0')
 //         cub->p_x = left_x;
-//     if (cub->map_arr[(int)(cub->p_x)][(int)(left_y)] == '0')
+//     if (cub->sq_map[(int)(cub->p_x)][(int)(left_y)] == '0')
 //         cub->p_y = left_y;
 // }
 
@@ -229,26 +229,26 @@ void    move_right(t_main *cub)
     
 //     right_x = cub->p_x + cub->plane.x * PLAYER_SPEED;
 //     right_y = cub->p_y + cub->plane.y * PLAYER_SPEED;
-//     if (cub->map_arr[(int)(right_x)][(int)(cub->p_y)] == '0')
+//     if (cub->sq_map[(int)(right_x)][(int)(cub->p_y)] == '0')
 //         cub->p_x = right_x;
-//     if (cub->map_arr[(int)(cub->p_x)][(int)(right_y)] == '0')
+//     if (cub->sq_map[(int)(cub->p_x)][(int)(right_y)] == '0')
 //         cub->p_y = right_y;
 // }
 
-void	key_hook_slow(void *param)
-{
-	t_main	*game;
+// void	key_hook_slow(void *param)
+// {
+// 	t_main	*game;
 
-	game = (t_main *)param;
+// 	game = (t_main *)param;
 
-    if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
-		mlx_close_window(game->mlx_ptr);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
-		move_left(game);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
-		move_right(game);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
-		move_up(game);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
-		move_down(game);
-}
+//     if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
+// 		mlx_close_window(game->mlx_ptr);
+// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
+// 		move_left(game);
+// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
+// 		move_right(game);
+// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
+// 		move_up(game);
+// 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
+// 		move_down(game);
+// }

@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:20:30 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/11/30 17:22:13 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/18 18:30:18 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,55 @@ bool is_empty_line(char *line)
     return true;  // The line has only spaces
 }
 
-
 char *remove_wspace(char *line, int start)
 {
-	char *substr = NULL;
-	int x = start;
-	int end;
-	while(line[x] && (line[x] == ' ' || (line[x] >= 9 && line[x] <= 13)))
+    char *substr = NULL;
+    int x = start;
+    int end;
+
+    // Skip leading whitespace (spaces and control characters like tab, etc.)
+    while (line[x] && (line[x] == ' ' || (line[x] >= 9 && line[x] <= 13)))
     {
-		x++;
+        x++;
     }
-	end = ft_strlen(line) - 1;
-	while (end > x && (line[end] == ' ' || (line[end] >= 9 && line[end] <= 13)))
+
+    // Find the last non-whitespace character
+    end = ft_strlen(line) - 1;
+    while (end > x && (line[end] == ' ' || (line[end] >= 9 && line[end] <= 13)))
     {
         end--;
     }
-	substr = ft_substr(line, x, end - x + 1);
-	if (!substr)
-	{
-		return NULL;	
-	}
-	return (substr);
+
+    // Create a substring between the non-whitespace characters
+    substr = ft_substr(line, x, end - x + 1);
+    if (!substr)
+    {
+        return NULL;
+    }
+    return substr;
 }
+
+// char *remove_wspace(char *line, int start)
+// {
+// 	char *substr = NULL;
+// 	int x = start;
+// 	int end;
+// 	while(line[x] && (line[x] == ' ' || (line[x] >= 9 && line[x] <= 13)))
+//     {
+// 		x++;
+//     }
+// 	end = ft_strlen(line) - 1;
+// 	while (end > x && (line[end] == ' ' || (line[end] >= 9 && line[end] <= 13)))
+//     {
+//         end--;
+//     }
+// 	substr = ft_substr(line, x, end - x + 1);
+// 	if (!substr)
+// 	{
+// 		return NULL;	
+// 	}
+// 	return (substr);
+// }
 
 
 bool remove_spaces(char **colors)
