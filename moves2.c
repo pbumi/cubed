@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:47:50 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 15:37:49 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 16:00:56 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,10 @@ void    move_up(t_main *game)
     
     x = game->ppos.x + game->pdir.x * PLAYER_SPEED;
     y = game->ppos.y + game->pdir.y * PLAYER_SPEED;
-    printf("press up\n");
-    printf("Current position: (%f, %f)\n", game->ppos.x, game->ppos.y);
-    printf("Next position: (%f, %f)\n", x, y);
-    if (game->sq_map[(int)(game->ppos.y)][(int)(x)] == '0')
+
+    if (game->sq_map[(int)(x)][(int)(game->ppos.y)] == '0')
         game->ppos.x = x;
-    if (game->sq_map[(int)(y)][(int)(game->ppos.x)] == '0')
+    if (game->sq_map[(int)(game->ppos.x)][(int)(y)] == '0')
         game->ppos.y = y;
     printf("New position: (%f, %f)\n", x, y);
 
@@ -79,12 +77,12 @@ void    move_down(t_main *game)
     printf("press down\n");
     printf("Current position: (%f, %f)\n", game->ppos.x, game->ppos.y);
     printf("Next position: (%f, %f)\n", x, y);
-    if (game->sq_map[(int)(game->ppos.y)][(int)(x)] == '0')
+    if (game->sq_map[(int)(x)][(int)(game->ppos.y)] == '0')
     {
         printf("XXX");
         game->ppos.x = x;
     }
-    if (game->sq_map[(int)(y)][(int)(game->ppos.x)] == '0')
+    if (game->sq_map[(int)(game->ppos.x)][(int)(y)] == '0')
     {
          printf("XXX");
         game->ppos.y = y;
@@ -105,9 +103,9 @@ void    move_left(t_main *game)
     printf("Current position: (%f, %f)\n", game->ppos.x, game->ppos.y);
     printf("Next position: (%f, %f)\n", x, y);
     printf("Map value now: %c\n", game->sq_map[(int)x][(int)game->ppos.y]);
-    if (game->sq_map[(int)(game->ppos.y)][(int)(x)] == '0')
+    if (game->sq_map[(int)(x)][(int)(game->ppos.y)] == '0')
         game->ppos.x = x;
-    if (game->sq_map[(int)(y)][(int)(game->ppos.x)] == '0')
+    if (game->sq_map[(int)(game->ppos.x)][(int)(y)] == '0')
         game->ppos.y = y;
     printf("New position: (%f, %f)\n", x, y);
 }
@@ -117,15 +115,14 @@ void    move_right(t_main *game)
     double x;
     double y;
     
-    
     x = game->ppos.x + game->pplane.x * PLAYER_SPEED;
     y = game->ppos.y + game->pplane.y * PLAYER_SPEED;
     printf("press right\n");
     printf("Current position: (%f, %f)\n", game->ppos.x, game->ppos.y);
     printf("Next position: (%f, %f)\n", x, y);
-    if (game->sq_map[(int)(game->ppos.y)][(int)(x)] == '0')
+    if (game->sq_map[(int)(x)][(int)(game->ppos.y)] == '0')
         game->ppos.x = x;
-    if (game->sq_map[(int)(y)][(int)(game->ppos.x)] == '0')
+    if (game->sq_map[(int)(game->ppos.x)][(int)(y)] == '0')
         game->ppos.y = y;
     printf("New position: (%f, %f)\n", x, y);
 }
@@ -133,9 +130,8 @@ void    move_right(t_main *game)
 void	key_hook_slow(void *param)
 {
 	t_main	*game;
-
+    
 	game = (t_main *)param;
-
     if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
 		mlx_close_window(game->mlx_ptr);
     else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_RIGHT))
