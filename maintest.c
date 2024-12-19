@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 20:55:48 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:29:15 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@
 
 void draw_minimap_square(mlx_image_t *img, t_int_pt *map_pt, size_t size, size_t color)
 {
-    size_t y;
-	y = (size_t)map_pt->y;
+    int y;
+	y = map_pt->y;
     while (y < map_pt->y + size)
     {
-        size_t x;
-		x = (size_t)map_pt->x;
+        int x;
+		x = map_pt->x;
         while (x < map_pt->x + size)
         {
             mlx_put_pixel(img, x, y, color);  // Use ft_putpixel to set each pixel
@@ -300,7 +300,34 @@ int find_max(int *arr, int size)
     return max;
 }
 
+void end_game(t_main *game)
+{
+    mlx_delete_image(game->mlx_ptr, game->minimap);
+	mlx_terminate(game->mlx_ptr);
+    free_struct(game);
+}
 
+void start_game(t_main *game)
+{
+	//initialize_grafics(&game);
+	game->mlx_ptr = mlx_init(WIDTH, HEIGHT, "CUB3D", true);
+	if (!game->mlx_ptr)
+	{			
+        errorhandler(game, "mlxerror", true);
+	}
+	game->minimap = mlx_new_image(game->mlx_ptr, game->w_map * MINI_TILE, game->h_map * MINI_TILE);
+	if (!game->minimap)
+	{
+		errorhandler(game, "image error", true);
+	}
+	if (mlx_image_to_window(game->mlx_ptr, game->minimap, 0, 0) < 0)
+	{
+		errorhandler(game, "image error", true);
+	}
+	mlx_loop_hook(game->mlx_ptr, &key_hook_slow, game);
+	mlx_loop_hook(game->mlx_ptr, &gamehook, game);
+	mlx_loop(game->mlx_ptr);
+}
 
 int main(int argc, char **argv)
 {
@@ -308,34 +335,6 @@ int main(int argc, char **argv)
 	game = (t_main){0};
 	check_file(argc, argv, &game);
 	testchecker(&game);
-	{
-		game.mlx_ptr = NULL;
-		mlx_set_setting(MLX_MAXIMIZED, true);
-		game.mlx_ptr = mlx_init(WIDTH, HEIGHT, "CUB3D", true);
-		if (!game.mlx_ptr)
-		{
-			errorhandler(&game, "mlxerror", true);
-		}
-		game.minimap = malloc(sizeof(mlx_image_t));
-		if (!game.minimap)
-		{
-			errorhandler(&game, "window malloc error", true);
-		}
-		game.minimap = mlx_new_image(game.mlx_ptr, game.w_map * MINI_TILE, game.h_map * MINI_TILE);
-		if (!game.minimap)
-		{
-			errorhandler(&game, "image error", true);
-		}
-		//initialize_grafics(&game);
-		if (mlx_image_to_window(game.mlx_ptr, game.minimap, 0, 0) < 0)
-		{
-			errorhandler(&game, "image error", true);
-		}
-		mlx_loop_hook(game.mlx_ptr, &key_hook_slow, &game);
-		mlx_loop_hook(game.mlx_ptr, &gamehook, &game);
-		mlx_loop(game.mlx_ptr);
-		mlx_terminate(game.mlx_ptr);
-	}
-	free_struct(&game);
-    return 0;
+    start_game(&game);
+    end_game(&game);
 }

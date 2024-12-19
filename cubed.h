@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 19:41:55 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:35:13 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,15 @@ typedef struct s_images
 }			t_images;
 
 
+
 typedef struct s_main
 {
     t_wall  *walls;
 	t_fc	*floor;
     t_fc    *ceil;
-	t_dbl_pt	plane;
-	t_dbl_pt	dir;
-	t_dbl_pt	player;
+	t_dbl_pt	p_plane;
+	t_dbl_pt	p_dir;
+	t_dbl_pt	p_pos;
     char    *map;
 	char	**sq_map;
     double		p_x;
