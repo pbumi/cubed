@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 14:52:14 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:16:42 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,10 +141,10 @@ void draw_minimap(t_main *game, mlx_image_t *minimap)
     size_t color;
 
     pt.y = 0;
-    while (pt.y < game->h_map)
+    while (pt.y < game->msize.y)
     {
         pt.x = 0;
-        while (pt.x < game->w_map)
+        while (pt.x < game->msize.x)
         {
             map_pt.y = pt.y * MINI_TILE;
             map_pt.x = pt.x * MINI_TILE;
@@ -315,7 +315,7 @@ void start_game(t_main *game)
 	{			
         errorhandler(game, "mlxerror", true);
 	}
-	game->minimap = mlx_new_image(game->mlx_ptr, game->w_map * MINI_TILE, game->h_map * MINI_TILE);
+	game->minimap = mlx_new_image(game->mlx_ptr, game->msize.x * MINI_TILE, game->msize.y * MINI_TILE);
 	if (!game->minimap)
 	{
 		errorhandler(game, "image error", true);

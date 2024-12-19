@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 14:52:30 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:16:49 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,13 +153,13 @@ bool check_fill(t_main *game)
     char **tmp_arr;
     t_int_pt pt;
     
-    tmp_arr = malloc(sizeof(char *) * (game->h_map + 1));
+    tmp_arr = malloc(sizeof(char *) * (game->msize.y + 1));
     if (!tmp_arr)
     {
         return false;
     }
     pt.y = 0;
-    while (pt.y < game->h_map)
+    while (pt.y < game->msize.y)
     {
         tmp_arr[pt.y] = ft_strdup(game->sq_map[pt.y]);
         if (!tmp_arr[pt.y])
@@ -175,7 +175,7 @@ bool check_fill(t_main *game)
         pt.y++;
     }
     tmp_arr[pt.y] = NULL;
-    if (check_floodfill(game, tmp_arr, game->h_map, game->w_map) == false)
+    if (check_floodfill(game, tmp_arr, game->msize.y, game->msize.x) == false)
     {
         free_arr(tmp_arr);
         return false;

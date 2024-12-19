@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 14:59:33 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:17:23 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,9 @@ typedef struct s_main
 	t_dbl_pt	pplane;
 	t_dbl_pt	pdir;
 	t_dbl_pt	ppos;
+	t_int_pt	msize;
     char    *map;
 	char	**sq_map;
-	int		h_map;
-	int		w_map;
     mlx_t   *mlx_ptr;
 	mlx_image_t *minimap;
 }	t_main;

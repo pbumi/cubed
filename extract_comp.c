@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 14:58:03 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:16:32 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,10 +277,10 @@ void fill_maparray(t_main *game, int *tmp_wx, char **tmp_arr)
 {
 	t_int_pt pt;
 	pt.y = 0;
-	while(pt.y < game->h_map)
+	while(pt.y < game->msize.y)
 	{
 		pt.x = 0;
-		while (pt.x < game->w_map)
+		while (pt.x < game->msize.x)
 		{
 			if (pt.x < tmp_wx[pt.y])
 			{
@@ -295,20 +295,20 @@ void fill_maparray(t_main *game, int *tmp_wx, char **tmp_arr)
 		game->sq_map[pt.y][pt.x] = '\0';
 		pt.y++;
 	}
-	printf("pty %d,g_h %d\n", pt.y, game->h_map);
-	game->sq_map[game->h_map] = NULL;
+	printf("pty %d,g_h %d\n", pt.y, game->msize.y);
+	game->sq_map[game->msize.y] = NULL;
 }
 
 void get_widthx(t_main *game, char **tmp_arr, int *tmp_wx)
 {
 	int x;
     x = 0;
-    while (x < game->h_map)
+    while (x < game->msize.y)
     {
         tmp_wx[x] = ft_strlen(tmp_arr[x]);  // Store the width of each row
         x++;
     }
-    game->w_map = find_max(tmp_wx, game->h_map);
+    game->msize.x = find_max(tmp_wx, game->msize.y);
 }
 
 void get_height(t_main *game, char **tmp_arr)
@@ -319,7 +319,7 @@ void get_height(t_main *game, char **tmp_arr)
     {
         y++;
     }
-    game->h_map = y;
+    game->msize.y = y;
 }
 
 bool create_sqmap(t_main *game)
@@ -333,14 +333,14 @@ bool create_sqmap(t_main *game)
         return false;
     }
     get_height(game, tmp_arr);
-    tmp_wx = malloc(sizeof(int) * game->h_map);
+    tmp_wx = malloc(sizeof(int) * game->msize.y);
     if (tmp_wx == NULL)
     {
         free_arr(tmp_arr);  // Make sure to free tmp_arr before returning
         return false;  
     }
     get_widthx(game, tmp_arr, tmp_wx);
-    game->sq_map = allocate2DCharArray(game->h_map, game->w_map);
+    game->sq_map = allocate2DCharArray(game->msize.y, game->msize.x);
     if (!game->sq_map)
     {
         free_arr(tmp_arr);  // Free tmp_arr on failure
