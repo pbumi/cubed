@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 14:53:33 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:58:03 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,11 @@ bool check_contents(char *line, t_main *game)
 
 void    fill_plane_dir(t_main *game)
 {
+    game->pdir.x = 1.0;
+    game->pdir.y = 0.0;
+    game->pplane.x = 0.0;
+    game->pplane.y = 0.66;
+    
     if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'N')
     {
         game->pdir.x = 0.0;
@@ -205,21 +210,44 @@ void    fill_plane_dir(t_main *game)
         game->pplane.x = -0.66;
         game->pplane.y = 0.0;
     }
-    else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'E')
-    {
-        game->pdir.x = 1.0;
-        game->pdir.y = 0.0;
-        game->pplane.x = 0.0;
-        game->pplane.y = 0.66;
-    }
     else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'W')
     {
         game->pdir.x = -1.0;
-        game->pdir.y = 0.0;
-        game->pplane.x = 0.0;
         game->pplane.y = -0.66;
     }
 }
+
+// void    fill_plane_dir(t_main *game)
+// {
+//     if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'N')
+//     {
+//         game->pdir.x = 0.0;
+//         game->pdir.y = -1.0;
+//         game->pplane.x = 0.66;
+//         game->pplane.y = 0.0;
+//     }
+//     else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'S')
+//     {
+//         game->pdir.x = 0.0;
+//         game->pdir.y = 1.0;
+//         game->pplane.x = -0.66;
+//         game->pplane.y = 0.0;
+//     }
+//     else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'E')
+//     {
+//         game->pdir.x = 1.0;
+//         game->pdir.y = 0.0;
+//         game->pplane.x = 0.0;
+//         game->pplane.y = 0.66;
+//     }
+//     else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'W')
+//     {
+//         game->pdir.x = -1.0;
+//         game->pdir.y = 0.0;
+//         game->pplane.x = 0.0;
+//         game->pplane.y = -0.66;
+//     }
+// }
 
 
 void fill_player_position(t_main *game)
