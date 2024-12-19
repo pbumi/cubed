@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 19:19:47 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:52:30 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void mark_zeroes(char **array, int x, int y, int rows, int cols)
 
 void mark_player(t_main *game, char **array, int rows, int cols)
 {
-    int x = game->p_x;
-    int y = game->p_y;
+    int x = game->ppos.x;
+    int y = game->ppos.y;
     
     if ((y > 0 && array[y - 1][x] == ' ') ||
         (y < rows - 1 && array[y + 1][x] == ' ') ||

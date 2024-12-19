@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 20:49:30 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:53:33 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,33 +191,33 @@ bool check_contents(char *line, t_main *game)
 
 void    fill_plane_dir(t_main *game)
 {
-    if (game->sq_map[(int)game->p_y][(int)game->p_x] == 'N')
+    if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'N')
     {
-        game->dir.x = 0.0;
-        game->dir.y = -1.0;
-        game->plane.x = 0.66;
-        game->plane.y = 0.0;
+        game->pdir.x = 0.0;
+        game->pdir.y = -1.0;
+        game->pplane.x = 0.66;
+        game->pplane.y = 0.0;
     }
-    else if (game->sq_map[(int)game->p_y][(int)game->p_x] == 'S')
+    else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'S')
     {
-        game->dir.x = 0.0;
-        game->dir.y = 1.0;
-        game->plane.x = -0.66;
-        game->plane.y = 0.0;
+        game->pdir.x = 0.0;
+        game->pdir.y = 1.0;
+        game->pplane.x = -0.66;
+        game->pplane.y = 0.0;
     }
-    else if (game->sq_map[(int)game->p_y][(int)game->p_x] == 'E')
+    else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'E')
     {
-        game->dir.x = 1.0;
-        game->dir.y = 0.0;
-        game->plane.x = 0.0;
-        game->plane.y = 0.66;
+        game->pdir.x = 1.0;
+        game->pdir.y = 0.0;
+        game->pplane.x = 0.0;
+        game->pplane.y = 0.66;
     }
-    else if (game->sq_map[(int)game->p_y][(int)game->p_x] == 'W')
+    else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'W')
     {
-        game->dir.x = -1.0;
-        game->dir.y = 0.0;
-        game->plane.x = 0.0;
-        game->plane.y = -0.66;
+        game->pdir.x = -1.0;
+        game->pdir.y = 0.0;
+        game->pplane.x = 0.0;
+        game->pplane.y = -0.66;
     }
 }
 
@@ -234,8 +234,8 @@ void fill_player_position(t_main *game)
         {
             if (ft_strchr("NSWE", game->sq_map[pt.y][pt.x]))
             {
-                game->p_x = pt.x;  // Set the x-coordinate of the player
-                game->p_y = pt.y;  // Set the y-coordinate of the player
+                game->ppos.x = pt.x;  // Set the x-coordinate of the player
+                game->ppos.y = pt.y;  // Set the y-coordinate of the player
                 return;  // Player position found, exit the function
             }
             pt.x++;  // Move to the next character in the current row

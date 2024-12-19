@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 14:29:15 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:52:14 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 //     return 0;
 // }
 
-void draw_minimap_square(mlx_image_t *img, t_int_pt *map_pt, size_t size, size_t color)
+void draw_minimap_square(mlx_image_t *img, t_int_pt *map_pt, int size, size_t color)
 {
     int y;
 	y = map_pt->y;
@@ -94,8 +94,8 @@ void draw_player(t_main *game, mlx_image_t *img)
     // int ray_end_x;
     // int ray_end_y; 
 	
-	player.x = (int)(game->p_x * MINI_TILE);
-	player.y = (int)(game->p_y * MINI_TILE);
+	player.x = (int)(game->ppos.x * MINI_TILE);
+	player.y = (int)(game->ppos.y * MINI_TILE);
 	draw_player_square(img, player.x - PLAYER_TILE / 2, player.y - PLAYER_TILE / 2, 0x00ff2eff);
 
     // ray_end_x = player_x + (cub->player.dir.x * 10);
@@ -282,9 +282,9 @@ void testchecker(t_main *game) //TESTER DELETE
     {
         printf("%s\n", game->sq_map[i]);
     }
-	printf("\n player x: %f y: %f \n", game->p_x, game->p_y);
-	printf("\n plane x: %f y: %f \n", game->plane.x, game->plane.y);
-	printf("\n dir x: %f y: %f \n", game->dir.x, game->dir.y);
+	printf("\n player x: %f y: %f \n", game->ppos.x, game->ppos.y);
+	printf("\n plane x: %f y: %f \n", game->pplane.x, game->pplane.y);
+	printf("\n dir x: %f y: %f \n", game->pdir.x, game->pdir.y);
 	
 }
 

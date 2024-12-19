@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 14:35:13 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:52:42 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,13 @@ typedef struct s_main
     t_wall  *walls;
 	t_fc	*floor;
     t_fc    *ceil;
-	t_dbl_pt	p_plane;
-	t_dbl_pt	p_dir;
-	t_dbl_pt	p_pos;
+	t_dbl_pt	pplane;
+	t_dbl_pt	pdir;
+	t_dbl_pt	ppos;
     char    *map;
 	char	**sq_map;
-    double		p_x;
-	double		p_y;
+    // double		p_x;
+	// double		p_y;
 	int		h_map;
 	int		w_map;
     mlx_t   *mlx_ptr;
