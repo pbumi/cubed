@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 15:17:23 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 14:37:55 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # define HEIGHT 480
 # define MINI_TILE 30
 
-# define PLAYER_SPEED 0.045
+// # define PLAYER_SPEED 0.045
 # define PLAYER_TILE 10
 
 typedef struct s_dbl_pt
@@ -72,7 +72,7 @@ typedef struct s_main
     t_fc    *ceil;
 	t_dbl_pt	pplane;
 	t_dbl_pt	pdir;
-	t_dbl_pt	ppos;
+	t_int_pt	ppos;
 	t_int_pt	msize;
     char    *map;
 	char	**sq_map;
@@ -104,6 +104,8 @@ void	error_exit(char *msg, bool fatal);
 size_t  arr_size(char **arr);
 int find_max(int *arr, int size);
 char** allocate2DCharArray(int x, int y);
+
+int find_max(int *arr, int size);
 //moves
 void	key_hook_slow(void *param);
 

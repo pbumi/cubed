@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:25:27 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 20:54:08 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 14:37:42 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,16 @@ char** allocate2DCharArray(int y, int x)
         i++;
     }
     return arr;
+}
+
+int find_max(int *arr, int size)
+{
+    int max = arr[0];  // Assume the first element is the max initially
+
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > max) {
+            max = arr[i];  // Update max if current element is greater
+        }
+    }
+    return max;
 }
