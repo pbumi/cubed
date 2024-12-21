@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 17:01:56 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 19:35:00 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,6 @@ typedef struct s_wall
 	bool	walls_OK;
 }   t_wall;
 
-typedef struct s_fc
-{
-    int	R;
-    int	G;
-	int	B;
-    bool OK;
-}   t_fc;
-
 typedef struct s_images
 {
 	mlx_image_t	*NO;
@@ -87,12 +79,14 @@ typedef struct s_ray	//the ray structure
 typedef struct s_data	//the data structure
 {
 	t_wall  *walls;
-	t_fc	*floor;
-    t_fc    *ceil;
 	char 	*map;
 	char	**map2d;	// the map
 	t_int_pt	p;
 	t_int_pt	m;
+	unsigned int	Fcolor;
+	bool			F;
+	unsigned int	Ccolor;
+	bool			C;
 	// int		p_x;		// player x position in the map
 	// int		p_y;		// player y position in the map
 	// int		w_map;		// map width

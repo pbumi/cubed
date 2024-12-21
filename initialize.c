@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 16:51:30 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 19:39:28 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ bool check_components(int fd, t_data *game)
 			line = get_next_line(fd);
 		}
     }
-	if (!game->walls->walls_OK || !game->ceil->OK || !game->floor->OK)
+	if (!game->walls->walls_OK || !game->C || !game->F)
 	{
 		errorhandler(game,"* Missing components *", false);
 		free_and_close(line,fd);
@@ -52,14 +52,14 @@ void	initialize_struct(t_data *game)
     game->walls->SO = NULL;
     game->walls->WE = NULL;
     game->walls->EA = NULL;
-    game->ceil = malloc(sizeof(t_fc));
-    game->floor = malloc(sizeof(t_fc));
-    if (!game->ceil || !game->floor)
-    {
-		errorhandler(game, "* Memory allocation failed for walls *", true);
-    }
-	game->ceil->OK = false;
-	game->floor->OK = false;
+	game->Fcolor = 0;
+	game->Ccolor = 0;
+	game->p.x = 0;
+	game->p.y = 0;
+	game->m.x = 0;
+	game->m.y = 0;
+	game->C = false;
+	game->F = false;
 	game->map = NULL;
 	game->map2d = NULL;
 }

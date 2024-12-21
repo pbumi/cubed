@@ -1,5 +1,6 @@
 
 # include "cubed.h"
+# include <math.h>
 
 
 
@@ -254,13 +255,18 @@ float	nor_angle(float angle)	// normalize the angle
 void	draw_floor_ceiling(t_mlx *mlx, int ray, int t_pix, int b_pix)	// draw the floor and the ceiling
 {
 	int		i;
+	// unsigned int	color;
 
 	i = b_pix;
+	// color = (mlx->dt->floor->R << 16 | mlx->dt->floor->G << 8 | mlx->dt->floor->B); // get the color
 	while (i < S_H)
-		my_mlx_pixel_put(mlx, ray, i++, 0xB99470FF); // floor
+	{
+		my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Fcolor); // floor
+	}
 	i = 0;
+	// color = (mlx->dt->ceil->R << 16 | mlx->dt->ceil->G << 8 | mlx->dt->ceil->B); // get the color
 	while (i < t_pix)
-		my_mlx_pixel_put(mlx, ray, i++, 0x89CFF3FF); // ceiling
+		my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Ccolor); // ceiling
 }
 
 int	get_color(t_mlx *mlx, int flag)	// get the color of the wall
@@ -540,8 +546,6 @@ void testchecker(t_data *game) //TESTER DELETE
 	printf("SO: %s\n", game->walls->SO);
 	printf("WE: %s\n", game->walls->WE);
 	printf("EA: %s\n", game->walls->EA);
-	printf("F: %d, %d, %d \n", game->floor->R, game->floor->G, game->floor->B);
-	printf("C: %d, %d, %d \n", game->ceil->R, game->ceil->G, game->ceil->B);
 	printf("sqmap\n");
 	for (int i = 0; game->map2d[i] != NULL; i++)
     {

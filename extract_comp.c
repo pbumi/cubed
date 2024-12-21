@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 16:48:23 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 22:25:40 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,63 @@ bool check_range(char **colors)
 {
 	t_int_pt pt;
 
-	pt.x = 0;
-	while (colors[pt.x])
+	pt.y = 0;
+	while (colors[pt.y])
 	{
-		pt.y = 0;
-		while (colors[pt.x][pt.y])
+		pt.x = 0;
+		while (colors[pt.y][pt.x])
 		{
-			if (ft_isdigit(colors[pt.x][pt.y]) == 0)
-			{
-				return false;
-			}
-			pt.y++;
+			if (ft_isdigit(colors[pt.y][pt.x]) == 0 && colors[pt.y][pt.x] != ' ')
+            {
+                return false;
+            }
+			pt.x++;
 		}
-		if (ft_atoi(colors[pt.x]) < 0 || ft_atoi(colors[pt.x]) > 255)
+        if (ft_atoi(colors[pt.y]) < 0 || ft_atoi(colors[pt.y]) > 255)
 		{
 			return false;
 		}
-		pt.x++;
+		pt.y++;
 	}
     return true;
 }
-bool get_rgb2(char *line, t_fc *fc)
+
+// unsigned int rgba(int r, int g, int b)
+// {
+//     unsigned int color; // = (r << 16) | (g << 8) | b | (0xFF << 24);
+
+//     // // Check if the system is little-endian using a simple comparison
+//     // if (*(unsigned char*)&color == b)
+//     // {
+//     //     // System is little-endian, swap to BGRA
+//         color = (b << 24) | (g << 16) | (r << 8) | 0xFF;
+//     // }
+
+//     return color;
+// }
+
+void set_color(t_data *game, char *str, char **colors)
+{
+    int r;
+    int g;
+    int b;
+
+    r = (ft_atoi(colors[0]));
+    g = (ft_atoi(colors[1]));
+    b = (ft_atoi(colors[2]));
+    if (ft_strncmp(str, "F", 1) == 0)
+    {
+        game->Fcolor = ((b << 24) | (g << 16) | (r << 8) | 0xFF);
+        game->F = true;
+    }
+    else if (ft_strncmp(str, "C", 1) == 0)
+    {
+        game->Ccolor = ((b << 24) | (g << 16) | (r << 8) | 0xFF);
+        game->C = true;
+    }
+}
+
+bool get_rgb2(char *line, t_data *game, char *str)
 {
     char **colors;
     colors = ft_split(line, ',');
@@ -45,27 +81,18 @@ bool get_rgb2(char *line, t_fc *fc)
         errorhandler(NULL, "* Memory allocation failed for colors *", false);
         return false;
     }
-    if (remove_spaces(colors) == false)
-    {
-        free_arr(colors);  // Free memory before returning on failure
-        return false;
-    }
     if (arr_size(colors) != 3 || check_range(colors) == false)
     {
         errorhandler(NULL, "* Invalid parameters for colors *", false);
         free_arr(colors);  // Free memory before returning on failure
         return false;
     }
-    fc->R = ft_atoi(colors[0]);
-    fc->G = ft_atoi(colors[1]);
-    fc->B = ft_atoi(colors[2]);
-    fc->OK = true;
+    set_color(game, str, colors);
     free_arr(colors);
     return true;
 }
-bool get_rgb1(char *line, char *str, t_fc *fc, t_data *game)
+bool get_rgb1(char *line, char *str, t_data *game)
 {
-    (void)game;  // Unused parameter, can be kept for future use or removed if not needed.
 
     // Check if the line starts with the expected string and has a space after it
     if (ft_strncmp(line, str, 1) == 0 && is_space(line[1]) == true)
@@ -78,7 +105,7 @@ bool get_rgb1(char *line, char *str, t_fc *fc, t_data *game)
         }
 
         // Now extract RGB values using get_rgb2
-        if (get_rgb2(sub, fc))  // If RGB extraction succeeds
+        if (get_rgb2(sub, game, str))  // If RGB extraction succeeds
         {
             free(sub);  // Free the substring memory
             return true;  // Successfully extracted RGB
@@ -173,9 +200,9 @@ bool check_contents(char *line, t_data *game)
 {
 	if (game->walls->NO && game->walls->SO && game->walls->WE && game->walls->EA)
 		game->walls->walls_OK = true;
-	if (get_rgb1(line, "F", game->floor, game) == false)
+	if (get_rgb1(line, "F", game) == false)
         return false;
-	else if (get_rgb1(line, "C", game->ceil, game) == false)
+	else if (get_rgb1(line, "C", game) == false)
         return false;
     else if (!check_wall_component(line, "NO", &game->walls->NO))
         return false;
@@ -359,7 +386,7 @@ bool	extract_components(int fd, char *line, t_data *game)
 {
 	if (check_contents(line, game) == false)
         return false;
-	if (game->walls->walls_OK == true && game->floor->OK && game->ceil->OK)
+	if (game->walls->walls_OK == true && game->F && game->C)
 	{
 		if (extract_map1(fd, game) == false)
 		{
