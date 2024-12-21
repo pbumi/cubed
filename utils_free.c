@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:16:51 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 20:31:53 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 16:49:30 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void free_arr(char **arr)
 
 
 
-void free_struct(t_main *game)
+void free_struct(t_data *game)
 {
 	if (game)
 	{
@@ -62,7 +62,7 @@ void free_struct(t_main *game)
 		free(game->floor);
 		free(game->ceil);
 		free(game->map);
-		free_arr(game->sq_map);
+		free_arr(game->map2d);
 	}
 }
 

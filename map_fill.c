@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 15:16:49 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 16:49:15 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ void mark_zeroes(char **array, int x, int y, int rows, int cols)
     mark_zeroes(array, x, y + 1, rows, cols); // down
 }
 
-void mark_player(t_main *game, char **array, int rows, int cols)
+void mark_player(t_data *game, char **array, int rows, int cols)
 {
-    int x = game->ppos.x;
-    int y = game->ppos.y;
+    int x = game->p.x;
+    int y = game->p.y;
     
     if ((y > 0 && array[y - 1][x] == ' ') ||
         (y < rows - 1 && array[y + 1][x] == ' ') ||
@@ -119,7 +119,7 @@ bool check_for_X(char **tmp_arr, int rows, int cols)
 }
 
 
-bool check_floodfill(t_main *game, char **tmp_arr, int rows, int cols) 
+bool check_floodfill(t_data *game, char **tmp_arr, int rows, int cols) 
 {
     // Print array before marking
     // printf("Before marking border and space-connected '0's:\n");
@@ -148,20 +148,20 @@ bool check_floodfill(t_main *game, char **tmp_arr, int rows, int cols)
     return true;
 }
 
-bool check_fill(t_main *game)
+bool check_fill(t_data *game)
 {
     char **tmp_arr;
     t_int_pt pt;
     
-    tmp_arr = malloc(sizeof(char *) * (game->msize.y + 1));
+    tmp_arr = malloc(sizeof(char *) * (game->m.y + 1));
     if (!tmp_arr)
     {
         return false;
     }
     pt.y = 0;
-    while (pt.y < game->msize.y)
+    while (pt.y < game->m.y)
     {
-        tmp_arr[pt.y] = ft_strdup(game->sq_map[pt.y]);
+        tmp_arr[pt.y] = ft_strdup(game->map2d[pt.y]);
         if (!tmp_arr[pt.y])
         {
             while (pt.y > 0)
@@ -175,7 +175,7 @@ bool check_fill(t_main *game)
         pt.y++;
     }
     tmp_arr[pt.y] = NULL;
-    if (check_floodfill(game, tmp_arr, game->msize.y, game->msize.x) == false)
+    if (check_floodfill(game, tmp_arr, game->m.y, game->m.x) == false)
     {
         free_arr(tmp_arr);
         return false;

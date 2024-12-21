@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 15:19:52 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 16:48:23 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ bool get_rgb2(char *line, t_fc *fc)
     free_arr(colors);
     return true;
 }
-bool get_rgb1(char *line, char *str, t_fc *fc, t_main *game)
+bool get_rgb1(char *line, char *str, t_fc *fc, t_data *game)
 {
     (void)game;  // Unused parameter, can be kept for future use or removed if not needed.
 
@@ -93,7 +93,7 @@ bool get_rgb1(char *line, char *str, t_fc *fc, t_main *game)
     return true;
 }
 
-// bool get_rgb1(char *line, char *str, t_fc *fc, t_main *game)
+// bool get_rgb1(char *line, char *str, t_fc *fc, t_data *game)
 // {
 // 	(void)game;
 //     if (ft_strncmp(line, str, 1) == 0 && is_space(line[1]) == true)
@@ -169,7 +169,7 @@ bool check_wall_component(char *line, char *identifier, char **wall_ptr)
 //     return true;
 // }
 
-bool check_contents(char *line, t_main *game)
+bool check_contents(char *line, t_data *game)
 {
 	if (game->walls->NO && game->walls->SO && game->walls->WE && game->walls->EA)
 		game->walls->walls_OK = true;
@@ -189,58 +189,58 @@ bool check_contents(char *line, t_main *game)
 		return true;
 }
 
-void    fill_plane_dir(t_main *game)
-{
-    game->pdir.x = 1.0;
-    game->pdir.y = 0.0;
-    game->pplane.x = 0.0;
-    game->pplane.y = 0.66;
-    
-    if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'N')
-    {
-        game->pdir.x = 0.0;
-        game->pdir.y = -1.0;
-        game->pplane.x = 0.66;
-        game->pplane.y = 0.0;
-    }
-    else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'S')
-    {
-        game->pdir.x = 0.0;
-        game->pdir.y = 1.0;
-        game->pplane.x = -0.66;
-        game->pplane.y = 0.0;
-    }
-    else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'W')
-    {
-        game->pdir.x = -1.0;
-        game->pplane.y = -0.66;
-    }
-}
-
-// void    fill_plane_dir(t_main *game)
+// void    fill_plane_dir(t_data *game)
 // {
-//     if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'N')
+//     game->pdir.x = 1.0;
+//     game->pdir.y = 0.0;
+//     game->pplane.x = 0.0;
+//     game->pplane.y = 0.66;
+    
+//     if (game->map2d[(int)game->ppos.y][(int)game->ppos.x] == 'N')
 //     {
 //         game->pdir.x = 0.0;
 //         game->pdir.y = -1.0;
 //         game->pplane.x = 0.66;
 //         game->pplane.y = 0.0;
 //     }
-//     else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'S')
+//     else if (game->map2d[(int)game->ppos.y][(int)game->ppos.x] == 'S')
 //     {
 //         game->pdir.x = 0.0;
 //         game->pdir.y = 1.0;
 //         game->pplane.x = -0.66;
 //         game->pplane.y = 0.0;
 //     }
-//     else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'E')
+//     else if (game->map2d[(int)game->ppos.y][(int)game->ppos.x] == 'W')
+//     {
+//         game->pdir.x = -1.0;
+//         game->pplane.y = -0.66;
+//     }
+// }
+
+// void    fill_plane_dir(t_data *game)
+// {
+//     if (game->map2d[(int)game->ppos.y][(int)game->ppos.x] == 'N')
+//     {
+//         game->pdir.x = 0.0;
+//         game->pdir.y = -1.0;
+//         game->pplane.x = 0.66;
+//         game->pplane.y = 0.0;
+//     }
+//     else if (game->map2d[(int)game->ppos.y][(int)game->ppos.x] == 'S')
+//     {
+//         game->pdir.x = 0.0;
+//         game->pdir.y = 1.0;
+//         game->pplane.x = -0.66;
+//         game->pplane.y = 0.0;
+//     }
+//     else if (game->map2d[(int)game->ppos.y][(int)game->ppos.x] == 'E')
 //     {
 //         game->pdir.x = 1.0;
 //         game->pdir.y = 0.0;
 //         game->pplane.x = 0.0;
 //         game->pplane.y = 0.66;
 //     }
-//     else if (game->sq_map[(int)game->ppos.y][(int)game->ppos.x] == 'W')
+//     else if (game->map2d[(int)game->ppos.y][(int)game->ppos.x] == 'W')
 //     {
 //         game->pdir.x = -1.0;
 //         game->pdir.y = 0.0;
@@ -250,20 +250,20 @@ void    fill_plane_dir(t_main *game)
 // }
 
 
-void fill_player_position(t_main *game)
+void fill_player_position(t_data *game)
 {
     t_int_pt pt;
 
     pt.x = 0;
     pt.y = 0;
-    while (game->sq_map[pt.y] != NULL)
+    while (game->map2d[pt.y] != NULL)
     {
-        while (game->sq_map[pt.y][pt.x] != '\0')
+        while (game->map2d[pt.y][pt.x] != '\0')
         {
-            if (ft_strchr("NSWE", game->sq_map[pt.y][pt.x]))
+            if (ft_strchr("NSWE", game->map2d[pt.y][pt.x]))
             {
-                game->ppos.x = pt.x;  // Set the x-coordinate of the player
-                game->ppos.y = pt.y;  // Set the y-coordinate of the player
+                game->p.x = pt.x;  // Set the x-coordinate of the player
+                game->p.y = pt.y;  // Set the y-coordinate of the player
                 return;  // Player position found, exit the function
             }
             pt.x++;  // Move to the next character in the current row
@@ -273,45 +273,45 @@ void fill_player_position(t_main *game)
     }
 }
 
-void fill_maparray(t_main *game, int *tmp_wx, char **tmp_arr)
+void fill_maparray(t_data *game, int *tmp_wx, char **tmp_arr)
 {
 	t_int_pt pt;
 	pt.y = 0;
-	while(pt.y < game->msize.y)
+	while(pt.y < game->m.y)
 	{
 		pt.x = 0;
-		while (pt.x < game->msize.x)
+		while (pt.x < game->m.x)
 		{
 			if (pt.x < tmp_wx[pt.y])
 			{
-				game->sq_map[pt.y][pt.x] = tmp_arr[pt.y][pt.x];
+				game->map2d[pt.y][pt.x] = tmp_arr[pt.y][pt.x];
 			}
 			else
 			{
-				game->sq_map[pt.y][pt.x] = ' ';
+				game->map2d[pt.y][pt.x] = ' ';
 			}
 			pt.x++;
 		}
-		game->sq_map[pt.y][pt.x] = '\0';
+		game->map2d[pt.y][pt.x] = '\0';
 		pt.y++;
 	}
-	printf("pty %d,g_h %d\n", pt.y, game->msize.y);
-	game->sq_map[game->msize.y] = NULL;
+	printf("pty %d,g_h %d\n", pt.y, game->m.y);
+	game->map2d[game->m.y] = NULL;
 }
 
-void get_widthx(t_main *game, char **tmp_arr, int *tmp_wx)
+void get_widthx(t_data *game, char **tmp_arr, int *tmp_wx)
 {
 	int x;
     x = 0;
-    while (x < game->msize.y)
+    while (x < game->m.y)
     {
         tmp_wx[x] = ft_strlen(tmp_arr[x]);  // Store the width of each row
         x++;
     }
-    game->msize.x = find_max(tmp_wx, game->msize.y);
+    game->m.x = find_max(tmp_wx, game->m.y);
 }
 
-void get_height(t_main *game, char **tmp_arr)
+void get_height(t_data *game, char **tmp_arr)
 {
 	int y;
 	y = 0;
@@ -319,10 +319,10 @@ void get_height(t_main *game, char **tmp_arr)
     {
         y++;
     }
-    game->msize.y = y;
+    game->m.y = y;
 }
 
-bool create_sqmap(t_main *game)
+bool create_sqmap(t_data *game)
 {
     char **tmp_arr;
     int *tmp_wx;
@@ -333,15 +333,15 @@ bool create_sqmap(t_main *game)
         return false;
     }
     get_height(game, tmp_arr);
-    tmp_wx = malloc(sizeof(int) * game->msize.y);
+    tmp_wx = malloc(sizeof(int) * game->m.y);
     if (tmp_wx == NULL)
     {
         free_arr(tmp_arr);  // Make sure to free tmp_arr before returning
         return false;  
     }
     get_widthx(game, tmp_arr, tmp_wx);
-    game->sq_map = allocate2DCharArray(game->msize.y, game->msize.x);
-    if (!game->sq_map)
+    game->map2d = allocate2DCharArray(game->m.y, game->m.x);
+    if (!game->map2d)
     {
         free_arr(tmp_arr);  // Free tmp_arr on failure
         free(tmp_wx);       // Free tmp_wx on failure
@@ -355,7 +355,7 @@ bool create_sqmap(t_main *game)
     return true;
 }
 
-bool	extract_components(int fd, char *line, t_main *game)
+bool	extract_components(int fd, char *line, t_data *game)
 {
 	if (check_contents(line, game) == false)
         return false;
@@ -370,7 +370,7 @@ bool	extract_components(int fd, char *line, t_main *game)
 			return false;	
 		}
 		fill_player_position(game);
-		fill_plane_dir(game);
+		// fill_plane_dir(game);
 		if (check_fill(game) == false)
 		{
 			errorhandler(game,"* Invalid map *", false);

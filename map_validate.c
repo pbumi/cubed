@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:13:36 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 14:50:06 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 16:32:44 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ bool is_broken_map(char *line)
     return false; 
 }
 
-bool	validate_map(t_main *game)
+bool	validate_map(t_data *game)
 {
 	if (is_empty_line(game->map) == true)
 	{

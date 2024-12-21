@@ -1,51 +1,7 @@
 
 # include "cubed.h"
 
-# define S_W 1900 // screen width
-# define S_H 1000 // screen height
-# define TILE_SIZE 30 // tile size
-# define FOV 60 // field of view
-# define ROTATION_SPEED 0.045 // rotation speed
-# define PLAYER_SPEED 4	// player speed
-# define M_PI   3.14159265358979323846 // pi
 
-#define MINIMAP_TILE_SIZE 10 // minimap tile size
-
-typedef struct s_player //the player structure
-{
-	int		plyr_x; // player x position in pixels
-	int		plyr_y; // player y position in pixels
-	double	angle;	// player angle
-	float	fov_rd;	// field of view in radians
-	int		rot;	// rotation flag
-	int		l_r;	// left right flag
-	int		u_d;	// up down flag
-}	t_player;
-
-typedef struct s_ray	//the ray structure
-{
-	double	ray_ngl;	// ray angle
-	double	distance;	// distance to the wall
-	int		flag;		// flag for the wall
-}	t_ray;
-
-typedef struct s_data	//the data structure
-{
-	char	**map2d;	// the map
-	int		p_x;		// player x position in the map
-	int		p_y;		// player y position in the map
-	int		w_map;		// map width
-	int		h_map;		// map height
-}	t_data;
-
-typedef struct s_mlx	//the mlx structure
-{
-	mlx_image_t		*img;	// the image
-	mlx_t			*mlx_p;	// the mlx pointer
-	t_ray			*ray;	// the ray structure
-	t_data			*dt;	// the data structure
-	t_player		*ply;	// the player structure
-}	t_mlx;
 
 //##############################################################################//
 //############################## THE EXITING CODE ##############################//
@@ -66,103 +22,101 @@ void	ft_exit(t_mlx *mlx) 		// exit the game
 	printf("Game closed\n"); // print the message
 	exit(0); // exit the game
 }
+
 //##############################################################################################//
 //##############################TEMPORARY MINIMAP ##############################//
 //##############################################################################################//
 
 
-void	draw_minimap_square(t_mlx *cub ,t_dbl_pt map_pt, size_t size, uint32_t color)
-{
-	for (size_t y = map_pt.y; y <= (map_pt.y + size); y++)
-	{
-		for (size_t x = map_pt.x; x <= (map_pt.x + size); x++)
-		{
-			if (y == (map_pt.y + size) || x == (map_pt.x + size) || \
-				y == map_pt.y || x == map_pt.x)
-				mlx_put_pixel(cub->img, x, y, 0x000000ff);
-			else	mlx_put_pixel(cub->img, x, y, color);
-		}
-	}
-}
+// void	draw_minimap_square(t_mlx *cub ,t_dbl_pt map_pt, size_t size, uint32_t color)
+// {
+// 	for (size_t y = map_pt.y; y <= (map_pt.y + size); y++)
+// 	{
+// 		for (size_t x = map_pt.x; x <= (map_pt.x + size); x++)
+// 		{
+// 			if (y == (map_pt.y + size) || x == (map_pt.x + size) || y == map_pt.y || x == map_pt.x)
+// 				mlx_put_pixel(cub->img, x, y, 0x000000ff);
+// 			else	mlx_put_pixel(cub->img, x, y, color);
+// 		}
+// 	}
+// }
 
-void draw_line(t_mlx *cub, t_dbl_pt start, t_dbl_pt end, uint32_t color)
-{
-    int dx = fabs(end.x - start.x);
-    int dy = fabs(end.y - start.y);
-    int step_x = start.x < end.x ? 1 : -1;
-    int step_y = start.y < end.y ? 1 : -1;
-    int err = dx - dy;
+// void draw_line(t_mlx *cub, t_dbl_pt start, t_dbl_pt end, uint32_t color)
+// {
+//     int dx = fabs(end.x - start.x);
+//     int dy = fabs(end.y - start.y);
+//     int step_x = start.x < end.x ? 1 : -1;
+//     int step_y = start.y < end.y ? 1 : -1;
+//     int err = dx - dy;
 
-    while (true)
-    {
-        mlx_put_pixel(cub->img, start.x, start.y, color);
-        if (start.x == end.x && start.y == end.y)
-            break;
-        int e2 = err * 2;
-        if (e2 > -dy)
-        {
-            err -= dy;
-            start.x += step_x;
-        }
-        if (e2 < dx)
-        {
-            err += dx;
-            start.y += step_y;
-        }
-    }
-}
+//     while (true)
+//     {
+//         mlx_put_pixel(cub->img, start.x, start.y, color);
+//         if (start.x == end.x && start.y == end.y)
+//             break;
+//         int e2 = err * 2;
+//         if (e2 > -dy)
+//         {
+//             err -= dy;
+//             start.x += step_x;
+//         }
+//         if (e2 < dx)
+//         {
+//             err += dx;
+//             start.y += step_y;
+//         }
+//     }
+// }
 
-void draw_player(t_mlx *cub)
-{
-    int player_x;
-    int player_y; 
-    int ray_end_x;
-    int ray_end_y; 
+// void draw_player(t_mlx *cub)
+// {
+//     int player_x;
+//     int player_y; 
+//     int ray_end_x;
+//     int ray_end_y; 
 	
-	player_x = cub->dt->p_x * MINIMAP_TILE_SIZE;
-	player_y = cub->dt->p_y * MINIMAP_TILE_SIZE;
-    draw_minimap_square(cub, (t_dbl_pt){player_x - 10 / 2, \
-										player_y - 10 / 2}, \
-										10, 0x00ff2eff);
-    ray_end_x = (player_x + (cub->dt->p_x * 10));
-    ray_end_y = (player_y + (cub->dt->p_y * 10));
-    draw_line(cub, (t_dbl_pt){player_x, player_y}, (t_dbl_pt){ray_end_x, ray_end_y}, 0xFF0000ff);
-}
+// 	player_x = cub->dt->p.x * MINIMAP_TILE_SIZE;
+// 	player_y = cub->dt->p.y * MINIMAP_TILE_SIZE;
+//     draw_minimap_square(cub, (t_dbl_pt){player_x - 10 / 2, player_y - 10 / 2}, 10, 0x00ff2eff);
+//     ray_end_x = (player_x + (cub->dt->p.x * 10));
+//     ray_end_y = (player_y + (cub->dt->p.y * 10));
+//     draw_line(cub, (t_dbl_pt){player_x, player_y}, (t_dbl_pt){ray_end_x, ray_end_y}, 0xFF0000ff);
+// }
 
-uint32_t	set_minimap_color(t_mlx *cub, t_dbl_pt *pt)
-{
-	uint32_t	color;
-	int x;
-	int y;
+// uint32_t	set_minimap_color(t_mlx *cub, t_dbl_pt *pt)
+// {
+// 	uint32_t	color;
+// 	int x;
+// 	int y;
 
-	x = pt->x;
-	y = pt->y;
-	color = 0xffffffff;
-	if (cub->dt->map2d[y][x] == '1')
-		color = 0xffc100ff;
-	else if (cub->dt->map2d[y][x] == '0')
-		color = 0xd75000ff;
-	return (color);
-}
+// 	x = pt->x;
+// 	y = pt->y;
+// 	color = 0xffffffff;
+// 	if (cub->dt->map2d[y][x] == '1')
+// 		color = 0xffc100ff;
+// 	else if (cub->dt->map2d[y][x] == '0')
+// 		color = 0xd75000ff;
+// 	return (color);
+// }
 
-void	draw_minimap(t_mlx *cub)
-{
-	t_dbl_pt	pt;
-	t_dbl_pt	map_pt;
-	uint32_t	color;
+// void	draw_minimap(t_mlx *cub)
+// {
+// 	t_dbl_pt	pt;
+// 	t_dbl_pt	map_pt;
+// 	uint32_t	color;
 	
-	for (pt.y = 0; pt.y < cub->dt->h_map; pt.y++)
-	{
-		for (pt.x = 0; pt.x < cub->dt->w_map; pt.x++)
-		{
-			map_pt.y = pt.y * MINIMAP_TILE_SIZE;
-			map_pt.x = pt.x * MINIMAP_TILE_SIZE;
-			color = set_minimap_color(cub, &pt);
-			draw_minimap_square(cub, map_pt, MINIMAP_TILE_SIZE, color);
-		}
-	}
-	draw_player(cub);
-}
+// 	for (pt.y = 0; pt.y < cub->dt->m.y; pt.y++)
+// 	{
+// 		for (pt.x = 0; pt.x < cub->dt->m.x; pt.x++)
+// 		{
+// 			map_pt.y = pt.y * MINIMAP_TILE_SIZE;
+// 			map_pt.x = pt.x * MINIMAP_TILE_SIZE;
+// 			color = set_minimap_color(cub, &pt);
+// 			draw_minimap_square(cub, map_pt, MINIMAP_TILE_SIZE, color);
+// 		}
+// 	}
+// 	draw_player(cub);
+// }
 //################################################################################//
 //############################## THE MOUVEMENT CODE ##############################//
 //################################################################################//
@@ -406,7 +360,7 @@ int	wall_hit(float x, float y, t_mlx *mlx)	// check the wall hit
 		return (0);
 	x_m = floor (x / TILE_SIZE); // get the x position in the map
 	y_m = floor (y / TILE_SIZE); // get the y position in the map
-	if ((y_m >= mlx->dt->h_map || x_m >= mlx->dt->w_map))
+	if ((y_m >= mlx->dt->m.y || x_m >= mlx->dt->m.x))
 		return (0);
 	if (mlx->dt->map2d[y_m] && x_m <= (int)ft_strlen(mlx->dt->map2d[y_m]))
 		if (mlx->dt->map2d[y_m][x_m] == '1')
@@ -492,31 +446,6 @@ void	cast_rays(t_mlx *mlx)	// cast the rays
 //############################## START THE GAME AND THE GAME LOOP ##############################//
 //##############################################################################################//
 
-void testchecker(t_main *game, t_data *dt) //TESTER DELETE
-{
-	printf("NO: %s\n", game->walls->NO);
-	printf("SO: %s\n", game->walls->SO);
-	printf("WE: %s\n", game->walls->WE);
-	printf("EA: %s\n", game->walls->EA);
-	printf("F: %d, %d, %d \n", game->floor->R, game->floor->G, game->floor->B);
-	printf("C: %d, %d, %d \n", game->ceil->R, game->ceil->G, game->ceil->B);
-	printf("sqmap\n");
-	for (int i = 0; game->sq_map[i] != NULL; i++)
-    {
-        printf("%s\n", game->sq_map[i]);
-    }
-	printf("\n player x: %d y: %d \n", game->ppos.x, game->ppos.y);
-	printf("\n plane x: %f y: %f \n", game->pplane.x, game->pplane.y);
-	printf("\n dir x: %f y: %f \n", game->pdir.x, game->pdir.y);
-    printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	for (int i = 0; dt->map2d[i] != NULL; i++)
-    {
-        printf("%s\n", dt->map2d[i]);
-    }
-    printf("\n player x: %d y: %d \n", dt->p_x, dt->p_y);
-	printf("\n plane x: %d y: %d \n", dt->w_map, dt->h_map);
-}
-
 void	game_loop(void *ml)	// game loop
 {
 	t_mlx	*mlx;
@@ -525,7 +454,7 @@ void	game_loop(void *ml)	// game loop
 	mlx_delete_image(mlx->mlx_p, mlx->img);	// delete the image
 	mlx->img = mlx_new_image(mlx->mlx_p, S_W, S_H);	// create new image
 	hook(mlx, 0, 0); // hook the player
-    draw_minimap(mlx);// draw_minimap(mlx);
+    // draw_minimap(mlx);// draw_minimap(mlx);
 	cast_rays(mlx);	// cast the rays
 	mlx_image_to_window(mlx->mlx_p, mlx->img, 0, 0); // put the image to the window
 }
@@ -549,35 +478,27 @@ void getplayerangle(t_mlx *mlx)
     // {
     //     mlx->ply->angle = M_PI / 2;
     // }
-    if (mlx->dt->map2d[mlx->dt->p_y][mlx->dt->p_x] == 'N')
+    if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'N')
     {
         mlx->ply->angle = 3 * M_PI / 2;
     }
-    else if (mlx->dt->map2d[mlx->dt->p_y][mlx->dt->p_x] == 'S')
+    else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'S')
     {
         mlx->ply->angle = M_PI / 2;
     }
-    else if (mlx->dt->map2d[mlx->dt->p_y][mlx->dt->p_x] == 'W')
+    else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'W')
     {
         mlx->ply->angle = M_PI;
     }
-    else if (mlx->dt->map2d[mlx->dt->p_y][mlx->dt->p_x] == 'E')
+    else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'E')
     {
         mlx->ply->angle = 0;
     }
 }    
 void init_the_player(t_mlx mlx)	// init the player structure
 {
-
-	for (int i = 0; mlx.dt->map2d[i] != NULL; i++)
-    {
-        printf("%s\n", mlx.dt->map2d[i]);
-    }
-    printf("\n player x: %d y: %d \n", mlx.dt->p_x, mlx.dt->p_y);
-	printf("\n plane x: %d y: %d \n", mlx.dt->w_map, mlx.dt->h_map);
-
-	mlx.ply->plyr_x = mlx.dt->p_x * TILE_SIZE + TILE_SIZE / 2; // player x position in pixels in the center of the tile
-	mlx.ply->plyr_y = mlx.dt->p_y * TILE_SIZE + TILE_SIZE / 2; // player y position in pixels in the center of the tile
+	mlx.ply->plyr_x = mlx.dt->p.x * TILE_SIZE + TILE_SIZE / 2; // player x position in pixels in the center of the tile
+	mlx.ply->plyr_y = mlx.dt->p.y * TILE_SIZE + TILE_SIZE / 2; // player y position in pixels in the center of the tile
 	mlx.ply->fov_rd = (FOV * M_PI) / 180; // field of view in radians
 	getplayerangle(&mlx);//mlx.ply->angle = M_PI // player angle
 	//the rest of the variables are initialized to zero by calloc
@@ -596,59 +517,49 @@ void	start_the_game(t_data *dt)	// start the game
 	mlx_key_hook(mlx.mlx_p, &mlx_key, &mlx);	// key press and release
 	mlx_loop(mlx.mlx_p);	// mlx loop
 }
-//################################################################################################//
-//############################## MY FUNCTIONS TEMPORARY ##############################//
-//################################################################################################//
-void fill_map(t_main *game, t_data *dt)
-{
-	t_int_pt pt;
-	pt.y = 0;
-	while(pt.y < game->msize.y)
-	{
-		pt.x = 0;
-		while (pt.x < game->msize.x)
-		{
-			dt->map2d[pt.y][pt.x] = game->sq_map[pt.y][pt.x];
-			pt.x++;
-		}
-		game->sq_map[pt.y][pt.x] = '\0';
-		pt.y++;
-	}
-	printf("pty %d,g_h %d\n", pt.y, game->msize.y);
-	dt->map2d[game->msize.y] = NULL;
-}
 
-void makemap(t_data *dt, t_main *game)
-{
-    dt->map2d = allocate2DCharArray(game->msize.y, game->msize.x);
-    fill_map(game, dt);
-}
 //################################################################################################//
 //############################## THE MAIN FUNCTION AND INIT THE MAP ##############################//
 //################################################################################################//
 
-t_data *init_argumet(t_main *game)	// init the data structure
-{
-    t_data *dt = calloc(1, sizeof(t_data));// init the data structure
-	//dt->map2d = calloc(10, sizeof(char *)); // init the map
-    makemap(dt, game); // make the map
-	dt->p_y = (int)game->ppos.y; // player y position in the map
-	dt->p_x = (int)game->ppos.x; // player x position in the map
-	dt->w_map = game->msize.x; // map width
-	dt->h_map = game->msize.y; // map height
-	return (dt); // return the data structure
-}
+// t_data *init_argumet(t_data *game)	// init the data structure
+// {
+//     t_data *dt = calloc(1, sizeof(t_data));// init the data structure
+// 	//dt->map2d = calloc(10, sizeof(char *)); // init the map
+//     makemap(dt, game); // make the map
+// 	dt->p_y = (int)game->ppos.y; // player y position in the map
+// 	dt->p_x = (int)game->ppos.x; // player x position in the map
+// 	dt->w_map = game->msize.x; // map width
+// 	dt->h_map = game->msize.y; // map height
+// 	return (dt); // return the data structure
+// }
 
+void testchecker(t_data *game) //TESTER DELETE
+{
+	printf("NO: %s\n", game->walls->NO);
+	printf("SO: %s\n", game->walls->SO);
+	printf("WE: %s\n", game->walls->WE);
+	printf("EA: %s\n", game->walls->EA);
+	printf("F: %d, %d, %d \n", game->floor->R, game->floor->G, game->floor->B);
+	printf("C: %d, %d, %d \n", game->ceil->R, game->ceil->G, game->ceil->B);
+	printf("sqmap\n");
+	for (int i = 0; game->map2d[i] != NULL; i++)
+    {
+        printf("%s\n", game->map2d[i]);
+    }
+	printf("\n player x: %d y: %d \n", game->p.x, game->p.y);
+	printf("\n map x: %d y: %d \n", game->m.x, game->m.y);
+    printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+}
 
 int main(int argc, char **argv)	// main function
 {
-    t_main game;
-    t_data *dt;
+    t_data dt;
 
-	game = (t_main){0};
-	check_file(argc, argv, &game);
-    dt = init_argumet(&game);
-	testchecker(&game, dt);
-	start_the_game(dt);	// start the game
+	dt = (t_data){0};	// init the data structure
+	check_file(argc, argv, &dt);
+   //dt = init_argumet(&game);
+	testchecker(&dt);
+	start_the_game(&dt);	// start the game
 	return 0;
 }

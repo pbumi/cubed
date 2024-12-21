@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:25:27 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 14:37:42 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 16:32:58 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	error_exit(char *msg, bool fatal)
 	}
 }
 
-void	errorhandler(t_main *game, char *msg, bool fatal)
+void	errorhandler(t_data *game, char *msg, bool fatal)
 {
 	if (game)
 	{

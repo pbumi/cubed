@@ -6,13 +6,13 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 20:50:54 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/21 16:51:30 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
 
-bool check_components(int fd, t_main *game)
+bool check_components(int fd, t_data *game)
 {
     char *line;
 	
@@ -40,7 +40,7 @@ bool check_components(int fd, t_main *game)
 	return true;
 }
 
-void	initialize_struct(t_main *game)
+void	initialize_struct(t_data *game)
 {
     game->walls = malloc(sizeof(t_wall));
     if (!game->walls)
@@ -60,10 +60,11 @@ void	initialize_struct(t_main *game)
     }
 	game->ceil->OK = false;
 	game->floor->OK = false;
-	game->sq_map = NULL;
+	game->map = NULL;
+	game->map2d = NULL;
 }
 
-void initialize_game(char *cubfile, t_main *game)
+void initialize_game(char *cubfile, t_data *game)
 {
 	int fd;
 	initialize_struct(game);
@@ -90,7 +91,7 @@ bool    valid_cub(char *argv)
 	return false;
 }
 
-void	check_file(int argc, char **argv, t_main *game)
+void	check_file(int argc, char **argv, t_data *game)
 {
 	if (argc > 2)
 	{
