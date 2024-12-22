@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 19:35:00 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/22 14:01:02 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ typedef struct s_wall
 	bool	walls_OK;
 }   t_wall;
 
-typedef struct s_images
+typedef struct s_textures
 {
-	mlx_image_t	*NO;
-	mlx_image_t	*EA;
-	mlx_image_t	*SO;
-	mlx_image_t	*WE;
-}			t_images;
+	mlx_texture_t	*NO;
+	mlx_texture_t	*EA;
+	mlx_texture_t	*SO;
+	mlx_texture_t	*WE;
+}			t_textures;
 
 typedef struct s_player //the player structure
 {
@@ -73,7 +73,10 @@ typedef struct s_ray	//the ray structure
 {
 	double	ray_ngl;	// ray angle
 	double	distance;	// distance to the wall
+	int		index;
 	int		flag;		// flag for the wall
+	t_dbl_pt	horiz;		// horizontal wall hit
+	t_dbl_pt	vert;		// vertical wall hit
 }	t_ray;
 
 typedef struct s_data	//the data structure
@@ -81,16 +84,12 @@ typedef struct s_data	//the data structure
 	t_wall  *walls;
 	char 	*map;
 	char	**map2d;	// the map
-	t_int_pt	p;
-	t_int_pt	m;
+	t_int_pt	p; // player index
+	t_int_pt	m; // map index
 	unsigned int	Fcolor;
 	bool			F;
 	unsigned int	Ccolor;
 	bool			C;
-	// int		p_x;		// player x position in the map
-	// int		p_y;		// player y position in the map
-	// int		w_map;		// map width
-	// int		h_map;		// map height
 }	t_data;
 
 typedef struct s_mlx	//the mlx structure
@@ -100,6 +99,7 @@ typedef struct s_mlx	//the mlx structure
 	t_ray			*ray;	// the ray structure
 	t_data			*dt;	// the data structure
 	t_player		*ply;	// the player structure
+	t_textures		*tex;
 }	t_mlx;
 
 // typedef struct s_main

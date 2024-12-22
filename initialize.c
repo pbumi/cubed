@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 19:39:28 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/22 14:43:02 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	initialize_struct(t_data *game)
 void initialize_game(char *cubfile, t_data *game)
 {
 	int fd;
+	
 	initialize_struct(game);
 	fd = open(cubfile, O_RDONLY);
     if (fd < 0)

@@ -251,7 +251,6 @@ float	nor_angle(float angle)	// normalize the angle
 		angle -= (2 * M_PI);
 	return (angle);
 }
-
 void	draw_floor_ceiling(t_mlx *mlx, int ray, int t_pix, int b_pix)	// draw the floor and the ceiling
 {
 	int		i;
@@ -269,51 +268,199 @@ void	draw_floor_ceiling(t_mlx *mlx, int ray, int t_pix, int b_pix)	// draw the f
 		my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Ccolor); // ceiling
 }
 
-int	get_color(t_mlx *mlx, int flag)	// get the color of the wall
+mlx_texture_t	*get_texture(t_mlx *mlx, int flag)
 {
-	mlx->ray->ray_ngl = nor_angle(mlx->ray->ray_ngl); // normalize the angle
+	mlx->ray->ray_ngl = nor_angle(mlx->ray->ray_ngl);
 	if (flag == 0)
 	{
 		if (mlx->ray->ray_ngl > M_PI / 2 && mlx->ray->ray_ngl < 3 * (M_PI / 2))
-			return (0xB5B5B5FF); // west wall
+			return (mlx->tex->EA);
 		else
-			return (0xB5B5B5FF); // east wall
+			return (mlx->tex->WE);
 	}
 	else
 	{
 		if (mlx->ray->ray_ngl > 0 && mlx->ray->ray_ngl < M_PI)
-			return (0xF5F5F5FF); // south wall
+			return (mlx->tex->SO);
 		else
-			return (0xF5F5F5FF); // north wall
+			return (mlx->tex->NO);
 	}
 }
 
-void	draw_wall(t_mlx *mlx, int ray, int t_pix, int b_pix)	// draw the wall
+double	get_x_o(mlx_texture_t *texture, t_mlx *mlx)
 {
-	int color;
+	double	x_o;
 
-	color = get_color(mlx, mlx->ray->flag);
-	while (t_pix < b_pix)
-		my_mlx_pixel_put(mlx, ray, t_pix++, color);
+	if (mlx->ray->flag == 1)
+		x_o = (int)fmodf((mlx->ray->horiz.x * (texture->width / TILE_SIZE)), texture->width);
+	else
+		x_o = (int)fmodf((mlx->ray->vert.y * (texture->width / TILE_SIZE)), texture->width);
+	return (x_o);
 }
 
-void	render_wall(t_mlx *mlx, int ray)	// render the wall
+// void	draw_wall(t_mlx *mlx, int t_pix, int b_pix, double wall_h)
+// {
+// 	double			x_o;
+// 	double			y_o;
+// 	mlx_texture_t	*texture;
+// 	uint32_t		*arr;
+// 	double			factor;
+
+// 	texture = get_texture(mlx, mlx->ray->flag);
+// 	arr = (uint32_t *)texture->pixels;
+// 	factor = (double)texture->height / wall_h;
+
+// 	x_o = get_x_o(texture, mlx);
+// 	y_o = (t_pix - (S_H / 2) + (wall_h / 2)) * factor;
+// 	if (y_o < 0)
+// 		y_o = 0;
+// 	while (t_pix < b_pix)
+// 	{
+// 		my_mlx_pixel_put(mlx, mlx->ray->index, t_pix, reverse_bytes(arr[(int)y_o * texture->width + (int)x_o]));
+// 		y_o += factor;
+// 		t_pix++;
+// 	}
+// }
+
+int	reverse_bytes(int c)
+{
+	unsigned int	b;
+
+	b = 0;
+	b |= (c & 0xFF) << 24;
+	b |= (c & 0xFF00) << 8;
+	b |= (c & 0xFF0000) >> 8;
+	b |= (c & 0xFF000000) >> 24;
+	return (b);
+}
+
+void	draw_wall(t_mlx *mlx, int t_pix, int b_pix, double wall_h)
+{
+	double			x_o;
+	double			y_o;
+	mlx_texture_t	*texture;
+	uint32_t		*arr;
+	double			factor;
+
+	texture = get_texture(mlx, mlx->ray->flag);
+	arr = (uint32_t *)texture->pixels;
+	factor = (double)texture->height / wall_h;
+
+	x_o = get_x_o(texture, mlx);
+	y_o = (t_pix - (S_H / 2) + (wall_h / 2)) * factor;
+	if (y_o < 0)
+		y_o = 0;
+	while (t_pix < b_pix)
+	{
+		my_mlx_pixel_put(mlx, mlx->ray->index, t_pix, reverse_bytes(arr[(int)y_o * texture->width + (int)x_o]));
+		y_o += factor;
+		t_pix++;
+	}
+}
+
+void	render_wall(t_mlx *mlx, int ray)
 {
 	double	wall_h;
 	double	b_pix;
 	double	t_pix;
 
-	mlx->ray->distance *= cos(nor_angle(mlx->ray->ray_ngl - mlx->ply->angle)); // fix the fisheye
-	wall_h = (TILE_SIZE / mlx->ray->distance) * ((S_W / 2) / tan(mlx->ply->fov_rd / 2)); // get the wall height
-	b_pix = (S_H / 2) + (wall_h / 2); // get the bottom pixel
-	t_pix = (S_H / 2) - (wall_h / 2); // get the top pixel
-	if (b_pix > S_H) // check the bottom pixel
+	mlx->ray->distance *= cos(nor_angle(mlx->ray->ray_ngl - mlx->ply->angle));
+	wall_h = (TILE_SIZE / mlx->ray->distance) * ((S_W / 2) / tan(mlx->ply->fov_rd / 2));
+	b_pix = (S_H / 2) + (wall_h / 2);
+	t_pix = (S_H / 2) - (wall_h / 2);
+	if (b_pix > S_H)
 		b_pix = S_H;
-	if (t_pix < 0) // check the top pixel
+	if (t_pix < 0)
 		t_pix = 0;
-	draw_wall(mlx, ray, t_pix, b_pix); // draw the wall
-	draw_floor_ceiling(mlx, ray, t_pix, b_pix); // draw the floor and the ceiling
+	mlx->ray->index = ray;
+	draw_wall(mlx, t_pix, b_pix, wall_h);
+	draw_floor_ceiling(mlx, ray, t_pix, b_pix);
 }
+
+// void	my_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)	// put the pixel
+// {
+// 	if (x < 0) // check the x position
+// 		return ;
+// 	else if (x >= S_W)
+// 		return ;
+// 	if (y < 0) // check the y position
+// 		return ;
+// 	else if (y >= S_H)
+// 		return ;
+// 	mlx_put_pixel(mlx->img, x, y, color); // put the pixel
+// }
+
+// float	nor_angle(float angle)	// normalize the angle
+// {
+// 	if (angle < 0)
+// 		angle += (2 * M_PI);
+// 	if (angle > (2 * M_PI))
+// 		angle -= (2 * M_PI);
+// 	return (angle);
+// }
+
+// void	draw_floor_ceiling(t_mlx *mlx, int ray, int t_pix, int b_pix)	// draw the floor and the ceiling
+// {
+// 	int		i;
+// 	// unsigned int	color;
+
+// 	i = b_pix;
+// 	// color = (mlx->dt->floor->R << 16 | mlx->dt->floor->G << 8 | mlx->dt->floor->B); // get the color
+// 	while (i < S_H)
+// 	{
+// 		my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Fcolor); // floor
+// 	}
+// 	i = 0;
+// 	// color = (mlx->dt->ceil->R << 16 | mlx->dt->ceil->G << 8 | mlx->dt->ceil->B); // get the color
+// 	while (i < t_pix)
+// 		my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Ccolor); // ceiling
+// }
+
+// int	get_color(t_mlx *mlx, int flag)	// get the color of the wall
+// {
+// 	mlx->ray->ray_ngl = nor_angle(mlx->ray->ray_ngl); // normalize the angle
+// 	if (flag == 0)
+// 	{
+// 		if (mlx->ray->ray_ngl > M_PI / 2 && mlx->ray->ray_ngl < 3 * (M_PI / 2))
+// 			return (0xB5B5B5FF); // west wall
+// 		else
+// 			return (0xB5B5B5FF); // east wall
+// 	}
+// 	else
+// 	{
+// 		if (mlx->ray->ray_ngl > 0 && mlx->ray->ray_ngl < M_PI)
+// 			return (0xF5F5F5FF); // south walls
+// 		else
+// 			return (0xF5F5F5FF); // north wall
+// 	}
+// }
+
+// void	draw_wall(t_mlx *mlx, int ray, int t_pix, int b_pix)	// draw the wall
+// {
+// 	int color;
+
+// 	color = get_color(mlx, mlx->ray->flag);
+// 	while (t_pix < b_pix)
+// 		my_mlx_pixel_put(mlx, ray, t_pix++, color);
+// }
+
+// void	render_wall(t_mlx *mlx, int ray)	// render the wall
+// {
+// 	double	wall_h;
+// 	double	b_pix;
+// 	double	t_pix;
+
+// 	mlx->ray->distance *= cos(nor_angle(mlx->ray->ray_ngl - mlx->ply->angle)); // fix the fisheye
+// 	wall_h = (TILE_SIZE / mlx->ray->distance) * ((S_W / 2) / tan(mlx->ply->fov_rd / 2)); // get the wall height
+// 	b_pix = (S_H / 2) + (wall_h / 2); // get the bottom pixel
+// 	t_pix = (S_H / 2) - (wall_h / 2); // get the top pixel
+// 	if (b_pix > S_H) // check the bottom pixel
+// 		b_pix = S_H;
+// 	if (t_pix < 0) // check the top pixel
+// 		t_pix = 0;
+// 	draw_wall(mlx, ray, t_pix, b_pix); // draw the wall
+// 	draw_floor_ceiling(mlx, ray, t_pix, b_pix); // draw the floor and the ceiling
+// }
 
 //#################################################################################//
 //############################## THE RAYCASTING CODE ##############################//
@@ -394,6 +541,8 @@ float	get_h_inter(t_mlx *mlx, float angl)	// get the horizontal intersection
 		h_x += x_step;
 		h_y += y_step;
 	}
+	mlx->ray->horiz.x = h_x;
+	mlx->ray->horiz.y = h_y;
 	return (sqrt(pow(h_x - mlx->ply->plyr_x, 2) + pow(h_y - mlx->ply->plyr_y, 2))); // get the distance
 }
 
@@ -417,6 +566,8 @@ float	get_v_inter(t_mlx *mlx, float angl)	// get the vertical intersection
 		v_x += x_step;
 		v_y += y_step;
 	}
+	mlx->ray->vert.x = v_x;
+	mlx->ray->vert.y = v_y;
 	return (sqrt(pow(v_x - mlx->ply->plyr_x, 2) + pow(v_y - mlx->ply->plyr_y, 2))); // get the distance
 }
 
@@ -424,11 +575,10 @@ void	cast_rays(t_mlx *mlx)	// cast the rays
 {
 	double	h_inter;
 	double	v_inter;
-	int		ray;
 
-	ray = 0;
+	mlx->ray->index = 0;
 	mlx->ray->ray_ngl = mlx->ply->angle - (mlx->ply->fov_rd / 2); // the start angle
-	while (ray < S_W) // loop for the rays
+	while (mlx->ray->index < S_W) // loop for the rays
 	{
 		mlx->ray->flag = 0; // flag for the wall
 		h_inter = get_h_inter(mlx, nor_angle(mlx->ray->ray_ngl)); // get the horizontal intersection
@@ -440,8 +590,8 @@ void	cast_rays(t_mlx *mlx)	// cast the rays
 			mlx->ray->distance = h_inter; // get the distance
 			mlx->ray->flag = 1; // flag for the wall
 		}
-		render_wall(mlx, ray); // render the wall
-		ray++; // next ray
+		render_wall(mlx, mlx->ray->index); // render the wall
+		mlx->ray->index++; // next ray
 		mlx->ray->ray_ngl += (mlx->ply->fov_rd / S_W); // next angle
 	}
 }
@@ -468,22 +618,6 @@ void	game_loop(void *ml)	// game loop
 
 void getplayerangle(t_mlx *mlx)
 {
-    // if (mlx->dt->map2d[mlx->dt->p_y][mlx->dt->p_x] == 'N')
-    // {
-    //     mlx->ply->angle = 0;
-    // }
-    // else if (mlx->dt->map2d[mlx->dt->p_y][mlx->dt->p_x] == 'S')
-    // {
-    //     mlx->ply->angle = M_PI;
-    // }
-    // else if (mlx->dt->map2d[mlx->dt->p_y][mlx->dt->p_x] == 'W')
-    // {
-    //     mlx->ply->angle = 3 * M_PI / 2;
-    // }
-    // else if (mlx->dt->map2d[mlx->dt->p_y][mlx->dt->p_x] == 'E')
-    // {
-    //     mlx->ply->angle = M_PI / 2;
-    // }
     if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'N')
     {
         mlx->ply->angle = 3 * M_PI / 2;
@@ -510,6 +644,28 @@ void init_the_player(t_mlx mlx)	// init the player structure
 	//the rest of the variables are initialized to zero by calloc
 }
 
+void	mlx_texture_fail(t_mlx *mlx)	// texture fail
+{
+	printf("Error\nTexture failed to load\n");	// print the message
+	ft_exit(mlx);	// exit the game
+}
+
+void	init_the_textures(t_mlx *mlx)	// load the textures
+{
+	mlx->tex->NO = mlx_load_png(mlx->dt->walls->NO);	// load the north texture
+	if (!mlx->tex->NO)	// check the texture
+		mlx_texture_fail(mlx);	// texture fail
+	mlx->tex->SO = mlx_load_png(mlx->dt->walls->SO);	// load the south texture
+	if (!mlx->tex->SO)	// check the texture
+		mlx_texture_fail(mlx);	// texture fail
+	mlx->tex->WE = mlx_load_png(mlx->dt->walls->WE);	// load the west texture
+	if (!mlx->tex->WE)	// check the texture
+		mlx_texture_fail(mlx);	// texture fail
+	mlx->tex->EA = mlx_load_png(mlx->dt->walls->EA);	// load the east texture
+	if (!mlx->tex->EA)	// check the texture
+		mlx_texture_fail(mlx);	// texture fail
+}
+
 void	start_the_game(t_data *dt)	// start the game
 {
 	t_mlx	mlx;
@@ -517,10 +673,12 @@ void	start_the_game(t_data *dt)	// start the game
 	mlx.dt = dt;	// init the mlx structure
 	mlx.ply = calloc(1, sizeof(t_player));	// init the player structure i'm using calloc to initialize the variables to zero
 	mlx.ray = calloc(1, sizeof(t_ray));	// init the ray structure
+	mlx.tex = calloc(1, sizeof(t_textures));	// init the textures structure
 	mlx.mlx_p = mlx_init(S_W, S_H, "Cub3D", 0);	// init the mlx pointer
 	init_the_player(mlx);	// init the player structure
-	mlx_loop_hook(mlx.mlx_p, &game_loop, &mlx);	// game loop
+	init_the_textures(&mlx);	// init the textures
 	mlx_key_hook(mlx.mlx_p, &mlx_key, &mlx);	// key press and release
+	mlx_loop_hook(mlx.mlx_p, &game_loop, &mlx);	// game loop
 	mlx_loop(mlx.mlx_p);	// mlx loop
 }
 
@@ -560,7 +718,7 @@ int main(int argc, char **argv)	// main function
 {
     t_data dt;
 
-	dt = (t_data){0};	// init the data structure
+	dt = (t_data){0};
 	check_file(argc, argv, &dt);
    //dt = init_argumet(&game);
 	testchecker(&dt);
