@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 22:25:40 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/26 15:47:47 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,19 +198,19 @@ bool check_wall_component(char *line, char *identifier, char **wall_ptr)
 
 bool check_contents(char *line, t_data *game)
 {
-	if (game->walls->NO && game->walls->SO && game->walls->WE && game->walls->EA)
-		game->walls->walls_OK = true;
+	if (game->NO && game->SO && game->WE && game->EA)
+		game->W = true;
 	if (get_rgb1(line, "F", game) == false)
         return false;
 	else if (get_rgb1(line, "C", game) == false)
         return false;
-    else if (!check_wall_component(line, "NO", &game->walls->NO))
+    else if (!check_wall_component(line, "NO", &game->NO))
         return false;
-    else if (!check_wall_component(line, "SO", &game->walls->SO))
+    else if (!check_wall_component(line, "SO", &game->SO))
         return false;
-    else if (!check_wall_component(line, "WE", &game->walls->WE))
+    else if (!check_wall_component(line, "WE", &game->WE))
         return false;
-    else if (!check_wall_component(line, "EA", &game->walls->EA))
+    else if (!check_wall_component(line, "EA", &game->EA))
         return false;
 	else
 		return true;
@@ -386,7 +386,7 @@ bool	extract_components(int fd, char *line, t_data *game)
 {
 	if (check_contents(line, game) == false)
         return false;
-	if (game->walls->walls_OK == true && game->F && game->C)
+	if (game->W && game->F && game->C)
 	{
 		if (extract_map1(fd, game) == false)
 		{

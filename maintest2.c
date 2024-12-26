@@ -8,21 +8,22 @@
 //############################## THE EXITING CODE ##############################//
 //##############################################################################//
 
-void	ft_exit(t_mlx *mlx) 		// exit the game
-{
-	int	i = 0;
-	while (mlx->dt->map2d[i])
-		free(mlx->dt->map2d[i++]); // free the map line by line
-	free(mlx->dt->map2d); // free the map
-	free(mlx->dt); // free the data structure
-	free(mlx->ply); // free the player structure
-	free(mlx->ray); // free the ray structure
-	mlx_delete_image(mlx->mlx_p, mlx->img); // delete the image
-	mlx_close_window(mlx->mlx_p); // close the window
-	mlx_terminate(mlx->mlx_p); // terminate the mlx pointer
-	printf("Game closed\n"); // print the message
-	exit(0); // exit the game
-}
+// void	ft_exit(t_mlx *mlx) 		// exit the game
+// {
+// 	int	i = 0;
+// 	printf("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
+// 	mlx_delete_image(mlx->mlx_p, mlx->img); // delete the image
+// 	mlx_terminate(mlx->mlx_p); // terminate the mlx pointer
+// 	//mlx_close_window(mlx->mlx_p); // close the window
+// 	while (mlx->dt->map2d[i])
+// 		free(mlx->dt->map2d[i++]); // free the map line by line
+// 	free(mlx->dt->map2d); // free the map
+// 	free(mlx->dt); // free the data structure
+// 	free(mlx->ply); // free the player structure
+// 	free(mlx->ray); // free the ray structure
+// 	printf("Game closed\n"); // print the message
+// 	exit(0); // exit the game
+// }
 
 //##############################################################################################//
 //##############################TEMPORARY MINIMAP ##############################//
@@ -118,8 +119,9 @@ void	ft_exit(t_mlx *mlx) 		// exit the game
 // 	}
 // 	draw_player(cub);
 // }
+
 //################################################################################//
-//############################## THE MOUVEMENT CODE ##############################//
+//############################## THE MOVEMENT CODE ##############################//
 //################################################################################//
 
 void	ft_reles(mlx_key_data_t keydata, t_mlx *mlx)	// release the key
@@ -143,8 +145,8 @@ void mlx_key(mlx_key_data_t keydata, void *ml)	// key press
 	t_mlx	*mlx;
 
 	mlx = ml;
-	if (keydata.key == MLX_KEY_ESCAPE && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)) // exit the game
-		ft_exit(mlx);
+	if (keydata.key == MLX_KEY_ESCAPE && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)) 
+		mlx_close_window(mlx->mlx_p);
 	else if (keydata.key == MLX_KEY_A && (keydata.action == MLX_PRESS)) // move left
 		mlx->ply->l_r = -1;
 	else if (keydata.key == MLX_KEY_D && (keydata.action == MLX_PRESS)) // move right
@@ -196,34 +198,39 @@ void	move_player(t_mlx *mlx, double move_x, double move_y)	// move the player
 	}
 }
 
-void	hook(t_mlx *mlx, double move_x, double move_y)	// hook the player
+void set_angle(t_mlx *mlx) //set rotational angle
 {
 	if (mlx->ply->rot == 1) //rotate right
 		rotate_player(mlx, 1);
 	if (mlx->ply->rot == -1) //rotate left
 		rotate_player(mlx, 0);
+}
+
+void	hook(t_mlx *mlx) //, double move_x, double move_y)	// hook the player
+{
+	t_dbl_pt move;
+
 	if (mlx->ply->l_r == 1) //move right
 	{
-		move_x = -sin(mlx->ply->angle) * PLAYER_SPEED;
-		move_y = cos(mlx->ply->angle) * PLAYER_SPEED;
+		move.x = -sin(mlx->ply->angle) * PLAYER_SPEED;
+		move.y = cos(mlx->ply->angle) * PLAYER_SPEED;
 	}
 	if (mlx->ply->l_r == -1) //move left
 	{
-		move_x = sin(mlx->ply->angle) * PLAYER_SPEED;
-		move_y = -cos(mlx->ply->angle) * PLAYER_SPEED;
+		move.x = sin(mlx->ply->angle) * PLAYER_SPEED;
+		move.y = -cos(mlx->ply->angle) * PLAYER_SPEED;
 	}
 	if (mlx->ply->u_d == 1) //move up
 	{
-		move_x = cos(mlx->ply->angle) * PLAYER_SPEED;
-		move_y = sin(mlx->ply->angle) * PLAYER_SPEED;
+		move.x = cos(mlx->ply->angle) * PLAYER_SPEED;
+		move.y = sin(mlx->ply->angle) * PLAYER_SPEED;
 	}
 	if (mlx->ply->u_d == -1) //move down
 	{
-		move_x = -cos(mlx->ply->angle) * PLAYER_SPEED;
-		move_y = -sin(mlx->ply->angle) * PLAYER_SPEED;
+		move.x = -cos(mlx->ply->angle) * PLAYER_SPEED;
+		move.y = -sin(mlx->ply->angle) * PLAYER_SPEED;
 	}
-	move_player(mlx, move_x, move_y); // move the player
-
+	move_player(mlx, move.x, move.y); // move the player
 }
 
 //#####################################################################################//
@@ -597,7 +604,6 @@ void	cast_rays(t_mlx *mlx)	// cast the rays
 }
 
 
-
 //##############################################################################################//
 //############################## START THE GAME AND THE GAME LOOP ##############################//
 //##############################################################################################//
@@ -609,59 +615,76 @@ void	game_loop(void *ml)	// game loop
 	mlx = ml;	// cast to the mlx structure
 	mlx_delete_image(mlx->mlx_p, mlx->img);	// delete the image
 	mlx->img = mlx_new_image(mlx->mlx_p, S_W, S_H);	// create new image
-	hook(mlx, 0, 0); // hook the player
-    // draw_minimap(mlx);// draw_minimap(mlx);
+	set_angle(mlx);
+	hook(mlx); //, 0, 0); // hook the player
 	cast_rays(mlx);	// cast the rays
 	mlx_image_to_window(mlx->mlx_p, mlx->img, 0, 0); // put the image to the window
 }
 
 
-void getplayerangle(t_mlx *mlx)
-{
-    if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'N')
-    {
-        mlx->ply->angle = 3 * M_PI / 2;
-    }
-    else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'S')
-    {
-        mlx->ply->angle = M_PI / 2;
-    }
-    else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'W')
-    {
-        mlx->ply->angle = M_PI;
-    }
-    else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'E')
-    {
-        mlx->ply->angle = 0;
-    }
-}    
+// void getplayerangle(t_mlx *mlx)
+// {
+//     if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'N')
+//     {
+//         mlx->ply->angle = 3 * M_PI / 2;
+//     }
+//     else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'S')
+//     {
+//         mlx->ply->angle = M_PI / 2;
+//     }
+//     else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'W')
+//     {
+//         mlx->ply->angle = M_PI;
+//     }
+//     else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'E')
+//     {
+//         mlx->ply->angle = 0;
+//     }
+// }    
 void init_the_player(t_mlx mlx)	// init the player structure
 {
 	mlx.ply->plyr_x = mlx.dt->p.x * TILE_SIZE + TILE_SIZE / 2; // player x position in pixels in the center of the tile
 	mlx.ply->plyr_y = mlx.dt->p.y * TILE_SIZE + TILE_SIZE / 2; // player y position in pixels in the center of the tile
 	mlx.ply->fov_rd = (FOV * M_PI) / 180; // field of view in radians
-	getplayerangle(&mlx);//mlx.ply->angle = M_PI // player angle
+	if (mlx.dt->map2d[mlx.dt->p.y][mlx.dt->p.x] == 'N')
+    {
+        mlx.ply->angle = 3 * M_PI / 2;
+    }
+    else if (mlx.dt->map2d[mlx.dt->p.y][mlx.dt->p.x] == 'S')
+    {
+        mlx.ply->angle = M_PI / 2;
+    }
+    else if (mlx.dt->map2d[mlx.dt->p.y][mlx.dt->p.x] == 'W')
+    {
+        mlx.ply->angle = M_PI;
+    }
+    else if (mlx.dt->map2d[mlx.dt->p.y][mlx.dt->p.x] == 'E')
+    {
+        mlx.ply->angle = 0;
+    } 
+	//getplayerangle(&mlx);//mlx.ply->angle = M_PI // player angle
 	//the rest of the variables are initialized to zero by calloc
 }
 
 void	mlx_texture_fail(t_mlx *mlx)	// texture fail
 {
+	(void)mlx;
 	printf("Error\nTexture failed to load\n");	// print the message
-	ft_exit(mlx);	// exit the game
+	//ft_exit(mlx);	// exit the game ;aonddgoasno;A;K
 }
 
 void	init_the_textures(t_mlx *mlx)	// load the textures
 {
-	mlx->tex->NO = mlx_load_png(mlx->dt->walls->NO);	// load the north texture
+	mlx->tex->NO = mlx_load_png(mlx->dt->NO);	// load the north texture
 	if (!mlx->tex->NO)	// check the texture
 		mlx_texture_fail(mlx);	// texture fail
-	mlx->tex->SO = mlx_load_png(mlx->dt->walls->SO);	// load the south texture
+	mlx->tex->SO = mlx_load_png(mlx->dt->SO);	// load the south texture
 	if (!mlx->tex->SO)	// check the texture
 		mlx_texture_fail(mlx);	// texture fail
-	mlx->tex->WE = mlx_load_png(mlx->dt->walls->WE);	// load the west texture
+	mlx->tex->WE = mlx_load_png(mlx->dt->WE);	// load the west texture
 	if (!mlx->tex->WE)	// check the texture
 		mlx_texture_fail(mlx);	// texture fail
-	mlx->tex->EA = mlx_load_png(mlx->dt->walls->EA);	// load the east texture
+	mlx->tex->EA = mlx_load_png(mlx->dt->EA);	// load the east texture
 	if (!mlx->tex->EA)	// check the texture
 		mlx_texture_fail(mlx);	// texture fail
 }
@@ -671,15 +694,17 @@ void	start_the_game(t_data *dt)	// start the game
 	t_mlx	mlx;
 
 	mlx.dt = dt;	// init the mlx structure
-	mlx.ply = calloc(1, sizeof(t_player));	// init the player structure i'm using calloc to initialize the variables to zero
-	mlx.ray = calloc(1, sizeof(t_ray));	// init the ray structure
-	mlx.tex = calloc(1, sizeof(t_textures));	// init the textures structure
+	mlx.ply = ft_calloc(1, sizeof(t_player));	// init the player structure i'm using calloc to initialize the variables to zero
+	mlx.ray = ft_calloc(1, sizeof(t_ray));	// init the ray structure
+	mlx.tex = ft_calloc(1, sizeof(t_textures));	// init the textures structure
 	mlx.mlx_p = mlx_init(S_W, S_H, "Cub3D", 0);	// init the mlx pointer
 	init_the_player(mlx);	// init the player structure
 	init_the_textures(&mlx);	// init the textures
 	mlx_key_hook(mlx.mlx_p, &mlx_key, &mlx);	// key press and release
 	mlx_loop_hook(mlx.mlx_p, &game_loop, &mlx);	// game loop
-	mlx_loop(mlx.mlx_p);	// mlx loop
+	mlx_loop(mlx.mlx_p);
+	mlx_terminate(mlx.mlx_p);
+	//ft_exit(&mlx);
 }
 
 //################################################################################################//
@@ -700,10 +725,10 @@ void	start_the_game(t_data *dt)	// start the game
 
 void testchecker(t_data *game) //TESTER DELETE
 {
-	printf("NO: %s\n", game->walls->NO);
-	printf("SO: %s\n", game->walls->SO);
-	printf("WE: %s\n", game->walls->WE);
-	printf("EA: %s\n", game->walls->EA);
+	printf("NO: %s\n", game->NO);
+	printf("SO: %s\n", game->SO);
+	printf("WE: %s\n", game->WE);
+	printf("EA: %s\n", game->EA);
 	printf("sqmap\n");
 	for (int i = 0; game->map2d[i] != NULL; i++)
     {
@@ -720,8 +745,9 @@ int main(int argc, char **argv)	// main function
 
 	dt = (t_data){0};
 	check_file(argc, argv, &dt);
-   //dt = init_argumet(&game);
 	testchecker(&dt);
-	start_the_game(&dt);	// start the game
+	start_the_game(&dt);
+	free_struct(&dt);
+	//ft_exit()	// start the game
 	return 0;
 }

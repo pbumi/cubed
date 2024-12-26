@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:16:51 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 21:13:00 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/26 15:48:38 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,10 @@ void free_struct(t_data *game)
 {
 	if (game)
 	{
-		free(game->walls->NO);
-		free(game->walls->SO);
-		free(game->walls->WE);
-		free(game->walls->EA);
-		free(game->walls);
+		free(game->NO);
+		free(game->SO);
+		free(game->WE);
+		free(game->EA);
 		free(game->map);
 		free_arr(game->map2d);
 	}

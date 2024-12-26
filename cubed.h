@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/22 14:01:02 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/26 15:54:20 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,6 @@ typedef struct s_int_pt
 	int	y;
 }	t_int_pt;
 
-typedef struct s_wall
-{
-    char    *NO;
-    char    *EA;
-    char    *WE;
-    char    *SO;
-	bool	walls_OK;
-}   t_wall;
-
 typedef struct s_textures
 {
 	mlx_texture_t	*NO;
@@ -81,11 +72,15 @@ typedef struct s_ray	//the ray structure
 
 typedef struct s_data	//the data structure
 {
-	t_wall  *walls;
 	char 	*map;
 	char	**map2d;	// the map
 	t_int_pt	p; // player index
 	t_int_pt	m; // map index
+	char    *NO;
+    char    *EA;
+    char    *WE;
+    char    *SO;
+	bool	W;
 	unsigned int	Fcolor;
 	bool			F;
 	unsigned int	Ccolor;
@@ -101,16 +96,6 @@ typedef struct s_mlx	//the mlx structure
 	t_player		*ply;	// the player structure
 	t_textures		*tex;
 }	t_mlx;
-
-// typedef struct s_main
-// {
-//     t_wall  *walls;
-// 	t_fc	*floor;
-//     t_fc    *ceil;
-// 	t_int_pt	msize;
-//     char    *map;
-// 	char	**sq_map;
-// }	t_data;
 
 //map
 void	check_file(int argc, char **argv, t_data *game);
