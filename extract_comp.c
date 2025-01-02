@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/26 15:47:47 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/02 17:09:22 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,7 +360,7 @@ bool create_sqmap(t_data *game)
         return false;
     }
     get_height(game, tmp_arr);
-    tmp_wx = malloc(sizeof(int) * game->m.y);
+    tmp_wx = ft_calloc(game->m.y, sizeof(int));
     if (tmp_wx == NULL)
     {
         free_arr(tmp_arr);  // Make sure to free tmp_arr before returning

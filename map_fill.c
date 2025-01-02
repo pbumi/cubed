@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 16:49:15 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/02 17:10:43 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ bool check_fill(t_data *game)
     char **tmp_arr;
     t_int_pt pt;
     
-    tmp_arr = malloc(sizeof(char *) * (game->m.y + 1));
+    tmp_arr = ft_calloc((game->m.y + 1), sizeof(char *));
     if (!tmp_arr)
     {
         return false;

@@ -8,22 +8,37 @@
 //############################## THE EXITING CODE ##############################//
 //##############################################################################//
 
-// void	ft_exit(t_mlx *mlx) 		// exit the game
-// {
-// 	int	i = 0;
-// 	printf("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
-// 	mlx_delete_image(mlx->mlx_p, mlx->img); // delete the image
-// 	mlx_terminate(mlx->mlx_p); // terminate the mlx pointer
-// 	//mlx_close_window(mlx->mlx_p); // close the window
-// 	while (mlx->dt->map2d[i])
-// 		free(mlx->dt->map2d[i++]); // free the map line by line
-// 	free(mlx->dt->map2d); // free the map
-// 	free(mlx->dt); // free the data structure
-// 	free(mlx->ply); // free the player structure
-// 	free(mlx->ray); // free the ray structure
-// 	printf("Game closed\n"); // print the message
-// 	exit(0); // exit the game
-// }
+void	free_exit(t_mlx *mlx) 		// exit the game
+{
+// // 	int	i = 0;
+// // 	printf("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
+//   	mlx_delete_image(mlx->mlx_p, mlx->img); // delete the image
+// // // 	//mlx_close_window(mlx->mlx_p); // close the window
+// // // 	while (mlx->dt->map2d[i])
+// // // 		free(mlx->dt->map2d[i++]); // free the map line by line
+// // // 	free(mlx->dt->map2d); // free the map
+// // // 	free(mlx->dt); // free the data structure
+ 	if (mlx->tex->EA)
+		mlx_delete_texture(mlx->tex->EA);
+	if (mlx->tex->WE)
+ 		mlx_delete_texture(mlx->tex->WE);
+	if (mlx->tex->NO)
+ 		mlx_delete_texture(mlx->tex->NO);
+	if (mlx->tex->SO)
+ 		mlx_delete_texture(mlx->tex->SO);
+  	free(mlx->tex);
+ 	mlx->tex = NULL;
+  	free_struct(mlx->dt);
+ 	mlx->dt = NULL;
+  	free(mlx->ply); // free the player structure
+	mlx->ply = NULL;
+ 	free(mlx->ray);
+	mlx->ray = NULL;
+//  	mlx_terminate(mlx->mlx_p); // terminate the mlx pointer
+// // 	 // free the ray structure
+// // // 	printf("Game closed\n"); // print the message
+// // // 	exit(0); // exit the game
+}
 
 
 //################################################################################//
@@ -432,9 +447,8 @@ void init_the_player(t_mlx mlx)	// init the player structure
 
 void	mlx_texture_fail(t_mlx *mlx)	// texture fail
 {
-	(void)mlx;
 	printf("Error\nTexture failed to load\n");	// print the message
-	//ft_exit(mlx);	// exit the game ;aonddgoasno;A;K
+	free_exit(mlx);	// exit the game ;aonddgoasno;A;K
 }
 
 void	init_the_textures(t_mlx *mlx)	// load the textures
@@ -468,7 +482,7 @@ void	start_the_game(t_data *dt)	// start the game
 	mlx_loop_hook(mlx.mlx_p, &game_loop, &mlx);	// game loop
 	mlx_loop(mlx.mlx_p);
 	mlx_terminate(mlx.mlx_p);
-	//ft_exit(&mlx);
+	free_exit(&mlx);
 }
 
 //################################################################################################//
