@@ -206,7 +206,7 @@ void set_angle(t_mlx *mlx) //set rotational angle
 		rotate_player(mlx, 0);
 }
 
-void	hook(t_mlx *mlx) //, double move_x, double move_y)	// hook the player
+void	set_player(t_mlx *mlx) //, double move_x, double move_y)	// hook the player
 {
 	t_dbl_pt move;
 
@@ -359,7 +359,7 @@ void	draw_wall(t_mlx *mlx, int t_pix, int b_pix, double wall_h)
 		y_o = 0;
 	while (t_pix < b_pix)
 	{
-		my_mlx_pixel_put(mlx, mlx->ray->index, t_pix, reverse_bytes(arr[(int)y_o * texture->width + (int)x_o]));
+		my_mlx_pixel_put(mlx, mlx->ray->index, t_pix, arr[(int)y_o * texture->width + (int)x_o]); //reverse_bytes(arr[(int)y_o * texture->width + (int)x_o]));
 		y_o += factor;
 		t_pix++;
 	}
@@ -584,7 +584,7 @@ void	cast_rays(t_mlx *mlx)	// cast the rays
 	double	v_inter;
 
 	mlx->ray->index = 0;
-	mlx->ray->ray_ngl = mlx->ply->angle - (mlx->ply->fov_rd / 2); // the start angle
+	mlx->ray->ray_ngl = mlx->ply->angle - (mlx->ply->fov_rd / 2); // the start angle to start from left
 	while (mlx->ray->index < S_W) // loop for the rays
 	{
 		mlx->ray->flag = 0; // flag for the wall
@@ -616,7 +616,7 @@ void	game_loop(void *ml)	// game loop
 	mlx_delete_image(mlx->mlx_p, mlx->img);	// delete the image
 	mlx->img = mlx_new_image(mlx->mlx_p, S_W, S_H);	// create new image
 	set_angle(mlx);
-	hook(mlx); //, 0, 0); // hook the player
+	set_player(mlx); //, 0, 0); // hook the player
 	cast_rays(mlx);	// cast the rays
 	mlx_image_to_window(mlx->mlx_p, mlx->img, 0, 0); // put the image to the window
 }
