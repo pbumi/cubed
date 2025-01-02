@@ -25,100 +25,6 @@
 // 	exit(0); // exit the game
 // }
 
-//##############################################################################################//
-//##############################TEMPORARY MINIMAP ##############################//
-//##############################################################################################//
-
-
-// void	draw_minimap_square(t_mlx *cub ,t_dbl_pt map_pt, size_t size, uint32_t color)
-// {
-// 	for (size_t y = map_pt.y; y <= (map_pt.y + size); y++)
-// 	{
-// 		for (size_t x = map_pt.x; x <= (map_pt.x + size); x++)
-// 		{
-// 			if (y == (map_pt.y + size) || x == (map_pt.x + size) || y == map_pt.y || x == map_pt.x)
-// 				mlx_put_pixel(cub->img, x, y, 0x000000ff);
-// 			else	mlx_put_pixel(cub->img, x, y, color);
-// 		}
-// 	}
-// }
-
-// void draw_line(t_mlx *cub, t_dbl_pt start, t_dbl_pt end, uint32_t color)
-// {
-//     int dx = fabs(end.x - start.x);
-//     int dy = fabs(end.y - start.y);
-//     int step_x = start.x < end.x ? 1 : -1;
-//     int step_y = start.y < end.y ? 1 : -1;
-//     int err = dx - dy;
-
-//     while (true)
-//     {
-//         mlx_put_pixel(cub->img, start.x, start.y, color);
-//         if (start.x == end.x && start.y == end.y)
-//             break;
-//         int e2 = err * 2;
-//         if (e2 > -dy)
-//         {
-//             err -= dy;
-//             start.x += step_x;
-//         }
-//         if (e2 < dx)
-//         {
-//             err += dx;
-//             start.y += step_y;
-//         }
-//     }
-// }
-
-// void draw_player(t_mlx *cub)
-// {
-//     int player_x;
-//     int player_y; 
-//     int ray_end_x;
-//     int ray_end_y; 
-	
-// 	player_x = cub->dt->p.x * MINIMAP_TILE_SIZE;
-// 	player_y = cub->dt->p.y * MINIMAP_TILE_SIZE;
-//     draw_minimap_square(cub, (t_dbl_pt){player_x - 10 / 2, player_y - 10 / 2}, 10, 0x00ff2eff);
-//     ray_end_x = (player_x + (cub->dt->p.x * 10));
-//     ray_end_y = (player_y + (cub->dt->p.y * 10));
-//     draw_line(cub, (t_dbl_pt){player_x, player_y}, (t_dbl_pt){ray_end_x, ray_end_y}, 0xFF0000ff);
-// }
-
-// uint32_t	set_minimap_color(t_mlx *cub, t_dbl_pt *pt)
-// {
-// 	uint32_t	color;
-// 	int x;
-// 	int y;
-
-// 	x = pt->x;
-// 	y = pt->y;
-// 	color = 0xffffffff;
-// 	if (cub->dt->map2d[y][x] == '1')
-// 		color = 0xffc100ff;
-// 	else if (cub->dt->map2d[y][x] == '0')
-// 		color = 0xd75000ff;
-// 	return (color);
-// }
-
-// void	draw_minimap(t_mlx *cub)
-// {
-// 	t_dbl_pt	pt;
-// 	t_dbl_pt	map_pt;
-// 	uint32_t	color;
-	
-// 	for (pt.y = 0; pt.y < cub->dt->m.y; pt.y++)
-// 	{
-// 		for (pt.x = 0; pt.x < cub->dt->m.x; pt.x++)
-// 		{
-// 			map_pt.y = pt.y * MINIMAP_TILE_SIZE;
-// 			map_pt.x = pt.x * MINIMAP_TILE_SIZE;
-// 			color = set_minimap_color(cub, &pt);
-// 			draw_minimap_square(cub, map_pt, MINIMAP_TILE_SIZE, color);
-// 		}
-// 	}
-// 	draw_player(cub);
-// }
 
 //################################################################################//
 //############################## THE MOVEMENT CODE ##############################//
@@ -167,14 +73,14 @@ void	rotate_player(t_mlx *mlx, int i)	// rotate the player
 	if (i == 1)
 	{
 		mlx->ply->angle += ROTATION_SPEED; // rotate right
-		if (mlx->ply->angle > 2 * M_PI)
-			mlx->ply->angle -= 2 * M_PI;
+		if (mlx->ply->angle > (2 * M_PI))
+			mlx->ply->angle -= (2 * M_PI);
 	}
 	else
 	{
 		mlx->ply->angle -= ROTATION_SPEED; // rotate left
 		if (mlx->ply->angle < 0)
-			mlx->ply->angle += 2 * M_PI;
+			mlx->ply->angle += (2 * M_PI);
 	}
 }
 
@@ -185,8 +91,8 @@ void	move_player(t_mlx *mlx, double move_x, double move_y)	// move the player
 	int		new_x;
 	int		new_y;
 
-	new_x = roundf(mlx->ply->plyr_x + move_x); // get the new x position
-	new_y = roundf(mlx->ply->plyr_y + move_y); // get the new y position
+	new_x = (mlx->ply->plyr_x + move_x); // roundf(mlx->ply->plyr_x + move_x); // get the new x position
+	new_y = (mlx->ply->plyr_y + move_y);  //roundf(mlx->ply->plyr_y + move_y); // get the new y position
 	map_grid_x = (new_x / TILE_SIZE); // get the x position in the map
 	map_grid_y = (new_y / TILE_SIZE); // get the y position in the map
 	if (mlx->dt->map2d[map_grid_y][map_grid_x] != '1' && \
@@ -210,6 +116,8 @@ void	set_player(t_mlx *mlx) //, double move_x, double move_y)	// hook the player
 {
 	t_dbl_pt move;
 
+	move.x = 0;
+	move.y = 0;
 	if (mlx->ply->l_r == 1) //move right
 	{
 		move.x = -sin(mlx->ply->angle) * PLAYER_SPEED;
@@ -237,18 +145,18 @@ void	set_player(t_mlx *mlx) //, double move_x, double move_y)	// hook the player
 //############################## THE WALL RENDERING CODE ##############################//
 //#####################################################################################//
 
-void	my_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)	// put the pixel
-{
-	if (x < 0) // check the x position
-		return ;
-	else if (x >= S_W)
-		return ;
-	if (y < 0) // check the y position
-		return ;
-	else if (y >= S_H)
-		return ;
-	mlx_put_pixel(mlx->img, x, y, color); // put the pixel
-}
+// void	my_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)	// put the pixel
+// {
+// 	if (x < 0) // check the x position
+// 		return ;
+// 	else if (x >= S_W)
+// 		return ;
+// 	if (y < 0) // check the y position
+// 		return ;
+// 	else if (y >= S_H)
+// 		return ;
+// 	mlx_put_pixel(mlx->img, x, y, color); // put the pixel
+// }
 
 float	nor_angle(float angle)	// normalize the angle
 {
@@ -267,12 +175,14 @@ void	draw_floor_ceiling(t_mlx *mlx, int ray, int t_pix, int b_pix)	// draw the f
 	// color = (mlx->dt->floor->R << 16 | mlx->dt->floor->G << 8 | mlx->dt->floor->B); // get the color
 	while (i < S_H)
 	{
-		my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Fcolor); // floor
+		mlx_put_pixel(mlx->img, ray, i++, mlx->dt->Fcolor);
+		//my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Fcolor); // floor
 	}
 	i = 0;
 	// color = (mlx->dt->ceil->R << 16 | mlx->dt->ceil->G << 8 | mlx->dt->ceil->B); // get the color
 	while (i < t_pix)
-		my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Ccolor); // ceiling
+		mlx_put_pixel(mlx->img, ray, i++, mlx->dt->Ccolor);
+		//my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Ccolor); // ceiling
 }
 
 mlx_texture_t	*get_texture(t_mlx *mlx, int flag)
@@ -281,16 +191,16 @@ mlx_texture_t	*get_texture(t_mlx *mlx, int flag)
 	if (flag == 0)
 	{
 		if (mlx->ray->ray_ngl > M_PI / 2 && mlx->ray->ray_ngl < 3 * (M_PI / 2))
-			return (mlx->tex->EA);
-		else
 			return (mlx->tex->WE);
+		else
+			return (mlx->tex->EA);
 	}
 	else
 	{
 		if (mlx->ray->ray_ngl > 0 && mlx->ray->ray_ngl < M_PI)
-			return (mlx->tex->SO);
-		else
 			return (mlx->tex->NO);
+		else
+			return (mlx->tex->SO);
 	}
 }
 
@@ -299,9 +209,9 @@ double	get_x_o(mlx_texture_t *texture, t_mlx *mlx)
 	double	x_o;
 
 	if (mlx->ray->flag == 1)
-		x_o = (int)fmodf((mlx->ray->horiz.x * (texture->width / TILE_SIZE)), texture->width);
+		x_o = (int)(mlx->ray->horiz.x * (texture->width / TILE_SIZE)) % texture->width; //(int)fmodf((mlx->ray->horiz.x * (texture->width / TILE_SIZE)), texture->width);
 	else
-		x_o = (int)fmodf((mlx->ray->vert.y * (texture->width / TILE_SIZE)), texture->width);
+		x_o = (int)(mlx->ray->vert.y * (texture->width / TILE_SIZE)) % texture->width; //(int)fmodf((mlx->ray->vert.y * (texture->width / TILE_SIZE)), texture->width);
 	return (x_o);
 }
 
@@ -341,29 +251,55 @@ int	reverse_bytes(int c)
 	return (b);
 }
 
-void	draw_wall(t_mlx *mlx, int t_pix, int b_pix, double wall_h)
+void draw_wall(t_mlx *mlx, int t_pix, int b_pix, double wall_h) // edited
 {
-	double			x_o;
-	double			y_o;
-	mlx_texture_t	*texture;
-	uint32_t		*arr;
-	double			factor;
+    double          x_o;
+    double          y_o;
+    mlx_texture_t   *texture;
+    uint32_t        *arr;
+    double          factor;
 
-	texture = get_texture(mlx, mlx->ray->flag);
-	arr = (uint32_t *)texture->pixels;
-	factor = (double)texture->height / wall_h;
-
-	x_o = get_x_o(texture, mlx);
-	y_o = (t_pix - (S_H / 2) + (wall_h / 2)) * factor;
-	if (y_o < 0)
-		y_o = 0;
-	while (t_pix < b_pix)
-	{
-		my_mlx_pixel_put(mlx, mlx->ray->index, t_pix, arr[(int)y_o * texture->width + (int)x_o]); //reverse_bytes(arr[(int)y_o * texture->width + (int)x_o]));
-		y_o += factor;
-		t_pix++;
-	}
+    texture = get_texture(mlx, mlx->ray->flag);
+    arr = (uint32_t *)texture->pixels;
+    factor = (double)texture->height / wall_h;
+    x_o = get_x_o(texture, mlx);
+    y_o = (t_pix - (S_H / 2) + (wall_h / 2)) * factor;
+    if (y_o < 0)
+        y_o = 0;
+    while (t_pix < b_pix)
+    {
+        if (t_pix >= 0 && t_pix < S_H) 
+        {
+            mlx_put_pixel(mlx->img, mlx->ray->index, t_pix, reverse_bytes(arr[(int)y_o * texture->width + (int)x_o]));
+        }
+        y_o += factor;
+        t_pix++;
+    }
 }
+
+// void	draw_wall(t_mlx *mlx, int t_pix, int b_pix, double wall_h) //correct
+// {
+// 	double			x_o;
+// 	double			y_o;
+// 	mlx_texture_t	*texture;
+// 	uint32_t		*arr;
+// 	double			factor;
+
+// 	texture = get_texture(mlx, mlx->ray->flag);
+// 	arr = (uint32_t *)texture->pixels;
+// 	factor = (double)texture->height / wall_h;
+
+// 	x_o = get_x_o(texture, mlx);
+// 	y_o = (t_pix - (S_H / 2) + (wall_h / 2)) * factor;
+// 	if (y_o < 0)
+// 		y_o = 0;
+// 	while (t_pix < b_pix)
+// 	{
+// 		my_mlx_pixel_put(mlx, mlx->ray->index, t_pix, reverse_bytes(arr[(int)y_o * texture->width + (int)x_o]));
+// 		y_o += factor;
+// 		t_pix++;
+// 	}
+// }
 
 void	render_wall(t_mlx *mlx, int ray)
 {
@@ -518,8 +454,8 @@ int	wall_hit(float x, float y, t_mlx *mlx)	// check the wall hit
 
 	if (x < 0 || y < 0)
 		return (0);
-	x_m = floor (x / TILE_SIZE); // get the x position in the map
-	y_m = floor (y / TILE_SIZE); // get the y position in the map
+	x_m = (int) (x / TILE_SIZE); //floor (x / TILE_SIZE); // get the x position in the map
+	y_m =  (int) (y / TILE_SIZE); //floor (y / TILE_SIZE); // get the y position in the map
 	if ((y_m >= mlx->dt->m.y || x_m >= mlx->dt->m.x))
 		return (0);
 	if (mlx->dt->map2d[y_m] && x_m <= (int)ft_strlen(mlx->dt->map2d[y_m]))
@@ -538,7 +474,7 @@ float	get_h_inter(t_mlx *mlx, float angl)	// get the horizontal intersection
 
 	y_step = TILE_SIZE;
 	x_step = TILE_SIZE / tan(angl);
-	h_y = floor(mlx->ply->plyr_y / TILE_SIZE) * TILE_SIZE;
+	h_y = (int)(mlx->ply->plyr_y / TILE_SIZE) * TILE_SIZE; //floor(mlx->ply->plyr_y / TILE_SIZE) * TILE_SIZE;
 	pixel = inter_check(angl, &h_y, &y_step, 1);
 	h_x = mlx->ply->plyr_x + (h_y - mlx->ply->plyr_y) / tan(angl);
 	if ((unit_circle(angl, 'y') && x_step > 0) || (!unit_circle(angl, 'y') && x_step < 0)) // check x_step value
@@ -563,7 +499,7 @@ float	get_v_inter(t_mlx *mlx, float angl)	// get the vertical intersection
 
 	x_step = TILE_SIZE; 
 	y_step = TILE_SIZE * tan(angl);
-	v_x = floor(mlx->ply->plyr_x / TILE_SIZE) * TILE_SIZE;
+	v_x = (int)(mlx->ply->plyr_x / TILE_SIZE) * TILE_SIZE; // floor(mlx->ply->plyr_x / TILE_SIZE) * TILE_SIZE;
 	pixel = inter_check(angl, &v_x, &x_step, 0); // check the intersection and get the pixel value
 	v_y = mlx->ply->plyr_y + (v_x - mlx->ply->plyr_x) * tan(angl);
 	if ((unit_circle(angl, 'x') && y_step < 0) || (!unit_circle(angl, 'x') && y_step > 0)) // check y_step value
@@ -641,6 +577,7 @@ void	game_loop(void *ml)	// game loop
 //         mlx->ply->angle = 0;
 //     }
 // }    
+
 void init_the_player(t_mlx mlx)	// init the player structure
 {
 	mlx.ply->plyr_x = mlx.dt->p.x * TILE_SIZE + TILE_SIZE / 2; // player x position in pixels in the center of the tile

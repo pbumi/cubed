@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/26 15:46:39 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/02 15:56:02 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,19 @@ bool check_components(int fd, t_data *game)
 
 void	initialize_struct(t_data *game)
 {
-	game->W = false;
     game->NO = NULL;
     game->SO = NULL;
     game->WE = NULL;
     game->EA = NULL;
+	game->W = false;
 	game->Fcolor = 0;
 	game->Ccolor = 0;
+	game->C = false;
+	game->F = false;
 	game->p.x = 0;
 	game->p.y = 0;
 	game->m.x = 0;
 	game->m.y = 0;
-	game->C = false;
-	game->F = false;
 	game->map = NULL;
 	game->map2d = NULL;
 }

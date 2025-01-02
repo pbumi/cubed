@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/26 15:54:20 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/02 15:52:25 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 
 # define S_W 1900 // screen width
 # define S_H 1000 // screen height
-# define TILE_SIZE 30 // tile size
+# define TILE_SIZE 64 // tile size
 # define FOV 60 // field of view
-# define ROTATION_SPEED 0.045 // rotation speed
+# define ROTATION_SPEED 0.040 // rotation speed
 # define PLAYER_SPEED 4	// player speed
 
 
