@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:25:27 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 16:32:58 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/03 17:40:20 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,29 +56,33 @@ size_t  arr_size(char **arr)
 
 char** allocate2DCharArray(int y, int x)
 {
-    char **arr = ft_calloc(y + 1, sizeof(char *)); //(char**)malloc((sizeof(char*) * y + 1));
+    char **arr;
+    t_int_pt pt;
+    
+    pt.x = 0;
+    arr = ft_calloc(y + 1, sizeof(char *));
     if (arr == NULL)
-	{
-        return NULL;
-    }
-    int i = 0;
-    while (i < y) 
-	{
-        arr[i] = ft_calloc(x + 1, sizeof(char)); //(char*)malloc(sizeof(char) * x + 1);
-        if (arr[i] == NULL) 
-		{
-            int j = 0;
-            while (j < i) {
-                free(arr[j]);
-                j++;
+        return NULL; // Memory allocation failed
+    while (pt.x < y)
+    {
+        arr[pt.x] = ft_calloc(x + 1, sizeof(char)); // Allocate memory for each row
+        if (arr[pt.x] == NULL)
+        {
+            pt.y = 0;
+            while (pt.y < pt.x)
+            {
+                free(arr[pt.y]);
+                pt.y++;
             }
             free(arr);
-            return NULL;
+            return NULL; // Return NULL to indicate failure
         }
-        i++;
+        pt.x++;
     }
-    return arr;
+    return arr; // Return the 2D array
 }
+
+
 
 int find_max(int *arr, int size)
 {

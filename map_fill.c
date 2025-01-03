@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/02 17:10:43 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:39:47 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ bool check_for_X(char **tmp_arr, int rows, int cols)
 {
     int y = 0, x;
     
-    // Check if any 'X' exists in the array
     while (y < rows) 
     {
         x = 0;
@@ -121,60 +120,53 @@ bool check_for_X(char **tmp_arr, int rows, int cols)
 
 bool check_floodfill(t_data *game, char **tmp_arr, int rows, int cols) 
 {
-    // Print array before marking
-    // printf("Before marking border and space-connected '0's:\n");
-    // for (int i = 0; i < rows; i++) 
-    // {
-    //     printf("%s\n", tmp_arr[i]);
-    // }
-
-    // Mark the borders and space-connected '0's
     mark_lrborders(tmp_arr, rows, cols);
     mark_tbborders(tmp_arr, rows, cols);
     mark_spaces(tmp_arr, rows, cols);
     mark_player(game, tmp_arr, rows, cols);
-
-    // // Print array after marking
-    // printf("After marking border and space-connected '0's:\n");
-    // for (int i = 0; i < rows; i++) 
-    // {
-    //     printf("%s\n", tmp_arr[i]);
-    // }
-
-    // If any 'X' was marked, return false
-    if (check_for_X(tmp_arr, rows, cols)) 
-        return false;
-
-    return true;
-}
-
-bool check_fill(t_data *game)
-{
-    char **tmp_arr;
-    t_int_pt pt;
-    
-    tmp_arr = ft_calloc((game->m.y + 1), sizeof(char *));
-    if (!tmp_arr)
+    if (check_for_X(tmp_arr, rows, cols))
     {
         return false;
     }
+    return true;
+}
+
+bool fill_tmparr(t_data *game, char **tmp_arr)
+{
+    t_int_pt pt;
+    
     pt.y = 0;
     while (pt.y < game->m.y)
     {
         tmp_arr[pt.y] = ft_strdup(game->map2d[pt.y]);
-        if (!tmp_arr[pt.y])
+        if (!tmp_arr[pt.y])  // Allocation failed
         {
             while (pt.y > 0)
             {
                 free(tmp_arr[pt.y - 1]);
                 pt.y--;
             }
-            free(tmp_arr); 
-            return false;
+            free(tmp_arr);  // Free the array itself
+            return false;   // Return failure
         }
         pt.y++;
     }
-    tmp_arr[pt.y] = NULL;
+    tmp_arr[pt.y] = NULL;  // Null-terminate the array
+    return true;
+}
+
+bool check_fill(t_data *game)
+{
+    char **tmp_arr;
+
+    tmp_arr = ft_calloc(game->m.y + 1, sizeof(char *));
+    if (!tmp_arr)  
+        return false;
+    if (fill_tmparr(game, tmp_arr) == false)
+    {
+        free_arr(tmp_arr);
+        return false;
+    }
     if (check_floodfill(game, tmp_arr, game->m.y, game->m.x) == false)
     {
         free_arr(tmp_arr);

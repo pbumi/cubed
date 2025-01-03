@@ -168,29 +168,27 @@ float	nor_angle(float angle)	// normalize the angle
 		angle -= (2 * M_PI);
 	return (angle);
 }
+
 void	draw_floor_ceiling(t_mlx *mlx, int ray, int t_pix, int b_pix)	// draw the floor and the ceiling
 {
 	int		i;
-	// unsigned int	color;
 
 	i = b_pix;
-	// color = (mlx->dt->floor->R << 16 | mlx->dt->floor->G << 8 | mlx->dt->floor->B); // get the color
 	while (i < S_H)
 	{
 		mlx_put_pixel(mlx->img, ray, i++, mlx->dt->Fcolor);
-		//my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Fcolor); // floor
 	}
 	i = 0;
-	// color = (mlx->dt->ceil->R << 16 | mlx->dt->ceil->G << 8 | mlx->dt->ceil->B); // get the color
 	while (i < t_pix)
+	{
 		mlx_put_pixel(mlx->img, ray, i++, mlx->dt->Ccolor);
-		//my_mlx_pixel_put(mlx, ray, i++, mlx->dt->Ccolor); // ceiling
+	}
 }
 
 mlx_texture_t	*get_texture(t_mlx *mlx)
 {
 	mlx->ray->ray_ngl = nor_angle(mlx->ray->ray_ngl);
-	if (mlx->ray->h_inter_hit == false)
+	if (mlx->ray->wall_hit == false)
 	{
 		if (mlx->ray->ray_ngl > M_PI / 2 && mlx->ray->ray_ngl < 3 * (M_PI / 2))
 			return (mlx->tex->WE);
@@ -210,7 +208,7 @@ double	get_pixeldata(mlx_texture_t *texture, t_mlx *mlx)
 {
 	double	pixel;
 
-	if (mlx->ray->h_inter_hit == true)
+	if (mlx->ray->wall_hit == true)
 		pixel = (int)(mlx->ray->horiz.x * (texture->width / TILE_SIZE)) % texture->width; //(int)fmodf((mlx->ray->horiz.x * (texture->width / TILE_SIZE)), texture->width);
 	else
 		pixel = (int)(mlx->ray->vert.y * (texture->width / TILE_SIZE)) % texture->width; //(int)fmodf((mlx->ray->vert.y * (texture->width / TILE_SIZE)), texture->width);
@@ -324,8 +322,10 @@ int	wall_hit(float x, float y, t_mlx *mlx)	// check the wall hit
 	if ((y_m >= mlx->dt->m.y || x_m >= mlx->dt->m.x))
 		return (0);
 	if (mlx->dt->map2d[y_m] && x_m <= (int)ft_strlen(mlx->dt->map2d[y_m]))
+	{
 		if (mlx->dt->map2d[y_m][x_m] == '1')
 			return (0);
+	}
 	return (1);
 }
 
@@ -388,7 +388,7 @@ void	cast_rays(t_mlx *mlx)	// cast the rays
 	mlx->ray->ray_ngl = mlx->ply->angle - (mlx->ply->fov_rd / 2); // the start angle to start from left
 	while (mlx->ray->index < S_W) // loop for the rays
 	{
-		mlx->ray->h_inter_hit = false; // flag for the wall
+		mlx->ray->wall_hit = false; // flag for the wall
 		h_inter = get_h_inter(mlx, nor_angle(mlx->ray->ray_ngl)); // get the horizontal intersection
 		v_inter = get_v_inter(mlx, nor_angle(mlx->ray->ray_ngl)); // get the vertical intersection
 		if (v_inter <= h_inter) // check the distance
@@ -396,7 +396,7 @@ void	cast_rays(t_mlx *mlx)	// cast the rays
 		else
 		{
 			mlx->ray->distance = h_inter; // get the distance
-			mlx->ray->h_inter_hit = true; // flag for the wall
+			mlx->ray->wall_hit = true; // flag for the wall
 		}
 		render_ray(mlx, mlx->ray->index); // render the wall
 		mlx->ray->index++; // next ray
@@ -413,7 +413,7 @@ void	game_loop(void *ml)	// game loop
 {
 	t_mlx	*mlx;
 
-	mlx = ml;	// cast to the mlx structure
+	mlx = (t_mlx *)ml;	// cast to the mlx structure
 	mlx_delete_image(mlx->mlx_p, mlx->img);	// delete the image
 	mlx->img = mlx_new_image(mlx->mlx_p, S_W, S_H);	// create new image
 	set_angle(mlx);
@@ -422,32 +422,32 @@ void	game_loop(void *ml)	// game loop
 	mlx_image_to_window(mlx->mlx_p, mlx->img, 0, 0); // put the image to the window
 }
 
-void init_the_player(t_mlx mlx)	// init the player structure
+void init_the_player(t_mlx *mlx)	// init the player structure
 {
-	mlx.ply->plyr_x = mlx.dt->p.x * TILE_SIZE + TILE_SIZE / 2; // player x position in pixels in the center of the tile
-	mlx.ply->plyr_y = mlx.dt->p.y * TILE_SIZE + TILE_SIZE / 2; // player y position in pixels in the center of the tile
-	mlx.ply->fov_rd = (FOV * M_PI) / 180; // field of view in radians
-	if (mlx.dt->map2d[mlx.dt->p.y][mlx.dt->p.x] == 'N')
+	mlx->ply->plyr_x = mlx->dt->p.x * TILE_SIZE + TILE_SIZE / 2; // player x position in pixels in the center of the tile
+	mlx->ply->plyr_y = mlx->dt->p.y * TILE_SIZE + TILE_SIZE / 2; // player y position in pixels in the center of the tile
+	mlx->ply->fov_rd = (FOV * M_PI) / 180; // field of view in radians
+	if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'N')
     {
-        mlx.ply->angle = 3 * M_PI / 2;
+        mlx->ply->angle = 3 * M_PI / 2;
     }
-    else if (mlx.dt->map2d[mlx.dt->p.y][mlx.dt->p.x] == 'S')
+    else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'S')
     {
-        mlx.ply->angle = M_PI / 2;
+        mlx->ply->angle = M_PI / 2;
     }
-    else if (mlx.dt->map2d[mlx.dt->p.y][mlx.dt->p.x] == 'W')
+    else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'W')
     {
-        mlx.ply->angle = M_PI;
+        mlx->ply->angle = M_PI;
     }
-    else if (mlx.dt->map2d[mlx.dt->p.y][mlx.dt->p.x] == 'E')
+    else if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'E')
     {
-        mlx.ply->angle = 0;
+        mlx->ply->angle = 0;
     } 
 }
 
 void	mlx_texture_fail(t_mlx *mlx)	// texture fail
 {
-	printf("Error\nTexture failed to load\n");	// print the message
+	ft_putstr_fd("Error\nTexture failed to load\n", 2);
 	free_exit(mlx);	// exit the game ;aonddgoasno;A;K
 }
 
@@ -467,22 +467,54 @@ void	init_the_textures(t_mlx *mlx)	// load the textures
 		mlx_texture_fail(mlx);	// texture fail
 }
 
+bool	initialize_mlx_struct(t_mlx *mlx)
+{
+	mlx->ply = ft_calloc(1, sizeof(t_player));	// init the player structure i'm using calloc to initialize the variables to zero
+	if (!mlx->ply)
+	{
+		return (false);
+	}
+	mlx->ray = ft_calloc(1, sizeof(t_ray));	// init the ray structure
+	if (!mlx->ray)
+	{
+		return (false);
+	}
+	mlx->tex = ft_calloc(1, sizeof(t_textures)); // init texture
+	if (!mlx->tex)
+	{
+		return (false);
+	}
+	init_the_player(mlx);	// init the player structure
+	init_the_textures(mlx);
+	return(true);
+}
+
+void 	end_the_game(t_mlx *mlx)
+{
+	mlx_delete_image(mlx->mlx_p, mlx->img);
+	mlx_terminate(mlx->mlx_p);
+	free_exit(mlx);
+}
 void	start_the_game(t_data *dt)	// start the game
 {
 	t_mlx	mlx;
 
-	mlx.dt = dt;	// init the mlx structure
-	mlx.ply = ft_calloc(1, sizeof(t_player));	// init the player structure i'm using calloc to initialize the variables to zero
-	mlx.ray = ft_calloc(1, sizeof(t_ray));	// init the ray structure
-	mlx.tex = ft_calloc(1, sizeof(t_textures));	// init the textures structure
+	mlx.dt = dt;
+	if (initialize_mlx_struct(&mlx) == false)
+	{
+		ft_putstr_fd(" malloc error\n", 2);
+		free_exit(&mlx);
+	}
 	mlx.mlx_p = mlx_init(S_W, S_H, "Cub3D", 0);	// init the mlx pointer
-	init_the_player(mlx);	// init the player structure
-	init_the_textures(&mlx);	// init the textures
+	if (mlx.mlx_p == NULL)
+    {
+		ft_putstr_fd(" mlx error\n", 2);
+		end_the_game(&mlx);
+	}
 	mlx_key_hook(mlx.mlx_p, &mlx_key, &mlx);	// key press and release
 	mlx_loop_hook(mlx.mlx_p, &game_loop, &mlx);	// game loop
 	mlx_loop(mlx.mlx_p);
-	mlx_terminate(mlx.mlx_p);
-	free_exit(&mlx);
+	end_the_game(&mlx);
 }
 
 //################################################################################################//
@@ -514,6 +546,5 @@ int main(int argc, char **argv)	// main function
 	testchecker(&dt);
 	start_the_game(&dt);
 	free_struct(&dt);
-	//ft_exit()	// start the game
 	return 0;
 }

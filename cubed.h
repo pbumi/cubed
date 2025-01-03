@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/02 16:28:03 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:17:15 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ typedef struct s_ray	//the ray structure
 	double	ray_ngl;	// ray angle
 	double	distance;	// distance to the wall
 	int		index;
-	bool		h_inter_hit;		// flag for the wall
+	bool		wall_hit;		// flag for the wall
 	t_dbl_pt	horiz;		// horizontal wall hit
 	t_dbl_pt	vert;		// vertical wall hit
 }	t_ray;

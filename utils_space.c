@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:20:30 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 18:30:18 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:09:12 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ bool remove_spaces(char **colors)
             while (x > 0)
             {
                 x--;
-                safe_free((void **)&colors[x]);
+                free(colors[x]);
             }
             return false;
         }

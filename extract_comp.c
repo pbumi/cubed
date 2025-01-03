@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/02 17:09:22 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/03 17:44:40 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,13 @@ bool get_rgb2(char *line, t_data *game, char *str)
     if (arr_size(colors) != 3 || check_range(colors) == false)
     {
         errorhandler(NULL, "* Invalid parameters for colors *", false);
-        free_arr(colors);  // Free memory before returning on failure
+        free_arr(colors); 
+        colors = NULL; // Free memory before returning on failure
         return false;
     }
     set_color(game, str, colors);
     free_arr(colors);
+    colors = NULL;
     return true;
 }
 bool get_rgb1(char *line, char *str, t_data *game)
@@ -143,10 +145,8 @@ bool check_wall_component(char *line, char *identifier, char **wall_ptr)
 {
     char *tmp = NULL;
 
-    // Check if line starts with the identifier and if wall_ptr is NULL (i.e., not yet assigned)
     if (ft_strncmp(line, identifier, 2) == 0 && !(*wall_ptr))
     {
-        // Check if the next character is a space
         if (is_space(line[2]) == true)
         {
             tmp = remove_wspace(line, 3);  // Remove leading and trailing spaces from the line starting from index 3
@@ -155,19 +155,14 @@ bool check_wall_component(char *line, char *identifier, char **wall_ptr)
                 *wall_ptr = tmp;  // Assign the trimmed string to the wall pointer
                 return true;  // Successfully set the wall component
             }
-
-            // If the line is empty or incorrectly formatted, free tmp and return false
             free(tmp);
             tmp = NULL;
         }
-
-        // Error message for invalid format
         ft_putstr_fd("Error\n* Invalid format for ", 2);
         ft_putstr_fd(identifier, 2);
         ft_putstr_fd(" wall *\n", 2);
-        return false;  // Return false if the wall component is not valid
+        return (false);
     }
-
     return true;  // Return true if the wall component was already set or the line is valid
 }
 
@@ -202,15 +197,15 @@ bool check_contents(char *line, t_data *game)
 		game->W = true;
 	if (get_rgb1(line, "F", game) == false)
         return false;
-	else if (get_rgb1(line, "C", game) == false)
+	if (get_rgb1(line, "C", game) == false)
         return false;
-    else if (!check_wall_component(line, "NO", &game->NO))
+    if (!check_wall_component(line, "NO", &game->NO))
         return false;
-    else if (!check_wall_component(line, "SO", &game->SO))
+    if (!check_wall_component(line, "SO", &game->SO))
         return false;
-    else if (!check_wall_component(line, "WE", &game->WE))
+    if (!check_wall_component(line, "WE", &game->WE))
         return false;
-    else if (!check_wall_component(line, "EA", &game->EA))
+    if (!check_wall_component(line, "EA", &game->EA))
         return false;
 	else
 		return true;
@@ -322,7 +317,6 @@ void fill_maparray(t_data *game, int *tmp_wx, char **tmp_arr)
 		game->map2d[pt.y][pt.x] = '\0';
 		pt.y++;
 	}
-	printf("pty %d,g_h %d\n", pt.y, game->m.y);
 	game->map2d[game->m.y] = NULL;
 }
 
@@ -397,7 +391,6 @@ bool	extract_components(int fd, char *line, t_data *game)
 			return false;	
 		}
 		fill_player_position(game);
-		// fill_plane_dir(game);
 		if (check_fill(game) == false)
 		{
 			errorhandler(game,"* Invalid map *", false);
