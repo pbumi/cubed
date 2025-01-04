@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/03 18:17:15 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:42:56 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,6 @@ typedef struct s_int_pt
 	int	x;
 	int	y;
 }	t_int_pt;
-
-typedef struct s_textures
-{
-	mlx_texture_t	*NO;
-	mlx_texture_t	*EA;
-	mlx_texture_t	*SO;
-	mlx_texture_t	*WE;
-}			t_textures;
 
 typedef struct s_player //the player structure
 {
@@ -94,7 +86,10 @@ typedef struct s_mlx	//the mlx structure
 	t_ray			*ray;	// the ray structure
 	t_data			*dt;	// the data structure
 	t_player		*ply;	// the player structure
-	t_textures		*tex;
+	mlx_texture_t	*NO;
+	mlx_texture_t	*EA;
+	mlx_texture_t	*SO;
+	mlx_texture_t	*WE;
 }	t_mlx;
 
 //map
@@ -104,7 +99,7 @@ bool extract_map1(int fd, t_data *game);
 bool	validate_map(t_data *game);
 bool	check_fill(t_data *game);
 //free
-void free_struct(t_data *game);
+void free_data(t_data *game);
 void free_arr(char **arr);
 void safe_free(void **ptr);
 void free_and_close(char *line, int fd);
@@ -116,6 +111,8 @@ char *remove_wspace(char *line, int start);
 char *remove_whitespaces(char *line, int start);
 bool remove_spaces(char **colors);
 //utils
+void    free_dt_exit(t_data *game, char *msg, int error_code);
+void	error_msg(char *msg);
 void	errorhandler(t_data *game, char *msg, bool fatal);
 void	error_exit(char *msg, bool fatal);
 size_t  arr_size(char **arr);

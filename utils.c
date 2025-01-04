@@ -6,35 +6,54 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:25:27 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/03 17:40:20 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:43:23 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
 
-void	error_exit(char *msg, bool fatal)
+void    free_dt_exit(t_data *game, char *msg, int code)
 {
+    if (game)
+	{
+		free_data(game);
+	}	
 	if (msg)
 	{
-		ft_putstr_fd("Error\n", 2);
-		ft_putendl_fd(msg, 2);	
+		ft_putstr_fd("Error\n", STDERR_FILENO);
+		ft_putendl_fd(msg, STDERR_FILENO);	
 	}
-	if (fatal)
-	{
-		exit(1);
-	}
+	exit(code);
+}
+// void	error_exit(char *msg, bool fatal)
+// {
+// 	if (msg)
+// 	{
+// 		ft_putstr_fd("Error\n", 2);
+// 		ft_putendl_fd(msg, 2);	
+// 	}
+// 	if (fatal)
+// 	{
+// 		exit(1);
+// 	}
+// }
+
+void	error_msg(char *msg)
+{
+	ft_putstr_fd("Error\n", 2);
+	ft_putendl_fd(msg, 2);	
 }
 
 void	errorhandler(t_data *game, char *msg, bool fatal)
 {
 	if (game)
 	{
-		free_struct(game);
+		free_data(game);
 	}	
 	if (msg)
 	{
-		ft_putstr_fd("Error\n", 2);
-		ft_putendl_fd(msg, 2);	
+		ft_putstr_fd("Error\n", STDERR_FILENO);
+		ft_putendl_fd(msg, STDERR_FILENO);	
 	}
 	if (fatal)
 	{
@@ -86,12 +105,18 @@ char** allocate2DCharArray(int y, int x)
 
 int find_max(int *arr, int size)
 {
-    int max = arr[0];  // Assume the first element is the max initially
-
-    for (int i = 1; i < size; i++) {
-        if (arr[i] > max) {
+    int max;
+    int i;
+    
+    max = arr[0];  // Assume the first element is the max initially
+    i = 1;
+    while (i < size)
+    {
+        if (arr[i] > max) 
+        {
             max = arr[i];  // Update max if current element is greater
         }
+        i++;
     }
     return max;
 }

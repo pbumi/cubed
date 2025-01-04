@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:16:51 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/03 18:07:05 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/04 17:05:32 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void free_arr(char **arr)
     free(arr);                 // Free the array itself (pointer to the array)
 }
 
-void free_struct(t_data *game)
+void free_data(t_data *game)
 {
 	if (game)
 	{

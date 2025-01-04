@@ -8,36 +8,22 @@
 //############################## THE EXITING CODE ##############################//
 //##############################################################################//
 
-void	free_exit(t_mlx *mlx) 		// exit the game
+void	free_all(t_mlx *mlx) 		// exit the game
 {
-// // 	int	i = 0;
-// // 	printf("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
-//   	mlx_delete_image(mlx->mlx_p, mlx->img); // delete the image
-// // // 	//mlx_close_window(mlx->mlx_p); // close the window
-// // // 	while (mlx->dt->map2d[i])
-// // // 		free(mlx->dt->map2d[i++]); // free the map line by line
-// // // 	free(mlx->dt->map2d); // free the map
-// // // 	free(mlx->dt); // free the data structure
- 	if (mlx->tex->EA)
-		mlx_delete_texture(mlx->tex->EA);
-	if (mlx->tex->WE)
- 		mlx_delete_texture(mlx->tex->WE);
-	if (mlx->tex->NO)
- 		mlx_delete_texture(mlx->tex->NO);
-	if (mlx->tex->SO)
- 		mlx_delete_texture(mlx->tex->SO);
-  	free(mlx->tex);
- 	mlx->tex = NULL;
-  	free_struct(mlx->dt);
- 	mlx->dt = NULL;
-  	free(mlx->ply); // free the player structure
-	mlx->ply = NULL;
- 	free(mlx->ray);
-	mlx->ray = NULL;
-//  	mlx_terminate(mlx->mlx_p); // terminate the mlx pointer
-// // 	 // free the ray structure
-// // // 	printf("Game closed\n"); // print the message
-// // // 	exit(0); // exit the game
+ 	if (mlx->EA)
+		mlx_delete_texture(mlx->EA);
+	if (mlx->WE)
+ 		mlx_delete_texture(mlx->WE);
+	if (mlx->NO)
+ 		mlx_delete_texture(mlx->NO);
+	if (mlx->SO)
+ 		mlx_delete_texture(mlx->SO);
+	if (mlx->dt)
+		free_data(mlx->dt);
+	if (mlx->ply)
+		free(mlx->ply);
+	if (mlx->ray)
+		free(mlx->ray);
 }
 
 
@@ -131,8 +117,6 @@ void	set_player(t_mlx *mlx) //, double move_x, double move_y)	// hook the player
 {
 	t_dbl_pt move;
 
-	move.x = 0;
-	move.y = 0;
 	if (mlx->ply->l_r == 1) //move right
 	{
 		move.x = -sin(mlx->ply->angle) * PLAYER_SPEED;
@@ -176,12 +160,14 @@ void	draw_floor_ceiling(t_mlx *mlx, int ray, int t_pix, int b_pix)	// draw the f
 	i = b_pix;
 	while (i < S_H)
 	{
-		mlx_put_pixel(mlx->img, ray, i++, mlx->dt->Fcolor);
+		mlx_put_pixel(mlx->img, ray, i, mlx->dt->Fcolor);
+		i++;
 	}
 	i = 0;
 	while (i < t_pix)
 	{
-		mlx_put_pixel(mlx->img, ray, i++, mlx->dt->Ccolor);
+		mlx_put_pixel(mlx->img, ray, i, mlx->dt->Ccolor);
+		i++;
 	}
 }
 
@@ -191,16 +177,16 @@ mlx_texture_t	*get_texture(t_mlx *mlx)
 	if (mlx->ray->wall_hit == false)
 	{
 		if (mlx->ray->ray_ngl > M_PI / 2 && mlx->ray->ray_ngl < 3 * (M_PI / 2))
-			return (mlx->tex->WE);
+			return (mlx->WE);
 		else
-			return (mlx->tex->EA);
+			return (mlx->EA);
 	}
 	else
 	{
 		if (mlx->ray->ray_ngl > 0 && mlx->ray->ray_ngl < M_PI)
-			return (mlx->tex->NO);
+			return (mlx->NO);
 		else
-			return (mlx->tex->SO);
+			return (mlx->SO);
 	}
 }
 
@@ -409,17 +395,33 @@ void	cast_rays(t_mlx *mlx)	// cast the rays
 //############################## START THE GAME AND THE GAME LOOP ##############################//
 //##############################################################################################//
 
+void 	end_the_game(t_mlx *mlx, int exit_code)
+{
+	mlx_delete_image(mlx->mlx_p, mlx->img);
+	mlx_terminate(mlx->mlx_p);
+	free_all(mlx);
+	free(mlx);
+	mlx = NULL;
+	ft_putendl_fd("GAME OVER!", 1);
+	exit (exit_code);
+}
+
 void	game_loop(void *ml)	// game loop
 {
 	t_mlx	*mlx;
 
-	mlx = (t_mlx *)ml;	// cast to the mlx structure
+	mlx = (t_mlx *)ml;
 	mlx_delete_image(mlx->mlx_p, mlx->img);	// delete the image
-	mlx->img = mlx_new_image(mlx->mlx_p, S_W, S_H);	// create new image
+	mlx->img = mlx_new_image(mlx->mlx_p, S_W, S_H);
+	if(!mlx->img)
+	{
+		ft_putstr_fd("Error\nMlx image load error\n", 2);
+		end_the_game(mlx, 1);
+	}
 	set_angle(mlx);
 	set_player(mlx); //, 0, 0); // hook the player
 	cast_rays(mlx);	// cast the rays
-	mlx_image_to_window(mlx->mlx_p, mlx->img, 0, 0); // put the image to the window
+	mlx_image_to_window(mlx->mlx_p, mlx->img, 0, 0);// put the image to the window
 }
 
 void init_the_player(t_mlx *mlx)	// init the player structure
@@ -445,43 +447,54 @@ void init_the_player(t_mlx *mlx)	// init the player structure
     } 
 }
 
-void	mlx_texture_fail(t_mlx *mlx)	// texture fail
+void free_all_exit(t_mlx *mlx, int exit_code)
 {
-	ft_putstr_fd("Error\nTexture failed to load\n", 2);
-	free_exit(mlx);	// exit the game ;aonddgoasno;A;K
+	free_all(mlx);
+	free(mlx);
+	mlx = NULL;
+	exit(exit_code);
+}
+void	init_the_textures(t_mlx *mlx)	
+{
+	mlx->NO = mlx_load_png(mlx->dt->NO);	
+	if (!mlx->NO)
+	{
+		ft_putstr_fd("Error\nFailed to load NO texture\n", 2);
+		free_all_exit(mlx, 1);
+	}
+	mlx->SO = mlx_load_png(mlx->dt->SO);	
+	if (!mlx->SO)
+	{
+		ft_putstr_fd("Error\nFailed to load SO texture\n", 2);
+		free_all_exit(mlx, 1);
+	}
+	mlx->WE = mlx_load_png(mlx->dt->WE);
+	if (!mlx->WE)
+	{
+		ft_putstr_fd("Error\nFailed to load WE texture\n", 2);
+		free_all_exit(mlx, 1);
+	}
+	mlx->EA = mlx_load_png(mlx->dt->EA);
+	if (!mlx->EA)
+	{
+		ft_putstr_fd("Error\nFailed to load EA texturen", 2);
+		free_all_exit(mlx, 1);
+	}
 }
 
-void	init_the_textures(t_mlx *mlx)	// load the textures
+bool	initialize_mlx_struct(t_mlx *mlx, t_data *dt)
 {
-	mlx->tex->NO = mlx_load_png(mlx->dt->NO);	// load the north texture
-	if (!mlx->tex->NO)	// check the texture
-		mlx_texture_fail(mlx);	// texture fail
-	mlx->tex->SO = mlx_load_png(mlx->dt->SO);	// load the south texture
-	if (!mlx->tex->SO)	// check the texture
-		mlx_texture_fail(mlx);	// texture fail
-	mlx->tex->WE = mlx_load_png(mlx->dt->WE);	// load the west texture
-	if (!mlx->tex->WE)	// check the texture
-		mlx_texture_fail(mlx);	// texture fail
-	mlx->tex->EA = mlx_load_png(mlx->dt->EA);	// load the east texture
-	if (!mlx->tex->EA)	// check the texture
-		mlx_texture_fail(mlx);	// texture fail
-}
-
-bool	initialize_mlx_struct(t_mlx *mlx)
-{
+	mlx->dt = dt;
 	mlx->ply = ft_calloc(1, sizeof(t_player));	// init the player structure i'm using calloc to initialize the variables to zero
 	if (!mlx->ply)
 	{
+		ft_putstr_fd("Error\nMalloc error\n", 2);
 		return (false);
 	}
 	mlx->ray = ft_calloc(1, sizeof(t_ray));	// init the ray structure
 	if (!mlx->ray)
 	{
-		return (false);
-	}
-	mlx->tex = ft_calloc(1, sizeof(t_textures)); // init texture
-	if (!mlx->tex)
-	{
+		ft_putstr_fd("Error\nMalloc error\n", 2);
 		return (false);
 	}
 	init_the_player(mlx);	// init the player structure
@@ -489,62 +502,37 @@ bool	initialize_mlx_struct(t_mlx *mlx)
 	return(true);
 }
 
-void 	end_the_game(t_mlx *mlx)
-{
-	mlx_delete_image(mlx->mlx_p, mlx->img);
-	mlx_terminate(mlx->mlx_p);
-	free_exit(mlx);
-}
-void	start_the_game(t_data *dt)	// start the game
-{
-	t_mlx	mlx;
 
-	mlx.dt = dt;
-	if (initialize_mlx_struct(&mlx) == false)
-	{
-		ft_putstr_fd(" malloc error\n", 2);
-		free_exit(&mlx);
-	}
-	mlx.mlx_p = mlx_init(S_W, S_H, "Cub3D", 0);	// init the mlx pointer
-	if (mlx.mlx_p == NULL)
+void	start_the_game(t_mlx *mlx)	// start the game
+{
+	mlx->mlx_p = mlx_init(S_W, S_H, "Cub3D", 0);	// init the mlx pointer
+	if (!mlx->mlx_p)
     {
-		ft_putstr_fd(" mlx error\n", 2);
-		end_the_game(&mlx);
+		ft_putstr_fd("Error\nMlx initalization error\n", 2);
+		end_the_game(mlx, 1);
 	}
-	mlx_key_hook(mlx.mlx_p, &mlx_key, &mlx);	// key press and release
-	mlx_loop_hook(mlx.mlx_p, &game_loop, &mlx);	// game loop
-	mlx_loop(mlx.mlx_p);
-	end_the_game(&mlx);
+	mlx_key_hook(mlx->mlx_p, &mlx_key, mlx);	// key press and release
+	mlx_loop_hook(mlx->mlx_p, &game_loop, mlx);	// game loop
+	mlx_loop(mlx->mlx_p);
 }
 
-//################################################################################################//
-//############################## THE MAIN FUNCTION AND INIT THE MAP ##############################//
-//################################################################################################//
-
-void testchecker(t_data *game) //TESTER DELETE
-{
-	printf("NO: %s\n", game->NO);
-	printf("SO: %s\n", game->SO);
-	printf("WE: %s\n", game->WE);
-	printf("EA: %s\n", game->EA);
-	printf("sqmap\n");
-	for (int i = 0; game->map2d[i] != NULL; i++)
-    {
-        printf("%s\n", game->map2d[i]);
-    }
-	printf("\n player x: %d y: %d \n", game->p.x, game->p.y);
-	printf("\n map x: %d y: %d \n", game->m.x, game->m.y);
-    printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-}
+// //################################################################################################//
+// //############################## THE MAIN FUNCTION AND INIT THE MAP ##############################//
+// //################################################################################################//
 
 int main(int argc, char **argv)	// main function
 {
     t_data dt;
+	t_mlx	*mlx;
 
 	dt = (t_data){0};
 	check_file(argc, argv, &dt);
-	testchecker(&dt);
-	start_the_game(&dt);
-	free_struct(&dt);
-	return 0;
+	mlx = ft_calloc(1, sizeof(t_mlx));
+	if (!mlx)
+		free_dt_exit(&dt, "* Malloc error *", EXIT_FAILURE);
+	if (initialize_mlx_struct(mlx, &dt) == false)
+		free_all_exit(mlx, EXIT_FAILURE);
+	start_the_game(mlx);
+	end_the_game(mlx, EXIT_SUCCESS);
 }
+

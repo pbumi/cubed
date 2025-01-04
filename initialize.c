@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/03 17:03:41 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:45:44 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ bool check_components(int fd, t_data *game)
     {
 		if (extract_components(fd, line, game) == false)
 		{
-			free_and_close(line, fd);
+			free(line);
 			return false;
 		}
 		else
@@ -32,11 +32,11 @@ bool check_components(int fd, t_data *game)
     }
 	if (!game->W || !game->C || !game->F)
 	{
-		errorhandler(game,"* Missing components *", false);
-		free_and_close(line,fd);
+		error_msg("* Missing components *");
+		free(line);
 		return false;
 	}
-	free_and_close(line, fd);
+	free (line);
 	return true;
 }
 
@@ -59,18 +59,22 @@ void	initialize_struct(t_data *game)
 	game->map2d = NULL;
 }
 
-void initialize_game(char *cubfile, t_data *game)
+void initialize_game(char *cubfile, t_data *dt)
 {
 	int fd;
 	
-	initialize_struct(game);
+	initialize_struct(dt);
 	fd = open(cubfile, O_RDONLY);
     if (fd < 0)
     {
-		errorhandler(game, "Error opening file *", true);
+		free_dt_exit(dt, "* Error opening file *", EXIT_FAILURE);
     }
-	if (!check_components(fd, game))
-		exit (1);
+	if (!check_components(fd, dt))
+	{
+		close(fd);
+		free_dt_exit(dt, NULL, EXIT_FAILURE);
+	}
+	close(fd);
 }
 
 bool    valid_cub(char *argv)
@@ -87,23 +91,25 @@ bool    valid_cub(char *argv)
 	return false;
 }
 
-void	check_file(int argc, char **argv, t_data *game)
+void	check_file(int argc, char **argv, t_data *dt)
 {
 	if (argc > 2)
 	{
-		error_exit("* Run with only 1 .cub file *", true);
+		free_dt_exit(dt, "* Run with only 1 .cub file *", EXIT_FAILURE);
 	}
 	else if (argc == 1)
 	{
-		error_exit("* Run with .cub file and press ENTER *", true);
+		free_dt_exit(dt, "* Run with .cub file *", EXIT_FAILURE);
 	}
 	else if (argc == 2)
 	{
 		if (!valid_cub(argv[1]))
 		{
-			error_exit("* Invalid file *", true);
+			free_dt_exit(dt, "* Invalid file *", EXIT_FAILURE);
 		}
 		else
-			initialize_game(argv[1], game);
+		{	
+			initialize_game(argv[1], dt);
+		}
 	}
 }

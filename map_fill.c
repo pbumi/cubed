@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/03 18:39:47 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/04 21:11:14 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,13 @@ void mark_player(t_data *game, char **array, int rows, int cols)
     }
 }
 
-void mark_lrborders(char **array, int rows, int cols)
+void mark_borders(char **array, int rows, int cols)
 {
-    int y = 0;
+    int y; 
+    int x;
     
-    // Mark '0's connected to the left and right borders
-    while (y < rows) 
+    y = 0;
+    while (y < rows) //l_r 
     {
         if (array[y][0] == '0') 
             mark_zeroes(array, 0, y, rows, cols);  // Left border
@@ -53,15 +54,8 @@ void mark_lrborders(char **array, int rows, int cols)
             mark_zeroes(array, cols - 1, y, rows, cols);  // Right border
         y++;
     }
-}
-
-
-void mark_tbborders(char **array, int rows, int cols)
-{
-    int x = 0;
-    
-    // Mark '0's connected to the top and bottom borders
-    while (x < cols) 
+    x = 0;
+    while (x < cols) //t_b
     {
         if (array[0][x] == '0') 
             mark_zeroes(array, x, 0, rows, cols);  // Top border
@@ -71,12 +65,10 @@ void mark_tbborders(char **array, int rows, int cols)
     }
 }
 
-
 void mark_spaces(char **array, int rows, int cols)
 {
     int y = 0;
     
-    // Mark '0's connected to spaces
     while (y < rows) 
     {
         int x = 0;
@@ -84,13 +76,12 @@ void mark_spaces(char **array, int rows, int cols)
         {
             if (array[y][x] == '0') 
             {
-                // Check if adjacent to a space
                 if ((y > 0 && array[y - 1][x] == ' ') ||
                     (y < rows - 1 && array[y + 1][x] == ' ') ||
                     (x > 0 && array[y][x - 1] == ' ') ||
                     (x < cols - 1 && array[y][x + 1] == ' ')) 
                 {
-                    mark_zeroes(array, x, y, rows, cols);  // Mark the '0' connected to a space
+                    mark_zeroes(array, x, y, rows, cols);
                 }
             }
             x++;
@@ -117,11 +108,9 @@ bool check_for_X(char **tmp_arr, int rows, int cols)
     return false;
 }
 
-
 bool check_floodfill(t_data *game, char **tmp_arr, int rows, int cols) 
 {
-    mark_lrborders(tmp_arr, rows, cols);
-    mark_tbborders(tmp_arr, rows, cols);
+    mark_borders(tmp_arr, rows, cols);
     mark_spaces(tmp_arr, rows, cols);
     mark_player(game, tmp_arr, rows, cols);
     if (check_for_X(tmp_arr, rows, cols))
