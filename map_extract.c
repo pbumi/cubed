@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:08:22 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/04 20:58:29 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/05 17:33:25 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,7 @@ bool extract_map1(int fd, t_data *game)
         return false;
     map_content = extract_loop(map_content, fd);
     if (!map_content)
-    {
         return false;
-    }
     game->map = ft_strtrim(map_content, "\n");
     if (!game->map)
     {
@@ -59,12 +57,6 @@ bool extract_map1(int fd, t_data *game)
     }
     free(map_content);
     map_content = NULL;
-    if (validate_map(game) == false)
-    {
-        free(game->map);
-        game->map = NULL;
-        return false;
-    }
     return true;
 }
 

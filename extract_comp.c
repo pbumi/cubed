@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/04 21:01:55 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/05 17:48:49 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ bool get_rgb1(char *line, char *str, t_data *game)
         sub = remove_wspace(line, 2);
         if (!sub)
         {
-            error_msg("* Malloc error");
+            error_msg("* Memory allocation failed for colors *");
             return false;
         }
         if (get_rgb2(sub, game, str))
@@ -163,9 +163,9 @@ bool check_wall_component(char *line, char *identifier, char **wall_ptr)
         {
 		    free(tmp);
 		    tmp = NULL;
-            ft_putstr_fd("Error\n* Invalid format for ", 2);
-            ft_putstr_fd(identifier, 2);
-            ft_putstr_fd(" wall *\n", 2);
+            error_msg("* Invalid format for ");
+            ft_putstr_fd(identifier, STDERR_FILENO);
+            ft_putstr_fd(" wall *\n", STDERR_FILENO);
             return false;
         }
     }
@@ -303,7 +303,9 @@ bool	extract_components(int fd, char *line, t_data *game)
             error_msg("* Map extraction failed *");
 			return false;
 		}
-		if (create_sqmap(game) == false)
+        else if (validate_map(game) == false)
+            return false;
+		else if (create_sqmap(game) == false)
 		{
             error_msg("* Map creation failed *");
 			return false;	
@@ -311,7 +313,7 @@ bool	extract_components(int fd, char *line, t_data *game)
 		fill_player_position(game);
 		if (check_fill(game) == false)
 		{
-			error_msg("* Invalid map *");
+			error_msg("* Invalid map borders/spaces *");
 			return false;
 		}
 	}
