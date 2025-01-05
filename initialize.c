@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/04 20:45:44 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/05 16:53:54 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool check_components(int fd, t_data *game)
     }
 	if (!game->W || !game->C || !game->F)
 	{
-		error_msg("* Missing components *");
+		error_msg("* Missing file components *");
 		free(line);
 		return false;
 	}
@@ -69,12 +69,15 @@ void initialize_game(char *cubfile, t_data *dt)
     {
 		free_dt_exit(dt, "* Error opening file *", EXIT_FAILURE);
     }
-	if (!check_components(fd, dt))
+	else if (!check_components(fd, dt))
 	{
 		close(fd);
 		free_dt_exit(dt, NULL, EXIT_FAILURE);
 	}
-	close(fd);
+	else
+	{
+		close(fd);
+	}
 }
 
 bool    valid_cub(char *argv)

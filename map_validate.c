@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:13:36 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/21 16:32:44 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/05 17:34:43 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ bool incorrect_mapcharacter(char *line)
 		x_count++;
 		if (!ft_strchr(" 01NSWE\n", line[x]))
 		{
-			printf("Error\n");
-			printf("* Invalid character : '%c' in x:%ld y:%ld *\n\n", line[x], x_count, y_count);
 			return true;
 		}
         if (line[x] == '\n')
@@ -105,32 +103,21 @@ bool is_broken_map(char *line)
     return false; 
 }
 
-bool	validate_map(t_data *game)
+bool validate_map(t_data *game)
 {
-	if (is_empty_line(game->map) == true)
+	if (is_empty_line(game->map))
+		error_msg("* Empty MAP *");
+	else if (is_broken_map(game->map))
+		error_msg("* Empty lines in MAP *");
+	else if (incorrect_mapsize(game->map))
+		error_msg("* Invalid MAP size *");
+	else if (incorrect_mapcharacter(game->map))
+		error_msg("* Invalid character in MAP *");
+	else if (duplicate_player(game->map))
+		error_msg("* Multiple/No players in map *");
+	else
 	{
-		errorhandler(game, "* Empty MAP *", false);
-		return false;
+		return true;
 	}
-	if (is_broken_map(game->map) == true)
-	{
-		errorhandler(game, "* Empty lines in MAP *", false);
-		return false;
-	}
-	if (incorrect_mapsize(game->map) == true)
-	{
-		errorhandler(game, "* Incorrect MAP size *", false);
-		return false;
-	}
-	if (incorrect_mapcharacter(game->map) == true)
-	{
-		errorhandler(game, "* Incorrect MAP character*", false);
-		return false;	
-	}
-	if (duplicate_player(game->map) == true)
-	{
-		errorhandler(game, "* Multiple/No players in map*", false);
-		return false;	
-	}
-	return true;
+	return false;
 }

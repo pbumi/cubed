@@ -117,6 +117,8 @@ void	set_player(t_mlx *mlx) //, double move_x, double move_y)	// hook the player
 {
 	t_dbl_pt move;
 
+	move.x = 0;
+	move.y = 0;
 	if (mlx->ply->l_r == 1) //move right
 	{
 		move.x = -sin(mlx->ply->angle) * PLAYER_SPEED;
@@ -395,15 +397,21 @@ void	cast_rays(t_mlx *mlx)	// cast the rays
 //############################## START THE GAME AND THE GAME LOOP ##############################//
 //##############################################################################################//
 
+void free_all_exit(t_mlx *mlx, int exit_code)
+{
+	free_all(mlx);
+	free(mlx);
+	mlx = NULL;
+	exit(exit_code);
+}
 void 	end_the_game(t_mlx *mlx, int exit_code)
 {
 	mlx_delete_image(mlx->mlx_p, mlx->img);
 	mlx_terminate(mlx->mlx_p);
-	free_all(mlx);
-	free(mlx);
-	mlx = NULL;
-	ft_putendl_fd("GAME OVER!", 1);
-	exit (exit_code);
+	if (exit_code == EXIT_SUCCESS)
+		ft_putendl_fd("GAME OVER!", STDOUT_FILENO);
+	else
+		free_all_exit(mlx, exit_code);
 }
 
 void	game_loop(void *ml)	// game loop
@@ -447,38 +455,31 @@ void init_the_player(t_mlx *mlx)	// init the player structure
     } 
 }
 
-void free_all_exit(t_mlx *mlx, int exit_code)
-{
-	free_all(mlx);
-	free(mlx);
-	mlx = NULL;
-	exit(exit_code);
-}
 void	init_the_textures(t_mlx *mlx)	
 {
 	mlx->NO = mlx_load_png(mlx->dt->NO);	
 	if (!mlx->NO)
 	{
 		ft_putstr_fd("Error\nFailed to load NO texture\n", 2);
-		free_all_exit(mlx, 1);
+		free_all_exit(mlx, STDERR_FILENO);
 	}
 	mlx->SO = mlx_load_png(mlx->dt->SO);	
 	if (!mlx->SO)
 	{
 		ft_putstr_fd("Error\nFailed to load SO texture\n", 2);
-		free_all_exit(mlx, 1);
+		free_all_exit(mlx, STDERR_FILENO);
 	}
 	mlx->WE = mlx_load_png(mlx->dt->WE);
 	if (!mlx->WE)
 	{
 		ft_putstr_fd("Error\nFailed to load WE texture\n", 2);
-		free_all_exit(mlx, 1);
+		free_all_exit(mlx, STDERR_FILENO);
 	}
 	mlx->EA = mlx_load_png(mlx->dt->EA);
 	if (!mlx->EA)
 	{
 		ft_putstr_fd("Error\nFailed to load EA texturen", 2);
-		free_all_exit(mlx, 1);
+		free_all_exit(mlx, STDERR_FILENO);
 	}
 }
 
@@ -488,13 +489,13 @@ bool	initialize_mlx_struct(t_mlx *mlx, t_data *dt)
 	mlx->ply = ft_calloc(1, sizeof(t_player));	// init the player structure i'm using calloc to initialize the variables to zero
 	if (!mlx->ply)
 	{
-		ft_putstr_fd("Error\nMalloc error\n", 2);
+		error_msg("* mlx initilization failed *");
 		return (false);
 	}
 	mlx->ray = ft_calloc(1, sizeof(t_ray));	// init the ray structure
 	if (!mlx->ray)
 	{
-		ft_putstr_fd("Error\nMalloc error\n", 2);
+		error_msg("* mlx initilization failed *");
 		return (false);
 	}
 	init_the_player(mlx);	// init the player structure
@@ -508,7 +509,7 @@ void	start_the_game(t_mlx *mlx)	// start the game
 	mlx->mlx_p = mlx_init(S_W, S_H, "Cub3D", 0);	// init the mlx pointer
 	if (!mlx->mlx_p)
     {
-		ft_putstr_fd("Error\nMlx initalization error\n", 2);
+		error_msg("* mlx initilization failed *");
 		end_the_game(mlx, 1);
 	}
 	mlx_key_hook(mlx->mlx_p, &mlx_key, mlx);	// key press and release
@@ -529,7 +530,7 @@ int main(int argc, char **argv)	// main function
 	check_file(argc, argv, &dt);
 	mlx = ft_calloc(1, sizeof(t_mlx));
 	if (!mlx)
-		free_dt_exit(&dt, "* Malloc error *", EXIT_FAILURE);
+		free_dt_exit(&dt, "* Memory allocation failure*", EXIT_FAILURE);
 	if (initialize_mlx_struct(mlx, &dt) == false)
 		free_all_exit(mlx, EXIT_FAILURE);
 	start_the_game(mlx);

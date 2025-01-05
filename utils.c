@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:25:27 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/04 20:43:23 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/05 16:56:59 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ void    free_dt_exit(t_data *game, char *msg, int code)
 	}	
 	if (msg)
 	{
-		ft_putstr_fd("Error\n", STDERR_FILENO);
-		ft_putendl_fd(msg, STDERR_FILENO);	
+        error_msg(msg);
 	}
 	exit(code);
 }
@@ -40,8 +39,8 @@ void    free_dt_exit(t_data *game, char *msg, int code)
 
 void	error_msg(char *msg)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putendl_fd(msg, 2);	
+	ft_putstr_fd("Error\n", STDERR_FILENO);
+	ft_putendl_fd(msg, STDERR_FILENO);	
 }
 
 void	errorhandler(t_data *game, char *msg, bool fatal)
@@ -52,8 +51,7 @@ void	errorhandler(t_data *game, char *msg, bool fatal)
 	}	
 	if (msg)
 	{
-		ft_putstr_fd("Error\n", STDERR_FILENO);
-		ft_putendl_fd(msg, STDERR_FILENO);	
+        error_msg(msg);
 	}
 	if (fatal)
 	{
