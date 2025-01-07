@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 16:19:30 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:06:18 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,14 @@ typedef struct s_data	//the data structure
 	char	**map2d;	// the map
 	t_int_pt	p; // player index
 	t_int_pt	m; // map index
-	char    *NO;
-    char    *EA;
-    char    *WE;
-    char    *SO;
+	mlx_texture_t	*NO;
+	mlx_texture_t	*EA;
+	mlx_texture_t	*SO;
+	mlx_texture_t	*WE;
+	bool    n;
+    bool    e;
+    bool    w;
+    bool    s;
 	bool	W;
 	unsigned int	Fcolor;
 	bool			F;
@@ -87,10 +91,6 @@ typedef struct s_mlx	//the mlx structure
 	t_ray			*ray;	// the ray structure
 	t_data			*dt;	// the data structure
 	t_player		*ply;	// the player structure
-	mlx_texture_t	*NO;
-	mlx_texture_t	*EA;
-	mlx_texture_t	*SO;
-	mlx_texture_t	*WE;
 }	t_mlx;
 
 //map

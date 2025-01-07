@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 16:41:25 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:59:03 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,16 +147,76 @@ bool get_rgb1(char *line, char *str, t_data *game)
 //     return (true);  // Return true if the wall component was already set or the line is valid
 // }
 
-bool check_wall_component(char *line, char *identifier, char **wall_ptr)
+// bool check_wall_component(char *line, char *identifier, char **wall_ptr)
+// {
+// 	char *tmp;
+    
+//     if (ft_strncmp(line, identifier, 3) == 0 && *wall_ptr == NULL) // && *wall_ptr[0] != '\0')
+//     {
+// 		tmp = remove_wspace(line, 3);
+// 		if (is_empty_line(tmp) == false)
+// 		{
+// 			*wall_ptr = tmp;
+// 			return true;
+// 		}
+//         else
+//         {
+// 		    free(tmp);
+// 		    tmp = NULL;
+//             error_msg("* Invalid format for ");
+//             ft_putstr_fd(identifier, STDERR_FILENO);
+//             ft_putstr_fd(" wall *\n", STDERR_FILENO);
+//             return false;
+//         }
+//     }
+//     return true;
+// }  
+bool    load_texture(char *identifier, t_data *game, char *tmp)
+{
+    if (ft_strncmp("NO ", identifier, 3) == 0)
+    {
+        game->NO = mlx_load_png(tmp);
+        if (!game->NO)
+            return false;
+    }
+    else if (ft_strncmp("SO ", identifier, 3) == 0)
+    {
+        game->SO = mlx_load_png(tmp);
+        if (!game->SO)
+            return false;
+    }
+    else if (ft_strncmp("WE ", identifier, 3) == 0)
+    {
+        game->WE = mlx_load_png(tmp);
+        if (!game->WE)
+            return false;
+    }
+    else if (ft_strncmp("EA ", identifier, 3) == 0)
+    {
+        game->EA = mlx_load_png(tmp);
+        if (!game->EA)
+            return false;
+    }
+    return true;
+}
+
+bool check_wall_component(char *line, char *identifier, t_data *game, bool OK)
 {
 	char *tmp;
     
-    if (ft_strncmp(line, identifier, 3) == 0 && *wall_ptr == NULL) // && *wall_ptr[0] != '\0')
+    if (ft_strncmp(line, identifier, 3) == 0 && !OK) // && *wall_ptr[0] != '\0')
     {
 		tmp = remove_wspace(line, 3);
 		if (is_empty_line(tmp) == false)
 		{
-			*wall_ptr = tmp;
+            if (!load_texture(identifier, game, tmp))
+            {
+                error_msg("* Failed to load texture *");
+                free(tmp);
+                return false;
+            }
+            free(tmp);
+            OK = true;
 			return true;
 		}
         else
@@ -180,13 +240,13 @@ bool check_contents(char *line, t_data *game)
         return false;
 	if (get_rgb1(line, "C", game) == false)
         return false;
-    if (!check_wall_component(line, "NO ", &game->NO))
+    if (!check_wall_component(line, "NO ", game, game->n))
         return false;
-    if (!check_wall_component(line, "SO ", &game->SO))
+    if (!check_wall_component(line, "SO ", game, game->s))
         return false;
-    if (!check_wall_component(line, "WE ", &game->WE))
+    if (!check_wall_component(line, "WE ", game, game->w))
         return false;
-    if (!check_wall_component(line, "EA ", &game->EA))
+    if (!check_wall_component(line, "EA ", game, game->e))
         return false;
 	else
 		return true;

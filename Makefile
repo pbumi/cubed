@@ -6,7 +6,7 @@
 #    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2025/01/07 16:18:59 by pbumidan         ###   ########.fr        #
+#    Updated: 2025/01/07 18:16:03 by pbumidan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ OBJS := $(SRCS:.c=.o)
 OBJS_SHARED:= $(SRCS_SHARED:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror -Wunreachable-code -Ofast -I ./MLX42/include
+CFLAGS = -Wall -Wextra -Werror -Wunreachable-code -Ofast -I ./MLX42/include -g
 
 all: $(NAME)
 
