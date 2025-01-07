@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/04 20:42:56 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:19:30 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdbool.h>
+# include <fcntl.h>
 # include <math.h>
 # include "./libft/libft.h"
-# include "./gnl/get_next_line.h"
+// # include "./gnl/get_next_line.h"
 # include "./MLX42/include/MLX42/MLX42.h"
 
 # define S_W 1900 // screen width
@@ -122,5 +123,6 @@ char** allocate2DCharArray(int x, int y);
 int find_max(int *arr, int size);
 //moves
 void	key_hook_slow(void *param);
+char	*get_next_line(int fd);
 
 #endif

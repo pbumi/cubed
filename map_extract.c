@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:08:22 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/05 17:33:25 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:20:13 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char *extract_loop(char *map_content, int fd)
     {
         if (line[0] != '\0')
         {
-            tmp = gnl_strjoin(map_content, line);
+            tmp = ft_strjoin(map_content, line);
             free(map_content);
             if (!tmp)
             {

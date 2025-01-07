@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/05 16:53:54 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:57:44 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,12 @@ bool check_components(int fd, t_data *game)
     {
 		if (extract_components(fd, line, game) == false)
 		{
+			get_next_line(-1);
 			free(line);
 			return false;
 		}
-		else
-		{
-        	free(line);
-			line = get_next_line(fd);
-		}
+        free(line);
+		line = get_next_line(fd);
     }
 	if (!game->W || !game->C || !game->F)
 	{
@@ -36,34 +34,35 @@ bool check_components(int fd, t_data *game)
 		free(line);
 		return false;
 	}
+	get_next_line(-1);
 	free (line);
 	return true;
 }
 
-void	initialize_struct(t_data *game)
-{
-    game->NO = NULL;
-    game->SO = NULL;
-    game->WE = NULL;
-    game->EA = NULL;
-	game->W = false;
-	game->Fcolor = 0;
-	game->Ccolor = 0;
-	game->C = false;
-	game->F = false;
-	game->p.x = 0;
-	game->p.y = 0;
-	game->m.x = 0;
-	game->m.y = 0;
-	game->map = NULL;
-	game->map2d = NULL;
-}
+// void	initialize_struct(t_data *game)
+// {
+//     game->NO = NULL;
+//     game->SO = NULL;
+//     game->WE = NULL;
+//     game->EA = NULL;
+// 	game->W = false;
+// 	game->Fcolor = 0;
+// 	game->Ccolor = 0;
+// 	game->C = false;
+// 	game->F = false;
+// 	game->p.x = 0;
+// 	game->p.y = 0;
+// 	game->m.x = 0;
+// 	game->m.y = 0;
+// 	game->map = NULL;
+// 	game->map2d = NULL;
+// }
 
 void initialize_game(char *cubfile, t_data *dt)
 {
 	int fd;
 	
-	initialize_struct(dt);
+	// initialize_struct(dt);
 	fd = open(cubfile, O_RDONLY);
     if (fd < 0)
     {
@@ -71,6 +70,7 @@ void initialize_game(char *cubfile, t_data *dt)
     }
 	else if (!check_components(fd, dt))
 	{
+		get_next_line(-1);
 		close(fd);
 		free_dt_exit(dt, NULL, EXIT_FAILURE);
 	}

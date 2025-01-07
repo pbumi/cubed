@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/05 17:48:49 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:41:25 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ bool get_rgb2(char *line, t_data *game, char *str)
     colors = ft_split(line, ',');
     if (!colors)
     {
-        error_msg("* Memory allocation failed for colors *");
+        error_msg("* rgb2: Memory allocation failed for colors *");
         return false;
     }
     if (arr_size(colors) != 3 || check_range(colors) == false)

@@ -521,19 +521,36 @@ void	start_the_game(t_mlx *mlx)	// start the game
 // //############################## THE MAIN FUNCTION AND INIT THE MAP ##############################//
 // //################################################################################################//
 
+void testchecker1(t_data *game) //TESTER DELETE
+{
+	printf("NO: %s\n", game->NO);
+	printf("SO: %s\n", game->SO);
+	printf("WE: %s\n", game->WE);
+	printf("EA: %s\n", game->EA);
+	printf("F: %u \n", game->Fcolor);
+	printf("C: %u \n", game->Ccolor);
+	printf("sqmap\n");
+	for (int i = 0; game->map2d[i] != NULL; i++)
+    {
+        printf("%s\n", game->map2d[i]);
+    }
+}
 int main(int argc, char **argv)	// main function
 {
     t_data dt;
-	t_mlx	*mlx;
+	t_mlx	mlx;
 
 	dt = (t_data){0};
 	check_file(argc, argv, &dt);
-	mlx = ft_calloc(1, sizeof(t_mlx));
-	if (!mlx)
-		free_dt_exit(&dt, "* Memory allocation failure*", EXIT_FAILURE);
-	if (initialize_mlx_struct(mlx, &dt) == false)
-		free_all_exit(mlx, EXIT_FAILURE);
-	start_the_game(mlx);
-	end_the_game(mlx, EXIT_SUCCESS);
+	testchecker1(&dt);
+	// mlx = ft_calloc(1, sizeof(t_mlx));
+	// if (!mlx)
+	// 	free_dt_exit(&dt, "* Memory allocation failure*", EXIT_FAILURE);
+	mlx = (t_mlx){0};
+	if (initialize_mlx_struct(&mlx, &dt) == false)
+		free_all_exit(&mlx, EXIT_FAILURE);
+	// testchecker(mlx);
+	// start_the_game(&mlx);
+	end_the_game(&mlx, EXIT_SUCCESS);
 }
 
