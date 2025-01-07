@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 16:57:44 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 18:48:42 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ bool check_components(int fd, t_data *game)
     {
 		if (extract_components(fd, line, game) == false)
 		{
-			get_next_line(-1);
 			free(line);
 			return false;
 		}
@@ -34,7 +33,6 @@ bool check_components(int fd, t_data *game)
 		free(line);
 		return false;
 	}
-	get_next_line(-1);
 	free (line);
 	return true;
 }
@@ -66,16 +64,20 @@ void initialize_game(char *cubfile, t_data *dt)
 	fd = open(cubfile, O_RDONLY);
     if (fd < 0)
     {
-		free_dt_exit(dt, "* Error opening file *", EXIT_FAILURE);
+		free_data(dt);
+		error_msg("* Error opening file *");
+		exit (EXIT_FAILURE);
     }
 	else if (!check_components(fd, dt))
 	{
 		get_next_line(-1);
 		close(fd);
-		free_dt_exit(dt, NULL, EXIT_FAILURE);
+		free_data(dt);
+		exit (EXIT_FAILURE);
 	}
 	else
 	{
+		get_next_line(-1);
 		close(fd);
 	}
 }
@@ -98,17 +100,20 @@ void	check_file(int argc, char **argv, t_data *dt)
 {
 	if (argc > 2)
 	{
-		free_dt_exit(dt, "* Run with only 1 .cub file *", EXIT_FAILURE);
+		error_msg("* Run with only 1 .cub file *");
+		exit (EXIT_FAILURE);
 	}
 	else if (argc == 1)
 	{
-		free_dt_exit(dt, "* Run with .cub file *", EXIT_FAILURE);
+		error_msg("* Run with .cub file *");
+		exit (EXIT_FAILURE);
 	}
 	else if (argc == 2)
 	{
 		if (!valid_cub(argv[1]))
 		{
-			free_dt_exit(dt, "* Invalid file *", EXIT_FAILURE);
+			error_msg("* Invalid file *");
+			exit (EXIT_FAILURE);
 		}
 		else
 		{	

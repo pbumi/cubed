@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:13:36 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/05 17:34:43 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 20:11:46 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ bool incorrect_mapsize(char *line)
 	size_t x;
 	
 	x = 0;
-	count.x = 0;
-	count.y	= 0;
+	count = (t_int_pt){0, 0};
 	while (line[x])
     {
         if (line[x] == '\n')

@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 17:06:18 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 18:40:40 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ bool extract_map1(int fd, t_data *game);
 bool	validate_map(t_data *game);
 bool	check_fill(t_data *game);
 //free
+void	free_all(t_mlx *mlx);
 void free_data(t_data *game);
 void free_arr(char **arr);
 void safe_free(void **ptr);

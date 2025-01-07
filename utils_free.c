@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:16:51 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 18:05:09 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 18:40:17 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,26 @@ void free_data(t_data *game)
     game->map2d = NULL;
 }
 
-void free_and_close(char *line, int fd)
+// void free_and_close(char *line, int fd)
+// {
+//     if (line)
+//     {
+//         free(line);
+//         line = NULL;
+//     }
+//     if (fd >= 0)
+//         close(fd);
+// }
+
+
+void	free_all(t_mlx *mlx) 		// exit the game
 {
-    if (line)
-    {
-        free(line);
-        line = NULL;
-    }
-    if (fd >= 0)
-        close(fd);
+	free_data(mlx->dt);
+	if (mlx->ply)
+		free(mlx->ply);
+	if (mlx->ray)
+		free(mlx->ray);
+	mlx->dt = NULL;
+	mlx->ply = NULL;
+	mlx->ray = NULL;
 }

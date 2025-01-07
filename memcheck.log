@@ -1,0 +1,191 @@
+==934== Memcheck, a memory error detector
+==934== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==934== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==934== Command: ./cubed a.cub
+==934== Parent PID: 406
+==934== 
+==934== Invalid read of size 8
+==934==    at 0x40286A8: strncmp (strcmp.S:172)
+==934==    by 0x400668D: is_dst (dl-load.c:216)
+==934==    by 0x400810E: _dl_dst_count (dl-load.c:253)
+==934==    by 0x400810E: expand_dynamic_string_token (dl-load.c:395)
+==934==    by 0x40082B7: fillin_rpath.isra.0 (dl-load.c:483)
+==934==    by 0x4008602: decompose_rpath (dl-load.c:654)
+==934==    by 0x400ABF5: cache_rpath (dl-load.c:696)
+==934==    by 0x400ABF5: cache_rpath (dl-load.c:677)
+==934==    by 0x400ABF5: _dl_map_object (dl-load.c:2165)
+==934==    by 0x4003494: openaux (dl-deps.c:64)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x4003C7B: _dl_map_object_deps (dl-deps.c:248)
+==934==    by 0x400EA0E: dl_open_worker_begin (dl-open.c:592)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==934==  Address 0x52ea3c9 is 9 bytes inside a block of size 15 alloc'd
+==934==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==934==    by 0x40271DF: malloc (rtld-malloc.h:56)
+==934==    by 0x40271DF: strdup (strdup.c:42)
+==934==    by 0x4008594: decompose_rpath (dl-load.c:629)
+==934==    by 0x400ABF5: cache_rpath (dl-load.c:696)
+==934==    by 0x400ABF5: cache_rpath (dl-load.c:677)
+==934==    by 0x400ABF5: _dl_map_object (dl-load.c:2165)
+==934==    by 0x4003494: openaux (dl-deps.c:64)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x4003C7B: _dl_map_object_deps (dl-deps.c:248)
+==934==    by 0x400EA0E: dl_open_worker_begin (dl-open.c:592)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400E34D: _dl_open (dl-open.c:883)
+==934== 
+==934== 
+==934== ---- Print suppression ? --- [Return/N/n/Y/y/C/c] ---- ==934== Invalid read of size 8
+==934==    at 0x40286A8: strncmp (strcmp.S:172)
+==934==    by 0x400668D: is_dst (dl-load.c:216)
+==934==    by 0x4007F79: _dl_dst_substitute (dl-load.c:295)
+==934==    by 0x40082B7: fillin_rpath.isra.0 (dl-load.c:483)
+==934==    by 0x4008602: decompose_rpath (dl-load.c:654)
+==934==    by 0x400ABF5: cache_rpath (dl-load.c:696)
+==934==    by 0x400ABF5: cache_rpath (dl-load.c:677)
+==934==    by 0x400ABF5: _dl_map_object (dl-load.c:2165)
+==934==    by 0x4003494: openaux (dl-deps.c:64)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x4003C7B: _dl_map_object_deps (dl-deps.c:248)
+==934==    by 0x400EA0E: dl_open_worker_begin (dl-open.c:592)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==934==  Address 0x52ea3c9 is 9 bytes inside a block of size 15 alloc'd
+==934==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==934==    by 0x40271DF: malloc (rtld-malloc.h:56)
+==934==    by 0x40271DF: strdup (strdup.c:42)
+==934==    by 0x4008594: decompose_rpath (dl-load.c:629)
+==934==    by 0x400ABF5: cache_rpath (dl-load.c:696)
+==934==    by 0x400ABF5: cache_rpath (dl-load.c:677)
+==934==    by 0x400ABF5: _dl_map_object (dl-load.c:2165)
+==934==    by 0x4003494: openaux (dl-deps.c:64)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x4003C7B: _dl_map_object_deps (dl-deps.c:248)
+==934==    by 0x400EA0E: dl_open_worker_begin (dl-open.c:592)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400E34D: _dl_open (dl-open.c:883)
+==934== 
+==934== 
+==934== Process terminating with default action of signal 1 (SIGHUP)
+==934==    at 0x4026B16: __open_nocancel (open64_nocancel.c:39)
+==934==    by 0x4006978: open_verify.constprop.0 (dl-load.c:1626)
+==934==    by 0x4007107: open_path (dl-load.c:1922)
+==934==    by 0x400A712: _dl_map_object (dl-load.c:2167)
+==934==    by 0x4003494: openaux (dl-deps.c:64)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x4003C7B: _dl_map_object_deps (dl-deps.c:248)
+==934==    by 0x400EA0E: dl_open_worker_begin (dl-open.c:592)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400E34D: _dl_open (dl-open.c:883)
+==934== 
+==934== HEAP SUMMARY:
+==934==     in use at exit: 1,426,561 bytes in 2,128 blocks
+==934==   total heap usage: 14,857 allocs, 12,729 frees, 3,907,921 bytes allocated
+==934== 
+==934== 0 bytes in 1 blocks are definitely lost in loss record 3 of 322
+==934==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==934==    by 0x4005A22: malloc (rtld-malloc.h:56)
+==934==    by 0x4005A22: _dl_find_object_update (dl-find_object.c:791)
+==934==    by 0x400ECCF: dl_open_worker_begin (dl-open.c:735)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400E34D: _dl_open (dl-open.c:883)
+==934==    by 0x4A4163B: dlopen_doit (dlopen.c:56)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x4B25B62: _dl_catch_error (dl-error-skeleton.c:227)
+==934==    by 0x4A4112D: _dlerror_run (dlerror.c:138)
+==934==    by 0x4A416C7: dlopen_implementation (dlopen.c:71)
+==934==    by 0x4A416C7: dlopen@@GLIBC_2.34 (dlopen.c:81)
+==934== 
+==934== 80 bytes in 1 blocks are possibly lost in loss record 202 of 322
+==934==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==934==    by 0x570CF16: ??? (in /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0)
+==934==    by 0x570D5DE: __glDispatchInit (in /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0)
+==934==    by 0x578774E: ??? (in /usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0)
+==934==    by 0x400647D: call_init.part.0 (dl-init.c:70)
+==934==    by 0x4006567: call_init (dl-init.c:33)
+==934==    by 0x4006567: _dl_init (dl-init.c:117)
+==934==    by 0x4B25AF4: _dl_catch_exception (dl-error-skeleton.c:182)
+==934==    by 0x400DFF5: dl_open_worker (dl-open.c:808)
+==934==    by 0x400DFF5: dl_open_worker (dl-open.c:771)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400E34D: _dl_open (dl-open.c:883)
+==934==    by 0x4A4163B: dlopen_doit (dlopen.c:56)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934== 
+==934== 80 bytes in 1 blocks are possibly lost in loss record 203 of 322
+==934==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==934==    by 0x570CF16: ??? (in /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0)
+==934==    by 0x570D7FF: __glDispatchRegisterStubCallbacks (in /usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0)
+==934==    by 0x5688218: ??? (in /usr/lib/x86_64-linux-gnu/libGL.so.1.7.0)
+==934==    by 0x400647D: call_init.part.0 (dl-init.c:70)
+==934==    by 0x4006567: call_init (dl-init.c:33)
+==934==    by 0x4006567: _dl_init (dl-init.c:117)
+==934==    by 0x4B25AF4: _dl_catch_exception (dl-error-skeleton.c:182)
+==934==    by 0x400DFF5: dl_open_worker (dl-open.c:808)
+==934==    by 0x400DFF5: dl_open_worker (dl-open.c:771)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400E34D: _dl_open (dl-open.c:883)
+==934==    by 0x4A4163B: dlopen_doit (dlopen.c:56)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934== 
+==934== 128 bytes in 1 blocks are possibly lost in loss record 230 of 322
+==934==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==934==    by 0x5806DD4: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0)
+==934==    by 0x58066F7: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0)
+==934==    by 0x57EE0B8: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0)
+==934==    by 0x57EAADB: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0)
+==934==    by 0x4874404: glfwCreateWindow (in /usr/lib/x86_64-linux-gnu/libglfw.so.3.3)
+==934==    by 0x1104D3: mlx_init (in /home/pbumidan/HIVE/gitcub41/cubed)
+==934==    by 0x10BECF: start_the_game (in /home/pbumidan/HIVE/gitcub41/cubed)
+==934==    by 0x10A81D: main (in /home/pbumidan/HIVE/gitcub41/cubed)
+==934== 
+==934== 128 bytes in 1 blocks are possibly lost in loss record 231 of 322
+==934==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==934==    by 0x5806DD4: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0)
+==934==    by 0x5806E4A: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0)
+==934==    by 0x5806751: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0)
+==934==    by 0x57EE0B8: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0)
+==934==    by 0x57EAADB: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0)
+==934==    by 0x4874404: glfwCreateWindow (in /usr/lib/x86_64-linux-gnu/libglfw.so.3.3)
+==934==    by 0x1104D3: mlx_init (in /home/pbumidan/HIVE/gitcub41/cubed)
+==934==    by 0x10BECF: start_the_game (in /home/pbumidan/HIVE/gitcub41/cubed)
+==934==    by 0x10A81D: main (in /home/pbumidan/HIVE/gitcub41/cubed)
+==934== 
+==934== 4,608 bytes in 2 blocks are possibly lost in loss record 300 of 322
+==934==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==934==    by 0x4005D97: malloc (rtld-malloc.h:56)
+==934==    by 0x4005D97: _dlfo_mappings_segment_allocate (dl-find_object.c:217)
+==934==    by 0x4005D97: _dl_find_object_update_1 (dl-find_object.c:671)
+==934==    by 0x4005D97: _dl_find_object_update (dl-find_object.c:804)
+==934==    by 0x400ECCF: dl_open_worker_begin (dl-open.c:735)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x400E34D: _dl_open (dl-open.c:883)
+==934==    by 0x4A4163B: dlopen_doit (dlopen.c:56)
+==934==    by 0x4B25A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==934==    by 0x4B25B62: _dl_catch_error (dl-error-skeleton.c:227)
+==934==    by 0x4A4112D: _dlerror_run (dlerror.c:138)
+==934==    by 0x4A416C7: dlopen_implementation (dlopen.c:71)
+==934==    by 0x4A416C7: dlopen@@GLIBC_2.34 (dlopen.c:81)
+==934== 
+==934== LEAK SUMMARY:
+==934==    definitely lost: 0 bytes in 1 blocks
+==934==    indirectly lost: 0 bytes in 0 blocks
+==934==      possibly lost: 5,024 bytes in 6 blocks
+==934==    still reachable: 1,421,537 bytes in 2,121 blocks
+==934==         suppressed: 0 bytes in 0 blocks
+==934== Reachable blocks (those to which a pointer was found) are not shown.
+==934== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==934== 
+==934== For lists of detected and suppressed errors, rerun with: -s
+==934== ERROR SUMMARY: 8 errors from 8 contexts (suppressed: 0 from 0)

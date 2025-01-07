@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 17:59:03 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 20:11:19 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,53 +200,46 @@ bool    load_texture(char *identifier, t_data *game, char *tmp)
     return true;
 }
 
-bool check_wall_component(char *line, char *identifier, t_data *game, bool OK)
+bool check_wall_component(char *line, char *identifier, t_data *game, bool *OK)
 {
 	char *tmp;
     
-    if (ft_strncmp(line, identifier, 3) == 0 && !OK) // && *wall_ptr[0] != '\0')
+    if (ft_strncmp(line, identifier, 3) == 0 && *OK == true)
+    {
+        error_msg("* Duplicate texture *");
+        return false;
+    }
+    else if (ft_strncmp(line, identifier, 3) == 0 && *OK == false)
     {
 		tmp = remove_wspace(line, 3);
-		if (is_empty_line(tmp) == false)
-		{
-            if (!load_texture(identifier, game, tmp))
-            {
-                error_msg("* Failed to load texture *");
-                free(tmp);
-                return false;
-            }
-            free(tmp);
-            OK = true;
-			return true;
-		}
-        else
+        if (!load_texture(identifier, game, tmp))
         {
-		    free(tmp);
-		    tmp = NULL;
-            error_msg("* Invalid format for ");
-            ft_putstr_fd(identifier, STDERR_FILENO);
-            ft_putstr_fd(" wall *\n", STDERR_FILENO);
+            free(tmp);               
+            error_msg("* Failed to load texture *");
             return false;
-        }
+         }
+        free(tmp);
+        *OK = true;
+		return true;
     }
     return true;
 }
 
 bool check_contents(char *line, t_data *game)
 {
-	if (game->NO && game->SO && game->WE && game->EA)
+	if (game->w && game->s && game->w && game->e)
 		game->W = true;
 	if (get_rgb1(line, "F", game) == false)
         return false;
 	if (get_rgb1(line, "C", game) == false)
         return false;
-    if (!check_wall_component(line, "NO ", game, game->n))
+    if (!check_wall_component(line, "NO ", game, &game->n))
         return false;
-    if (!check_wall_component(line, "SO ", game, game->s))
+    if (!check_wall_component(line, "SO ", game, &game->s))
         return false;
-    if (!check_wall_component(line, "WE ", game, game->w))
+    if (!check_wall_component(line, "WE ", game, &game->w))
         return false;
-    if (!check_wall_component(line, "EA ", game, game->e))
+    if (!check_wall_component(line, "EA ", game, &game->e))
         return false;
 	else
 		return true;
@@ -256,8 +249,7 @@ void fill_player_position(t_data *game)
 {
     t_int_pt pt;
 
-    pt.x = 0;
-    pt.y = 0;
+    pt = (t_int_pt){0, 0};
     while (game->map2d[pt.y] != NULL)
     {
         while (game->map2d[pt.y][pt.x] != '\0')
@@ -278,6 +270,7 @@ void fill_player_position(t_data *game)
 void fill_maparray(t_data *game, int *tmp_wx, char **tmp_arr)
 {
 	t_int_pt pt;
+    
 	pt.y = 0;
 	while(pt.y < game->m.y)
 	{
