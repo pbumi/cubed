@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 18:40:40 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 20:17:45 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,14 @@ typedef struct s_data	//the data structure
 	mlx_texture_t	*EA;
 	mlx_texture_t	*SO;
 	mlx_texture_t	*WE;
-	bool    n;
-    bool    e;
-    bool    w;
-    bool    s;
-	bool	W;
 	unsigned int	Fcolor;
-	bool			F;
 	unsigned int	Ccolor;
+	bool    		n;
+    bool    		e;
+    bool			w;
+    bool    		s;
+	bool			W;
+	bool			F;
 	bool			C;
 }	t_data;
 

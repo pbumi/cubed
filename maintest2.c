@@ -394,8 +394,6 @@ void 	end_the_game(t_mlx *mlx, int exit_code)
 		mlx_delete_image(mlx->mlx_p, mlx->img);
 	free_all(mlx);
 	mlx_terminate(mlx->mlx_p);
-	// free(mlx);
-	// mlx = NULL;
 	if (exit_code == EXIT_SUCCESS)
 	{
 		ft_putendl_fd("GAME OVER!", STDOUT_FILENO);
@@ -505,8 +503,14 @@ void	start_the_game(t_mlx *mlx)	// start the game
 		error_msg("* mlx initilization failed *");
 		end_the_game(mlx, EXIT_FAILURE);
 	}
+	mlx->img = mlx_new_image(mlx->mlx_p, S_W, S_H);	// create the image
+	if (!mlx->img)
+	{
+		error_msg("* mlx image creation failed *");
+		end_the_game(mlx, EXIT_FAILURE);
+	}
 	mlx_key_hook(mlx->mlx_p, &mlx_key, mlx);	// key press and release
-	mlx_loop_hook(mlx->mlx_p, &game_loop, mlx);	// game loop
+	// mlx_loop_hook(mlx->mlx_p, &game_loop, mlx);	// game loop
 	mlx_loop(mlx->mlx_p);
 }
 

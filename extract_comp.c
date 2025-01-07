@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 20:11:19 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 20:35:08 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,7 +326,7 @@ bool create_sqmap(t_data *game)
         return false;
     get_height(game, tmp_arr);
     tmp_wx = ft_calloc(game->m.y, sizeof(int));
-    if (tmp_wx == NULL)
+    if (!tmp_wx)
     {
         free_arr(tmp_arr);  // Make sure to free tmp_arr before returning
         return false;  
