@@ -6,35 +6,52 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:25:27 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 20:54:08 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/05 16:56:59 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
 
-void	error_exit(char *msg, bool fatal)
+void    free_dt_exit(t_data *game, char *msg, int code)
 {
-	if (msg)
+    if (game)
 	{
-		ft_putstr_fd("Error\n", 2);
-		ft_putendl_fd(msg, 2);	
-	}
-	if (fatal)
-	{
-		exit(1);
-	}
-}
-
-void	errorhandler(t_main *game, char *msg, bool fatal)
-{
-	if (game)
-	{
-		free_struct(game);
+		free_data(game);
 	}	
 	if (msg)
 	{
-		ft_putstr_fd("Error\n", 2);
-		ft_putendl_fd(msg, 2);	
+        error_msg(msg);
+	}
+	exit(code);
+}
+// void	error_exit(char *msg, bool fatal)
+// {
+// 	if (msg)
+// 	{
+// 		ft_putstr_fd("Error\n", 2);
+// 		ft_putendl_fd(msg, 2);	
+// 	}
+// 	if (fatal)
+// 	{
+// 		exit(1);
+// 	}
+// }
+
+void	error_msg(char *msg)
+{
+	ft_putstr_fd("Error\n", STDERR_FILENO);
+	ft_putendl_fd(msg, STDERR_FILENO);	
+}
+
+void	errorhandler(t_data *game, char *msg, bool fatal)
+{
+	if (game)
+	{
+		free_data(game);
+	}	
+	if (msg)
+	{
+        error_msg(msg);
 	}
 	if (fatal)
 	{
@@ -56,26 +73,48 @@ size_t  arr_size(char **arr)
 
 char** allocate2DCharArray(int y, int x)
 {
-    char **arr = ft_calloc(y + 1, sizeof(char *)); //(char**)malloc((sizeof(char*) * y + 1));
+    char **arr;
+    t_int_pt pt;
+    
+    pt.x = 0;
+    arr = ft_calloc(y + 1, sizeof(char *));
     if (arr == NULL)
-	{
-        return NULL;
-    }
-    int i = 0;
-    while (i < y) 
-	{
-        arr[i] = ft_calloc(x + 1, sizeof(char)); //(char*)malloc(sizeof(char) * x + 1);
-        if (arr[i] == NULL) 
-		{
-            int j = 0;
-            while (j < i) {
-                free(arr[j]);
-                j++;
+        return NULL; // Memory allocation failed
+    while (pt.x < y)
+    {
+        arr[pt.x] = ft_calloc(x + 1, sizeof(char)); // Allocate memory for each row
+        if (arr[pt.x] == NULL)
+        {
+            pt.y = 0;
+            while (pt.y < pt.x)
+            {
+                free(arr[pt.y]);
+                pt.y++;
             }
             free(arr);
-            return NULL;
+            return NULL; // Return NULL to indicate failure
+        }
+        pt.x++;
+    }
+    return arr; // Return the 2D array
+}
+
+
+
+int find_max(int *arr, int size)
+{
+    int max;
+    int i;
+    
+    max = arr[0];  // Assume the first element is the max initially
+    i = 1;
+    while (i < size)
+    {
+        if (arr[i] > max) 
+        {
+            max = arr[i];  // Update max if current element is greater
         }
         i++;
     }
-    return arr;
+    return max;
 }

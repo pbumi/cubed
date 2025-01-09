@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 20:36:10 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 15:16:42 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/22 13:45:06 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@
 //     return 0;
 // }
 
-void draw_minimap_square(mlx_image_t *img, t_int_pt *map_pt, int size, size_t color)
+void draw_minimap_square(mlx_image_t *img, t_dbl_pt map_pt, int size, size_t color)
 {
     int y;
-	y = map_pt->y;
-    while (y < map_pt->y + size)
+	y = map_pt.y;
+    while (y < map_pt.y + size)
     {
         int x;
-		x = map_pt->x;
-        while (x < map_pt->x + size)
+		x = map_pt.x;
+        while (x < map_pt.x + size)
         {
             mlx_put_pixel(img, x, y, color);  // Use ft_putpixel to set each pixel
             x++;
@@ -88,7 +88,7 @@ void draw_player_square(mlx_image_t *img, int px, int py, size_t color)
 
 void draw_player(t_main *game, mlx_image_t *img)
 {
-	t_dbl_pt player;
+	t_int_pt player;
     // int player_x;
     // int player_y; 
     // int ray_end_x;
@@ -102,7 +102,7 @@ void draw_player(t_main *game, mlx_image_t *img)
     // ray_end_y = player_y + (cub->player.dir.y * 10);
     // draw_line(cub, (t_vector){player_x, player_y}, (t_vector){ray_end_x, ray_end_y}, RED);
 }
-// void draw_player(t_main *game)
+ // void draw_player(t_main *game)
 // {
 // 	t_pt player;
 //     // int player_x;
@@ -118,11 +118,11 @@ void draw_player(t_main *game, mlx_image_t *img)
 //     // draw_line(cub, (t_vector){player_x, player_y}, (t_vector){ray_end_x, ray_end_y}, 0xFF0000ff);
 // }
 
-uint32_t set_minimap_color(t_main *game, t_int_pt *pt)
+uint32_t set_minimap_color(t_main *game, t_dbl_pt pt)
 {
     size_t color;
-    int x = pt->x;
-    int y = pt->y;
+    int x = pt.x;
+    int y = pt.y;
 
 	color = 0x00000000; //space
     if (game->sq_map[y][x] == '1')
@@ -136,8 +136,8 @@ uint32_t set_minimap_color(t_main *game, t_int_pt *pt)
 
 void draw_minimap(t_main *game, mlx_image_t *minimap)
 {
-    t_int_pt pt;
-    t_int_pt map_pt;
+    t_dbl_pt pt;
+    t_dbl_pt map_pt;
     size_t color;
 
     pt.y = 0;
@@ -148,8 +148,8 @@ void draw_minimap(t_main *game, mlx_image_t *minimap)
         {
             map_pt.y = pt.y * MINI_TILE;
             map_pt.x = pt.x * MINI_TILE;
-            color = set_minimap_color(game, &pt);  // Get the color for the current minimap point
-            draw_minimap_square(minimap, &map_pt, MINI_TILE, color); // Draw the square on the minimap
+            color = set_minimap_color(game, pt);  // Get the color for the current minimap point
+            draw_minimap_square(minimap, map_pt, MINI_TILE, color); // Draw the square on the minimap
             pt.x++;
         }
         pt.y++;
@@ -315,6 +315,7 @@ void start_game(t_main *game)
 	{			
         errorhandler(game, "mlxerror", true);
 	}
+    //game->minimap = mlx_new_image(game->mlx_ptr, WIDTH, HEIGHT);
 	game->minimap = mlx_new_image(game->mlx_ptr, game->msize.x * MINI_TILE, game->msize.y * MINI_TILE);
 	if (!game->minimap)
 	{

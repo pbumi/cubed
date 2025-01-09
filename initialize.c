@@ -6,13 +6,13 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 20:50:54 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/09 20:55:12 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
 
-bool check_components(int fd, t_main *game)
+bool check_components(int fd, t_data *game)
 {
     char *line;
 	
@@ -21,59 +21,64 @@ bool check_components(int fd, t_main *game)
     {
 		if (extract_components(fd, line, game) == false)
 		{
-			free_and_close(line, fd);
+			free(line);
 			return false;
 		}
-		else
-		{
-        	free(line);
-			line = get_next_line(fd);
-		}
+        free(line);
+		line = get_next_line(fd);
     }
-	if (!game->walls->walls_OK || !game->ceil->OK || !game->floor->OK)
+	if (!game->W || !game->C || !game->F)
 	{
-		errorhandler(game,"* Missing components *", false);
-		free_and_close(line,fd);
+		error_msg("* Missing file components *");
+		free(line);
 		return false;
 	}
-	free_and_close(line, fd);
+	free (line);
 	return true;
 }
 
-void	initialize_struct(t_main *game)
-{
-    game->walls = malloc(sizeof(t_wall));
-    if (!game->walls)
-    {
-		errorhandler(game, "* Memory allocation failed for walls *", true);
-    }
-	game->walls->walls_OK = false;
-    game->walls->NO = NULL;
-    game->walls->SO = NULL;
-    game->walls->WE = NULL;
-    game->walls->EA = NULL;
-    game->ceil = malloc(sizeof(t_fc));
-    game->floor = malloc(sizeof(t_fc));
-    if (!game->ceil || !game->floor)
-    {
-		errorhandler(game, "* Memory allocation failed for walls *", true);
-    }
-	game->ceil->OK = false;
-	game->floor->OK = false;
-	game->sq_map = NULL;
-}
+// void	initialize_struct(t_data *game)
+// {
+//     game->NO = NULL;
+//     game->SO = NULL;
+//     game->WE = NULL;
+//     game->EA = NULL;
+// 	game->W = false;
+// 	game->Fcolor = 0;
+// 	game->Ccolor = 0;
+// 	game->C = false;
+// 	game->F = false;
+// 	game->p.x = 0;
+// 	game->p.y = 0;
+// 	game->m.x = 0;
+// 	game->m.y = 0;
+// 	game->map = NULL;
+// 	game->map2d = NULL;
+// }
 
-void initialize_game(char *cubfile, t_main *game)
+void initialize_game(char *cubfile, t_data *dt)
 {
 	int fd;
-	initialize_struct(game);
+	
 	fd = open(cubfile, O_RDONLY);
     if (fd < 0)
     {
-		errorhandler(game, "Error opening file *", true);
+		free_data(dt);
+		error_msg("* Error opening file *");
+		exit (EXIT_FAILURE);
     }
-	if (!check_components(fd, game))
-		exit (1);
+	else if (!check_components(fd, dt))
+	{
+		get_next_line(-1);
+		close(fd);
+		free_data(dt);
+		exit (EXIT_FAILURE);
+	}
+	else
+	{
+		get_next_line(-1);
+		close(fd);
+	}
 }
 
 bool    valid_cub(char *argv)
@@ -90,23 +95,28 @@ bool    valid_cub(char *argv)
 	return false;
 }
 
-void	check_file(int argc, char **argv, t_main *game)
+void	check_file(int argc, char **argv, t_data *dt)
 {
 	if (argc > 2)
 	{
-		error_exit("* Run with only 1 .cub file *", true);
+		error_msg("* Run with only 1 .cub file *");
+		exit (EXIT_FAILURE);
 	}
 	else if (argc == 1)
 	{
-		error_exit("* Run with .cub file and press ENTER *", true);
+		error_msg("* Run with .cub file *");
+		exit (EXIT_FAILURE);
 	}
 	else if (argc == 2)
 	{
 		if (!valid_cub(argv[1]))
 		{
-			error_exit("* Invalid file *", true);
+			error_msg("* Invalid file *");
+			exit (EXIT_FAILURE);
 		}
 		else
-			initialize_game(argv[1], game);
+		{	
+			initialize_game(argv[1], dt);
+		}
 	}
 }

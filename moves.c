@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 17:46:09 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/16 20:10:22 by pbumidan         ###   ########.fr       */
+/*   Updated: 2024/12/19 15:54:53 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -352,14 +352,14 @@ void move_right(t_main *game)
 void	key_hook_slow(void *param)
 {
 	t_main	*game;
-
+    mlx_t   *mlx;
 	game = (t_main *)param;
-
-    if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
-		mlx_close_window(game->mlx_ptr);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
+    mlx = game->mlx_ptr;
+    if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(mlx);
+	else if (mlx_is_key_down(mlx, MLX_KEY_A))
 		move_left(game);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
+	else if (mlx_is_key_down(mlx, MLX_KEY_D))
 		move_right(game);
 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
 		move_up(game);

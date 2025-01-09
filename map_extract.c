@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:08:22 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 19:11:28 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:20:13 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@ char *extract_loop(char *map_content, int fd)
     {
         if (line[0] != '\0')
         {
-            tmp = gnl_strjoin(map_content, line);
+            tmp = ft_strjoin(map_content, line);
             free(map_content);
             if (!tmp)
             {
                 free(line);
+                map_content = NULL;
                 return NULL;
             }
             map_content = tmp;
@@ -34,10 +35,11 @@ char *extract_loop(char *map_content, int fd)
         free(line);
         line = get_next_line(fd);
     }
-    return map_content;
+    free(line);
+    return (map_content);
 }
 
-bool extract_map1(int fd, t_main *game)
+bool extract_map1(int fd, t_data *game)
 {
     char *map_content;
 
@@ -46,9 +48,7 @@ bool extract_map1(int fd, t_main *game)
         return false;
     map_content = extract_loop(map_content, fd);
     if (!map_content)
-    {
         return false;
-    }
     game->map = ft_strtrim(map_content, "\n");
     if (!game->map)
     {
@@ -56,11 +56,7 @@ bool extract_map1(int fd, t_main *game)
         return false;
     }
     free(map_content);
-    if (!validate_map(game))
-    {
-        free(game->map);
-        return false;
-    }
+    map_content = NULL;
     return true;
 }
 
@@ -87,7 +83,7 @@ bool extract_map1(int fd, t_main *game)
 //     return map_content;
 // }
 
-// bool extract_map1(int fd, t_main *game)
+// bool extract_map1(int fd, t_data *game)
 // {
 //     char *map_content;
     

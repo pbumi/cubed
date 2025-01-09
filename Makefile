@@ -6,7 +6,7 @@
 #    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2024/12/16 20:15:22 by pbumidan         ###   ########.fr        #
+#    Updated: 2025/01/09 20:53:49 by pbumidan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ MLX42 = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 # -I include -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 SRCS = \
-	maintest.c \
+	maintest2.c \
 	initialize.c \
 	extract_comp.c \
 	map_extract.c \
@@ -34,11 +34,11 @@ SRCS = \
 	utils_space.c \
 	utils.c \
 	moves2.c \
+	# get_line.c \
 
 SRCS_SHARED = \
 
 SRCS_BONUS = \
-
 
 OBJS := $(SRCS:.c=.o)
 OBJS_SHARED:= $(SRCS_SHARED:.c=.o)
@@ -49,9 +49,10 @@ CFLAGS = -Wall -Wextra -Werror -Wunreachable-code -Ofast -I ./MLX42/include
 all: $(NAME)
 
 %.o: %.c
-	@cc $(CFLAGS) -c $< -o $@
+	@cc $(CFLAGS) -c $< -o $@ 
 
 $(NAME): .mlx .libft .gnl $(OBJS) $(OBJS_SHARED)
+# $(NAME): .mlx .libft $(OBJS) $(OBJS_SHARED)
 	@cc $(CFLAGS) $(OBJS) $(OBJS_SHARED) $(LIBFT) $(GNL) $(MLX42) -o $(NAME)
 	@echo "$(CYAN)* * * $(NAME) COMPLETE! * * *$(NC)"
 
