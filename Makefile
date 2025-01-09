@@ -6,7 +6,7 @@
 #    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2024/12/21 14:36:18 by pbumidan         ###   ########.fr        #
+#    Updated: 2025/01/07 20:00:45 by pbumidan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = cubed
 # NAME_BONUS = so_long_bonus
 
 LIBFT = ./libft/libft.a
-GNL = ./gnl/gnl.a
+# GNL = ./gnl/gnl.a
 MLX42 = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 
 # cgpt = ./MLX42/build/libmlx42.a -Iinclude -lglfw -lX11 -lpthread -lXrandr -lXi -ldl
@@ -34,6 +34,7 @@ SRCS = \
 	utils_space.c \
 	utils.c \
 	moves2.c \
+	get_line.c \
 
 SRCS_SHARED = \
 
@@ -49,9 +50,10 @@ CFLAGS = -Wall -Wextra -Werror -Wunreachable-code -Ofast -I ./MLX42/include
 all: $(NAME)
 
 %.o: %.c
-	@cc $(CFLAGS) -c $< -o $@
+	@cc $(CFLAGS) -c $< -o $@ 
 
-$(NAME): .mlx .libft .gnl $(OBJS) $(OBJS_SHARED)
+# $(NAME): .mlx .libft .gnl $(OBJS) $(OBJS_SHARED)
+$(NAME): .mlx .libft $(OBJS) $(OBJS_SHARED)
 	@cc $(CFLAGS) $(OBJS) $(OBJS_SHARED) $(LIBFT) $(GNL) $(MLX42) -o $(NAME)
 	@echo "$(CYAN)* * * $(NAME) COMPLETE! * * *$(NC)"
 
@@ -67,10 +69,10 @@ $(NAME): .mlx .libft .gnl $(OBJS) $(OBJS_SHARED)
 	@make -s -C libft
 	@touch .libft
 
-.gnl:
-	@git clone https://github.com/pbumi/gnl.git
-	@make -s -C gnl
-	@touch .gnl
+# .gnl:
+# 	@git clone https://github.com/pbumi/gnl.git
+# 	@make -s -C gnl
+# 	@touch .gnl
 
 bonus: .bonus
 .bonus: .mlx .libft .gnl $(OBJS) $(OBJS_BONUS) $(OBJS_SHARED)

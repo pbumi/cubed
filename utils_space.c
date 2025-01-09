@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:20:30 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 18:30:18 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/04 18:58:20 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,16 @@ char *remove_wspace(char *line, int start)
     int x = start;
     int end;
 
-    // Skip leading whitespace (spaces and control characters like tab, etc.)
     while (line[x] && (line[x] == ' ' || (line[x] >= 9 && line[x] <= 13)))
     {
         x++;
     }
-
-    // Find the last non-whitespace character
     end = ft_strlen(line) - 1;
     while (end > x && (line[end] == ' ' || (line[end] >= 9 && line[end] <= 13)))
     {
         end--;
     }
-
-    // Create a substring between the non-whitespace characters
-    substr = ft_substr(line, x, end - x + 1);
+    substr = ft_substr(line, x, (end - x) + 1);
     if (!substr)
     {
         return NULL;
@@ -94,7 +89,7 @@ bool remove_spaces(char **colors)
             while (x > 0)
             {
                 x--;
-                safe_free((void **)&colors[x]);
+                free(colors[x]);
             }
             return false;
         }
