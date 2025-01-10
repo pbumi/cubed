@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 19:59:35 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 20:48:43 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,10 @@ static void	fill_player_position(t_data *game)
     }
 }
 
-static bool check_contents(char *line, t_data *game)
-{
+static bool check_wall(char *line, t_data *game)
+{	
 	if (game->w && game->s && game->w && game->e)
 		game->wall = true;
-	if (parse_rgb(line, "F ", game) == false)
-        return false;
-	if (parse_rgb(line, "C ", game) == false)
-        return false;
     if (!parse_wall(line, "NO ", game, &game->n))
         return false;
     if (!parse_wall(line, "SO ", game, &game->s))
@@ -95,13 +91,17 @@ static bool check_contents(char *line, t_data *game)
         return false;
     if (!parse_wall(line, "EA ", game, &game->e))
         return false;
+	if (parse_rgb(line, "F ", game) == false)
+        return false;
+	if (parse_rgb(line, "C ", game) == false)
+        return false;
 	else
 		return true;
 }
 
 bool	extract_components(int fd, char *line, t_data *game)
 {
-	if (check_contents(line, game) == false)
+	if (parse_contents(line, game) == false)
         return false;
 	if (game->wall && game->floor && game->ceil)
 	{

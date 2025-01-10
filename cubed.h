@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 19:59:17 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 20:35:12 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ typedef struct s_int_pt
 
 typedef struct s_player
 {
-	int		plyr_x;
-	int		plyr_y;
+	t_int_pt	pos;
 	double	angle;
 	float	fov_rd;
 	int		rot;

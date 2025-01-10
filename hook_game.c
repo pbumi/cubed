@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 18:37:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 19:51:04 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 20:33:41 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@ static void	move_player(t_mlx *mlx, double move_x, double move_y)
     t_int_pt map;
     t_int_pt new;
 
-	new.y = (int)(mlx->ply->plyr_y + move_y);
-	new.x = (int)(mlx->ply->plyr_x + move_x);
+	new.y = (int)(mlx->ply->pos.y + move_y);
+	new.x = (int)(mlx->ply->pos.x + move_x);
 	map.y = (new.y / TILE_SIZE);
 	map.x = (new.x / TILE_SIZE);
 	if (mlx->dt->map2d[map.y][map.x] != '1' && \
-		(mlx->dt->map2d[map.y][mlx->ply->plyr_x / TILE_SIZE] != '1' && \
-		mlx->dt->map2d[mlx->ply->plyr_y / TILE_SIZE][map.x] != '1'))
+		(mlx->dt->map2d[map.y][mlx->ply->pos.x / TILE_SIZE] != '1' && \
+		mlx->dt->map2d[mlx->ply->pos.y / TILE_SIZE][map.x] != '1'))
 	{
-		mlx->ply->plyr_y = new.y;
-		mlx->ply->plyr_x = new.x;
+		mlx->ply->pos.y = new.y;
+		mlx->ply->pos.x = new.x;
 	}
 }
 

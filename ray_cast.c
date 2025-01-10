@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 18:03:11 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 20:27:16 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 20:33:06 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ static float	get_h_inter(t_mlx *mlx, float angl)	// get the horizontal intersect
 
 	y_step = TILE_SIZE;
 	x_step = TILE_SIZE / tan(angl);
-	h_y = (int)(mlx->ply->plyr_y / TILE_SIZE) * TILE_SIZE; //floor(mlx->ply->plyr_y / TILE_SIZE) * TILE_SIZE;
+	h_y = (int)(mlx->ply->pos.y / TILE_SIZE) * TILE_SIZE; //floor(mlx->ply->pos.y / TILE_SIZE) * TILE_SIZE;
 	pixel = inter_check(angl, &h_y, &y_step, 1);
-	h_x = mlx->ply->plyr_x + (h_y - mlx->ply->plyr_y) / tan(angl);
+	h_x = mlx->ply->pos.x + (h_y - mlx->ply->pos.y) / tan(angl);
 	if ((unit_circle(angl, 'y') && x_step > 0) || (!unit_circle(angl, 'y') && x_step < 0)) // check x_step value
 		x_step *= -1;
 	while (wall_hit(h_x, h_y - pixel, mlx)) // check the wall hit whit the pixel value
@@ -91,7 +91,7 @@ static float	get_h_inter(t_mlx *mlx, float angl)	// get the horizontal intersect
 	}
 	mlx->ray->horiz.x = h_x;
 	mlx->ray->horiz.y = h_y;
-	return (sqrt(pow(h_x - mlx->ply->plyr_x, 2) + pow(h_y - mlx->ply->plyr_y, 2))); // get the distance
+	return (sqrt(pow(h_x - mlx->ply->pos.x, 2) + pow(h_y - mlx->ply->pos.y, 2))); // get the distance
 }
 
 static float	get_v_inter(t_mlx *mlx, float angl)	// get the vertical intersection
@@ -104,9 +104,9 @@ static float	get_v_inter(t_mlx *mlx, float angl)	// get the vertical intersectio
 
 	x_step = TILE_SIZE; 
 	y_step = TILE_SIZE * tan(angl);
-	v_x = (int)(mlx->ply->plyr_x / TILE_SIZE) * TILE_SIZE; // floor(mlx->ply->plyr_x / TILE_SIZE) * TILE_SIZE;
+	v_x = (int)(mlx->ply->pos.x / TILE_SIZE) * TILE_SIZE; // floor(mlx->ply->pos.x / TILE_SIZE) * TILE_SIZE;
 	pixel = inter_check(angl, &v_x, &x_step, 0); // check the intersection and get the pixel value
-	v_y = mlx->ply->plyr_y + (v_x - mlx->ply->plyr_x) * tan(angl);
+	v_y = mlx->ply->pos.y + (v_x - mlx->ply->pos.x) * tan(angl);
 	if ((unit_circle(angl, 'x') && y_step < 0) || (!unit_circle(angl, 'x') && y_step > 0)) // check y_step value
 		y_step *= -1;
 	while (wall_hit(v_x - pixel, v_y, mlx)) // check the wall hit whit the pixel value
@@ -116,7 +116,7 @@ static float	get_v_inter(t_mlx *mlx, float angl)	// get the vertical intersectio
 	}
 	mlx->ray->vert.x = v_x;
 	mlx->ray->vert.y = v_y;
-	return (sqrt(pow(v_x - mlx->ply->plyr_x, 2) + pow(v_y - mlx->ply->plyr_y, 2))); // get the distance
+	return (sqrt(pow(v_x - mlx->ply->pos.x, 2) + pow(v_y - mlx->ply->pos.y, 2))); // get the distance
 }
 
 void	cast_rays(t_mlx *mlx)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   maintest2.c                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:51:37 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 19:51:56 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 20:33:53 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static void init_the_player(t_mlx *mlx)
 {
-	mlx->ply->plyr_x = mlx->dt->p.x * TILE_SIZE + TILE_SIZE / 2;
-	mlx->ply->plyr_y = mlx->dt->p.y * TILE_SIZE + TILE_SIZE / 2;
+	mlx->ply->pos.x = mlx->dt->p.x * TILE_SIZE + TILE_SIZE / 2;
+	mlx->ply->pos.y = mlx->dt->p.y * TILE_SIZE + TILE_SIZE / 2;
 	mlx->ply->fov_rd = (FOV * M_PI) / 180;
 	if (mlx->dt->map2d[mlx->dt->p.y][mlx->dt->p.x] == 'N')
     {
