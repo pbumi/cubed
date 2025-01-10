@@ -6,13 +6,13 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:13:36 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 20:11:46 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 19:53:39 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cubed.h"
 
-bool duplicate_player(char *line)
+static bool duplicate_player(char *line)
 {
 	size_t x;
 	int player;
@@ -34,7 +34,7 @@ bool duplicate_player(char *line)
     return false; 
 }
 
-bool incorrect_mapcharacter(char *line)
+static bool incorrect_mapcharacter(char *line)
 {
 	size_t x;
 	size_t x_count;
@@ -60,7 +60,7 @@ bool incorrect_mapcharacter(char *line)
     return false; 
 }
 
-bool incorrect_mapsize(char *line)
+static bool incorrect_mapsize(char *line)
 {
 	t_int_pt count;
 	size_t x;
@@ -72,7 +72,7 @@ bool incorrect_mapsize(char *line)
         if (line[x] == '\n')
         {
 			count.y++;
-			if (count.x < 2 || count.x > 500) // MIN MAX X
+			if (count.x < 2 || count.x > 500)
 			{
 				return true;
 			}
@@ -81,33 +81,39 @@ bool incorrect_mapsize(char *line)
 		count.x++;
         x++;
     }
-	if (count.y < 2 || count.y > 500) // MIN MAX Y
+	if (count.y < 2 || count.y > 500)
 	{
 		return true;
 	}
     return false; 
 }
 
-bool is_broken_map(char *line)
+static bool is_broken_or_empty_line(char *line)
 {
-	size_t x;
-	
+    size_t x; 
 	x = 0;
-	while (line[x + 1])
+    while (line[x]) 
     {
         if (line[x] == '\n' && line[x + 1] == '\n')
+        {
             return true;
+        }
         x++;
     }
-    return false; 
+    x = 0; 
+    while (line[x]) 
+    {
+        if (!(line[x] == 32 || (line[x] >= 9 && line[x] <= 13)) && line[x] != '\n')
+            return false;
+        x++;
+    }
+    return true;
 }
 
 bool validate_map(t_data *game)
 {
-	if (is_empty_line(game->map))
-		error_msg("* Empty MAP *");
-	else if (is_broken_map(game->map))
-		error_msg("* Empty lines in MAP *");
+	if (is_broken_or_empty_line(game->map))
+		error_msg("* Empty MAP or Broken MAP *");
 	else if (incorrect_mapsize(game->map))
 		error_msg("* Invalid MAP size *");
 	else if (incorrect_mapcharacter(game->map))

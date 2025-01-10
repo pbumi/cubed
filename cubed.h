@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/07 18:40:40 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 19:35:13 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,15 @@
 # include <fcntl.h>
 # include <math.h>
 # include "./libft/libft.h"
-// # include "./gnl/get_next_line.h"
+# include "./gnl/get_next_line.h"
 # include "./MLX42/include/MLX42/MLX42.h"
 
-# define S_W 1900 // screen width
-# define S_H 1000 // screen height
-# define TILE_SIZE 64 // tile size
-# define FOV 60 // field of view
-# define ROTATION_SPEED 0.040 // rotation speed
-# define PLAYER_SPEED 4	// player speed
-
+# define S_W 1900
+# define S_H 1000
+# define TILE_SIZE 64
+# define FOV 60
+# define ROTATION_SPEED 0.040
+# define PLAYER_SPEED 4
 
 typedef struct s_dbl_pt
 {
@@ -42,88 +41,79 @@ typedef struct s_int_pt
 	int	y;
 }	t_int_pt;
 
-typedef struct s_player //the player structure
+typedef struct s_player
 {
-	int		plyr_x; // player x position in pixels
-	int		plyr_y; // player y position in pixels
-	double	angle;	// player angle
-	float	fov_rd;	// field of view in radians
-	int		rot;	// rotation flag
-	int		l_r;	// left right flag
-	int		u_d;	// up down flag
+	int		plyr_x;
+	int		plyr_y;
+	double	angle;
+	float	fov_rd;
+	int		rot;
+	int		l_r;
+	int		u_d;
 }	t_player;
 
-typedef struct s_ray	//the ray structure
+typedef struct s_ray
 {
-	double	ray_ngl;	// ray angle
-	double	distance;	// distance to the wall
-	int		index;
-	bool		wall_hit;		// flag for the wall
-	t_dbl_pt	horiz;		// horizontal wall hit
-	t_dbl_pt	vert;		// vertical wall hit
+	double		ray_ngl;
+	double		distance;
+	int			index;
+	bool		wall_hit;
+	t_dbl_pt	horiz;
+	t_dbl_pt	vert;
 }	t_ray;
 
-typedef struct s_data	//the data structure
+typedef struct s_data
 {
-	char 	*map;
-	char	**map2d;	// the map
-	t_int_pt	p; // player index
-	t_int_pt	m; // map index
-	mlx_texture_t	*NO;
-	mlx_texture_t	*EA;
-	mlx_texture_t	*SO;
-	mlx_texture_t	*WE;
-	bool    n;
-    bool    e;
-    bool    w;
-    bool    s;
-	bool	W;
-	unsigned int	Fcolor;
-	bool			F;
-	unsigned int	Ccolor;
-	bool			C;
+	char			*map;
+	char			**map2d;
+	t_int_pt		p;
+	t_int_pt		m;
+	mlx_texture_t	*no_t;
+	mlx_texture_t	*ea_t;
+	mlx_texture_t	*so_t;
+	mlx_texture_t	*we_t;
+	bool			n;
+	bool			e;
+	bool			w;
+	bool			s;
+	bool			wall;
+	unsigned int	floor_color;
+	bool			floor;
+	unsigned int	ceil_color;
+	bool			ceil;
 }	t_data;
 
-typedef struct s_mlx	//the mlx structure
+typedef struct s_mlx
 {
-	mlx_t			*mlx_p;	// the mlx pointer
-	mlx_image_t		*img;	// the image
-	t_ray			*ray;	// the ray structure
-	t_data			*dt;	// the data structure
-	t_player		*ply;	// the player structure
+	mlx_t			*mlx_p;
+	mlx_image_t		*img;
+	t_ray			*ray;
+	t_data			*dt;
+	t_player		*ply;
 }	t_mlx;
 
-//map
-void	check_file(int argc, char **argv, t_data *game);
+//parsing functions
+bool	check_args(int argc, char **argv, t_data *game);
 bool	extract_components(int fd, char *line, t_data *game);
-bool extract_map1(int fd, t_data *game);
+bool	parse_rgb(char *line, char *str, t_data *game);
+bool	parse_wall(char *line, char *identifier, t_data *game, bool *OK);
+bool	extract_map(int fd, t_data *game);
 bool	validate_map(t_data *game);
-bool	check_fill(t_data *game);
-//free
-void	free_all(t_mlx *mlx);
-void free_data(t_data *game);
-void free_arr(char **arr);
-void safe_free(void **ptr);
-void free_and_close(char *line, int fd);
-//space
-bool is_space(char c);
-char *remove_wspace(char *line, int start);
-bool is_empty_line(char *line);
-char *remove_wspace(char *line, int start);
-char *remove_whitespaces(char *line, int start);
-bool remove_spaces(char **colors);
-//utils
-void    free_dt_exit(t_data *game, char *msg, int error_code);
-void	error_msg(char *msg);
-void	errorhandler(t_data *game, char *msg, bool fatal);
-void	error_exit(char *msg, bool fatal);
-size_t  arr_size(char **arr);
-int find_max(int *arr, int size);
-char** allocate2DCharArray(int x, int y);
+bool	create_sqmap(t_data *game);
+bool	check_floodfill(t_data *game, char **tmp_arr, int rows, int cols);
 
-int find_max(int *arr, int size);
-//moves
-void	key_hook_slow(void *param);
-char	*get_next_line(int fd);
+//game functions
+void	cast_rays(t_mlx *mlx);
+void	render_ray(t_mlx *mlx, int ray);
+void	game_hook(void *ml);
+void	key_hook(mlx_key_data_t keydata, void *ml);
+void 	end_the_game(t_mlx *mlx, int exit_code);
+
+//utils
+float	nor_angle(float angle);
+void	error_msg(char *msg);
+char	*remove_wspace(char *line, int start);
+void	free_arr(char **arr);
+void	free_all(t_mlx *mlx);
 
 #endif

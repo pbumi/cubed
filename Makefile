@@ -1,17 +1,5 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2025/01/09 20:53:49 by pbumidan         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
 
 NAME = cubed
-# NAME_BONUS = so_long_bonus
 
 LIBFT = ./libft/libft.a
 GNL = ./gnl/gnl.a
@@ -24,17 +12,20 @@ MLX42 = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 # -I include -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 SRCS = \
-	maintest2.c \
-	initialize.c \
+	main.c \
+	check_file.c \
 	extract_comp.c \
+	extract_color.c \
+	extract_wall.c \
 	map_extract.c \
 	map_validate.c \
+	map_create.c \
 	map_fill.c \
-	utils_free.c \
-	utils_space.c \
+	hook_game.c \
+	hook_key.c \
+	ray_cast.c \
+	ray_render.c \
 	utils.c \
-	moves2.c \
-	# get_line.c \
 
 SRCS_SHARED = \
 
