@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 17:24:57 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 19:52:41 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 20:25:09 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void fill_maparray(t_data *game, int *tmp_wx, char **tmp_arr)
 	game->map2d[game->m.y] = NULL;
 }
 
-sttaic void get_width(t_data *game, char **tmp_arr, int *tmp_wx)
+static void get_width(t_data *game, char **tmp_arr, int *tmp_wx)
 {
 	int max;
     int x;

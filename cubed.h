@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 19:35:13 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 19:59:17 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	cast_rays(t_mlx *mlx);
 void	render_ray(t_mlx *mlx, int ray);
 void	game_hook(void *ml);
 void	key_hook(mlx_key_data_t keydata, void *ml);
-void 	end_the_game(t_mlx *mlx, int exit_code);
+void	end_the_game(t_mlx *mlx, int exit_code);
 
 //utils
 float	nor_angle(float angle);

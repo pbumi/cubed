@@ -6,13 +6,13 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 17:56:10 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 19:59:35 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cubed.h"
- 
-static bool fill_tmparr(t_data *game, char **tmp_arr)
+
+static bool	fill_tmparr(t_data *game, char **tmp_arr)
 {
     t_int_pt pt;
     

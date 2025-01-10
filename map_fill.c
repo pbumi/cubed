@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 19:53:17 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 20:25:32 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static void mark_spaces(char **array, int rows, int cols)
     }
 }
 
-sttaic bool check_for_X(char **tmp_arr, int rows, int cols)
+static bool check_for_X(char **tmp_arr, int rows, int cols)
 {
     int y = 0, x;
     

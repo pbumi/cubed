@@ -6,13 +6,13 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 18:03:11 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 19:54:12 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/01/10 20:27:16 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cubed.h"
 
-staatic int	unit_circle(float angle, char c)
+static int	unit_circle(float angle, char c)
 {
 	if (c == 'x')
 	{
@@ -52,18 +52,18 @@ static int	inter_check(float angle, float *inter, float *step, int is_horizon)	/
 
 static int	wall_hit(float x, float y, t_mlx *mlx)	// check the wall hit
 {
-	int		x_m;
-	int		y_m;
+	t_int_pt map;
 
+	map = (t_int_pt){0,0};
 	if (x < 0 || y < 0)
 		return (0);
-	x_m = (int) (x / TILE_SIZE); //floor (x / TILE_SIZE); // get the x position in the map
-	y_m =  (int) (y / TILE_SIZE); //floor (y / TILE_SIZE); // get the y position in the map
-	if ((y_m >= mlx->dt->m.y || x_m >= mlx->dt->m.x))
+	map.y =  (int) (y / TILE_SIZE); //floor (y / TILE_SIZE); // get the y position in the map
+	map.x = (int) (x / TILE_SIZE); //floor (x / TILE_SIZE); // get the x position in the map
+	if ((map.y >= mlx->dt->m.y || map.x >= mlx->dt->m.x))
 		return (0);
-	if (mlx->dt->map2d[y_m] && x_m <= (int)ft_strlen(mlx->dt->map2d[y_m]))
+	if (mlx->dt->map2d[map.y] && map.x <= mlx->dt->m.y) //(int)ft_strlen(mlx->dt->map2d[map.y]))
 	{
-		if (mlx->dt->map2d[y_m][x_m] == '1')
+		if (mlx->dt->map2d[map.y][map.x] == '1')
 			return (0);
 	}
 	return (1);
