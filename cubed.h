@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 20:35:12 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/15 19:31:58 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,21 @@ typedef struct s_int_pt
 typedef struct s_player
 {
 	t_int_pt	pos;
-	double	angle;
-	float	fov_rd;
-	int		rot;
-	int		l_r;
-	int		u_d;
+	double		angle;
+	float		pov;
+	int			right_left;
+	int			east_west;
+	int			north_south;
 }	t_player;
 
 typedef struct s_ray
 {
-	double		ray_ngl;
-	double		distance;
-	int			index;
-	bool		wall_hit;
 	t_dbl_pt	horiz;
 	t_dbl_pt	vert;
+	double		r_angle;
+	double		dist;
+	int			index;
+	bool		wall_hit;
 }	t_ray;
 
 typedef struct s_data
@@ -110,8 +110,10 @@ void	end_the_game(t_mlx *mlx, int exit_code);
 
 //utils
 float	nor_angle(float angle);
+int		unit_circle(float angle, char c);
 void	error_msg(char *msg);
 char	*remove_wspace(char *line, int start);
+int		get_pixeldata(int c);
 void	free_arr(char **arr);
 void	free_all(t_mlx *mlx);
 

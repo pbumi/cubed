@@ -6,43 +6,43 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:46:33 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 18:50:21 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/15 17:20:52 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cubed.h"
 
-static void free_data(t_data *game)
+static void	free_data(t_data *game)
 {
 	free(game->map);
 	free_arr(game->map2d);
-    if (game->ea_t)
+	if (game->ea_t)
 		mlx_delete_texture(game->ea_t);
-    if (game->we_t)
-        mlx_delete_texture(game->we_t);
-    if (game->no_t)
-        mlx_delete_texture(game->no_t);
-    if (game->so_t)
-        mlx_delete_texture(game->so_t);
-    game->no_t = NULL;
-    game->so_t = NULL;
-    game->we_t = NULL;
-    game->ea_t = NULL;
-    game->map = NULL;
-    game->map2d = NULL;
+	if (game->we_t)
+		mlx_delete_texture(game->we_t);
+	if (game->no_t)
+		mlx_delete_texture(game->no_t);
+	if (game->so_t)
+		mlx_delete_texture(game->so_t);
+	game->no_t = NULL;
+	game->so_t = NULL;
+	game->we_t = NULL;
+	game->ea_t = NULL;
+	game->map = NULL;
+	game->map2d = NULL;
 }
 
 static bool	parse_file(int fd, t_data *game)
 {
-	char *line;
-	
+	char	*line;
+
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
 		if (extract_components(fd, line, game) == false)
 		{
 			free(line);
-			return false;
+			return (false);
 		}
 		free(line);
 		line = get_next_line(fd);
@@ -51,16 +51,16 @@ static bool	parse_file(int fd, t_data *game)
 	{
 		error_msg("* Missing file components *");
 		free(line);
-		return false;
+		return (false);
 	}
 	free (line);
-	return true;
+	return (true);
 }
 
 static void	open_file(char *cubfile, t_data *dt)
 {
-	int fd;
-	
+	int	fd;
+
 	fd = open(cubfile, O_RDONLY);
 	if (fd < 0)
 	{
@@ -84,18 +84,18 @@ static void	open_file(char *cubfile, t_data *dt)
 
 static bool	valid_cub(char *argv)
 {
-	int len;
-	
+	int	len;
+
 	if (!argv)
 	{
-		return false;
+		return (false);
 	}
 	len = ft_strlen(argv);
 	if (len > 4 && ft_strncmp(&argv[len - 4], ".cub", 4) == 0)
 	{
-		return true;
+		return (true);
 	}
-	return false;
+	return (false);
 }
 
 bool	check_args(int argc, char **argv, t_data *dt)

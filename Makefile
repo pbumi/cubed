@@ -26,6 +26,7 @@ SRCS = \
 	ray_cast.c \
 	ray_render.c \
 	utils.c \
+	utils_free.c \
 
 SRCS_SHARED = \
 

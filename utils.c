@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cubed.h"
+#include "cubed.h"
 
 float	nor_angle(float angle)
 {
@@ -21,71 +21,54 @@ float	nor_angle(float angle)
 	return (angle);
 }
 
-char *remove_wspace(char *line, int start)
+int	unit_circle(float angle, char c)
 {
-    char *substr = NULL;
-    int x = start;
-    int end;
-
-    while (line[x] && (line[x] == ' ' || (line[x] >= 9 && line[x] <= 13)))
-    {
-        x++;
-    }
-    end = ft_strlen(line) - 1;
-    while (end > x && (line[end] == ' ' || (line[end] >= 9 && line[end] <= 13)))
-    {
-        end--;
-    }
-    substr = ft_substr(line, x, (end - x) + 1);
-    if (!substr)
-    {
-        return NULL;
-    }
-    return substr;
+	if (c == 'x')
+	{
+		if (angle > 0 && angle < M_PI)
+			return (1);
+	}
+	else if (c == 'y')
+	{
+		if (angle > (M_PI / 2) && angle < (3 * M_PI) / 2)
+			return (1);
+	}
+	return (0);
 }
 
-void free_arr(char **arr)
+int	get_pixeldata(int c)
 {
-    if (arr == NULL)
-        return;
-    int i = 0;
-    while (arr[i] != NULL)
-    {
-        free(arr[i]);
-        i++;
-    }
-    free(arr);
+	return (((c >> 24) & 0xFF) | ((c >> 8) & 0xFF00)
+		| ((c << 8) & 0xFF0000) | ((c << 24) & 0xFF000000));
 }
 
-void	free_all(t_mlx *mlx)
+char	*remove_wspace(char *line, int start)
 {
-    free(mlx->dt->map);
-    mlx->dt->map = NULL;
-	free_arr(mlx->dt->map2d);
-    mlx->dt->map2d = NULL;
-    if (mlx->dt->ea_t)
-		mlx_delete_texture(mlx->dt->ea_t);
-    if (mlx->dt->we_t)
-        mlx_delete_texture(mlx->dt->we_t);
-    if (mlx->dt->no_t)
-        mlx_delete_texture(mlx->dt->no_t);
-    if (mlx->dt->so_t)
-        mlx_delete_texture(mlx->dt->so_t);
-    mlx->dt->no_t = NULL;
-    mlx->dt->so_t = NULL;
-    mlx->dt->we_t = NULL;
-    mlx->dt->ea_t = NULL;
-	if (mlx->ply)
-		free(mlx->ply);
-	if (mlx->ray)
-		free(mlx->ray);
-	mlx->dt = NULL;
-	mlx->ply = NULL;
-	mlx->ray = NULL;
+	char	*substr;
+	int		x;
+	int		end;
+
+	substr = NULL;
+	x = start;
+	while (line[x] && (line[x] == ' ' || (line[x] >= 9 && line[x] <= 13)))
+	{
+		x++;
+	}
+	end = ft_strlen(line) - 1;
+	while (end > x && (line[end] == ' ' || (line[end] >= 9 && line[end] <= 13)))
+	{
+		end--;
+	}
+	substr = ft_substr(line, x, (end - x) + 1);
+	if (!substr)
+	{
+		return (NULL);
+	}
+	return (substr);
 }
 
 void	error_msg(char *msg)
 {
 	ft_putstr_fd("Error\n", STDERR_FILENO);
-	ft_putendl_fd(msg, STDERR_FILENO);	
+	ft_putendl_fd(msg, STDERR_FILENO);
 }

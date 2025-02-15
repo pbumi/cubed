@@ -6,22 +6,22 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 16:50:32 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 18:52:52 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/15 17:17:58 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cubed.h"
 
-static size_t  arr_size(char **arr)
+static size_t	arr_size(char **arr)
 {
-    size_t count;
-    
-    count = 0;
-    while (arr[count] != NULL)
-    {
-        count++;
-    }
-    return (count);
+	size_t	count;
+
+	count = 0;
+	while (arr[count] != NULL)
+	{
+		count++;
+	}
+	return (count);
 }
 
 static bool	check_range(char **color)
@@ -93,12 +93,12 @@ static bool	get_rgb(char *line, t_data *game, char *str)
 	return (true);
 }
 
-bool parse_rgb(char *line, char *str, t_data *game)
+bool	parse_rgb(char *line, char *str, t_data *game)
 {
-    char	*sub;
+	char	*sub;
 
 	if (ft_strncmp(line, str, 2) == 0)
-    {
+	{
 		sub = remove_wspace(line, 2);
 		if (!sub)
 		{

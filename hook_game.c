@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 18:37:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/01/10 20:33:41 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/15 19:29:48 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static void	move_player(t_mlx *mlx, double move_x, double move_y)
 {
-    t_int_pt map;
-    t_int_pt new;
+	t_int_pt	map;
+	t_int_pt	new;
 
 	new.y = (int)(mlx->ply->pos.y + move_y);
 	new.x = (int)(mlx->ply->pos.x + move_x);
@@ -32,25 +32,25 @@ static void	move_player(t_mlx *mlx, double move_x, double move_y)
 
 static void	set_player(t_mlx *mlx)
 {
-	t_dbl_pt move;
+	t_dbl_pt	move;
 
 	move = (t_dbl_pt){0.0, 0.0};
-	if (mlx->ply->l_r == 1)
+	if (mlx->ply->east_west == 1)
 	{
 		move.x = -sin(mlx->ply->angle) * PLAYER_SPEED;
 		move.y = cos(mlx->ply->angle) * PLAYER_SPEED;
 	}
-	if (mlx->ply->l_r == -1)
+	if (mlx->ply->east_west == -1)
 	{
 		move.x = sin(mlx->ply->angle) * PLAYER_SPEED;
 		move.y = -cos(mlx->ply->angle) * PLAYER_SPEED;
 	}
-	if (mlx->ply->u_d == 1)
+	if (mlx->ply->north_south == 1)
 	{
 		move.x = cos(mlx->ply->angle) * PLAYER_SPEED;
 		move.y = sin(mlx->ply->angle) * PLAYER_SPEED;
 	}
-	if (mlx->ply->u_d == -1)
+	if (mlx->ply->north_south == -1)
 	{
 		move.x = -cos(mlx->ply->angle) * PLAYER_SPEED;
 		move.y = -sin(mlx->ply->angle) * PLAYER_SPEED;
@@ -74,11 +74,11 @@ static void	rotate_player(t_mlx *mlx, int i)
 	}
 }
 
-static void set_angle(t_mlx *mlx)
+static void	set_angle(t_mlx *mlx)
 {
-	if (mlx->ply->rot == 1)
+	if (mlx->ply->right_left == 1)
 		rotate_player(mlx, 1);
-	if (mlx->ply->rot == -1)
+	if (mlx->ply->right_left == -1)
 		rotate_player(mlx, 0);
 }
 
@@ -90,12 +90,13 @@ void	game_hook(void *ml)
 	if (mlx->img)
 		mlx_delete_image(mlx->mlx_p, mlx->img);
 	mlx->img = mlx_new_image(mlx->mlx_p, S_W, S_H);
-	if(!mlx->img)
+	if (!mlx->img)
 	{
 		error_msg("* mlx image creation failed *");
 		end_the_game(mlx, EXIT_FAILURE);
 	}
-	ft_memset(mlx->img->pixels, 255, mlx->img->width * mlx->img->height * sizeof(int32_t));
+	ft_memset(mlx->img->pixels, 255,
+		mlx->img->width * mlx->img->height * sizeof(int32_t));
 	set_angle(mlx);
 	set_player(mlx);
 	cast_rays(mlx);
