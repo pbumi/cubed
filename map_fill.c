@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:25:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/15 18:06:40 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/15 19:37:41 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,26 +93,6 @@ static void	mark_spaces(char **array, t_int_pt rc)
 		y++;
 	}
 }
-
-// static bool	check_for_x(char **tmp_arr, int rows, int cols)
-// {
-// 	int	y;
-// 	int	x;
-
-// 	y = 0;
-// 	while (y < rows)
-// 	{
-// 		x = 0;
-// 		while (x < cols)
-// 		{
-// 			if (tmp_arr[y][x] == 'X')
-// 				return (true);
-// 			x++;
-// 		}
-// 		y++;
-// 	}
-// 	return (false);
-// }
 
 bool	check_floodfill(t_data *game, char **tmp_arr, int rows, int cols)
 {
