@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 19:16:49 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/15 19:17:57 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/22 19:06:32 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,37 @@ void	free_all(t_mlx *mlx)
 	mlx->dt = NULL;
 	mlx->ply = NULL;
 	mlx->ray = NULL;
+}
+
+int	x_isdigit(char c)
+{
+	if (c >= '0' && c <= '9')
+	{
+		return (1);
+	}
+	return (0);
+}
+
+long	ft_atol(char *str)
+{
+	long		nb;
+	int			isneg;
+	int			i;
+
+	nb = 0;
+	isneg = 1;
+	i = 0;
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
+	{
+		isneg *= -1;
+		i++;
+	}
+	while (x_isdigit(str[i]))
+	{
+		nb = (nb * 10) + (str[i] - '0');
+		i++;
+	}
+	return (nb * isneg);
 }

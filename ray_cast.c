@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 18:03:11 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/15 19:33:53 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/22 19:09:19 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ static int	wall_hit(float x, float y, t_mlx *mlx)
 {
 	t_int_pt	map;
 
-	map = (t_int_pt){0, 0};
+	map.x = 0;
+	map.y = 0;
 	if (x < 0 || y < 0)
 		return (0);
 	map.y = (int)(y / TILE_SIZE);
@@ -56,56 +57,52 @@ static int	wall_hit(float x, float y, t_mlx *mlx)
 
 static float	get_h_inter(t_mlx *mlx, float angl)
 {
-	float	h_x;
-	float	h_y;
-	float	x_step;
-	float	y_step;
-	int		pixel;
+	t_flt_pt	h_ray;
+	t_flt_pt	step;
+	int			pixel;
 
-	y_step = TILE_SIZE;
-	x_step = TILE_SIZE / tan(angl);
-	h_y = (int)(mlx->ply->pos.y / TILE_SIZE) * TILE_SIZE;
-	pixel = inter_check(angl, &h_y, &y_step, 1);
-	h_x = mlx->ply->pos.x + (h_y - mlx->ply->pos.y) / tan(angl);
-	if ((unit_circle(angl, 'y') && x_step > 0)
-		|| (!unit_circle(angl, 'y') && x_step < 0))
-		x_step *= -1;
-	while (wall_hit(h_x, h_y - pixel, mlx))
+	step.y = TILE_SIZE;
+	step.x = TILE_SIZE / tan(angl);
+	h_ray.y = (int)(mlx->ply->pos.y / TILE_SIZE) * TILE_SIZE;
+	pixel = inter_check(angl, &h_ray.y, &step.y, 1);
+	h_ray.x = mlx->ply->pos.x + (h_ray.y - mlx->ply->pos.y) / tan(angl);
+	if ((unit_circle(angl, 'y') && step.x > 0)
+		|| (!unit_circle(angl, 'y') && step.x < 0))
+		step.x *= -1;
+	while (wall_hit(h_ray.x, h_ray.y - pixel, mlx))
 	{
-		h_x += x_step;
-		h_y += y_step;
+		h_ray.x += step.x;
+		h_ray.y += step.y;
 	}
-	mlx->ray->horiz.x = h_x;
-	mlx->ray->horiz.y = h_y;
-	return (sqrt(pow(h_x - mlx->ply->pos.x, 2) \
-		+ pow(h_y - mlx->ply->pos.y, 2)));
+	mlx->ray->horiz.x = h_ray.x;
+	mlx->ray->horiz.y = h_ray.y;
+	return (sqrt(pow(h_ray.x - mlx->ply->pos.x, 2) \
+		+ pow(h_ray.y - mlx->ply->pos.y, 2)));
 }
 
 static float	get_v_inter(t_mlx *mlx, float angl)
 {
-	float	v_x;
-	float	v_y;
-	float	x_step;
-	float	y_step;
-	int		pixel;
+	t_flt_pt	v_ray;
+	t_flt_pt	step;
+	int			pixel;
 
-	x_step = TILE_SIZE;
-	y_step = TILE_SIZE * tan(angl);
-	v_x = (int)(mlx->ply->pos.x / TILE_SIZE) * TILE_SIZE;
-	pixel = inter_check(angl, &v_x, &x_step, 0);
-	v_y = mlx->ply->pos.y + (v_x - mlx->ply->pos.x) * tan(angl);
-	if ((unit_circle(angl, 'x') && y_step < 0)
-		|| (!unit_circle(angl, 'x') && y_step > 0))
-		y_step *= -1;
-	while (wall_hit(v_x - pixel, v_y, mlx))
+	step.x = TILE_SIZE;
+	step.y = TILE_SIZE * tan(angl);
+	v_ray.x = (int)(mlx->ply->pos.x / TILE_SIZE) * TILE_SIZE;
+	pixel = inter_check(angl, &v_ray.x, &step.x, 0);
+	v_ray.y = mlx->ply->pos.y + (v_ray.x - mlx->ply->pos.x) * tan(angl);
+	if ((unit_circle(angl, 'x') && step.y < 0)
+		|| (!unit_circle(angl, 'x') && step.y > 0))
+		step.y *= -1;
+	while (wall_hit(v_ray.x - pixel, v_ray.y, mlx))
 	{
-		v_x += x_step;
-		v_y += y_step;
+		v_ray.x += step.x;
+		v_ray.y += step.y;
 	}
-	mlx->ray->vert.x = v_x;
-	mlx->ray->vert.y = v_y;
-	return (sqrt(pow(v_x - mlx->ply->pos.x, 2) \
-		+ pow(v_y - mlx->ply->pos.y, 2)));
+	mlx->ray->vert.x = v_ray.x;
+	mlx->ray->vert.y = v_ray.y;
+	return (sqrt(pow(v_ray.x - mlx->ply->pos.x, 2) \
+		+ pow(v_ray.y - mlx->ply->pos.y, 2)));
 }
 
 void	cast_rays(t_mlx *mlx)

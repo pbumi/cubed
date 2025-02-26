@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/15 19:31:58 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/22 17:31:44 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@
 # define FOV 60
 # define ROTATION_SPEED 0.040
 # define PLAYER_SPEED 4
+
+typedef struct s_flt_pt
+{
+	float	x;
+	float	y;
+}	t_flt_pt;
 
 typedef struct s_dbl_pt
 {
@@ -116,5 +122,6 @@ char	*remove_wspace(char *line, int start);
 int		get_pixeldata(int c);
 void	free_arr(char **arr);
 void	free_all(t_mlx *mlx);
+long	ft_atol(char *str);
 
 #endif

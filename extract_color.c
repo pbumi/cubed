@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 16:50:32 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/15 17:17:58 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/22 19:08:26 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,16 @@ static size_t	arr_size(char **arr)
 static bool	check_range(char **color)
 {
 	t_int_pt	pt;
+	int			x;
 
 	pt.y = 0;
 	while (color[pt.y])
 	{
+		x = 0;
+		while (color[pt.y][x] == ' ')
+			x++;
+		if (color[pt.y][x] == '\0')
+			return (false);
 		pt.x = 0;
 		while (color[pt.y][pt.x])
 		{
@@ -40,10 +46,8 @@ static bool	check_range(char **color)
 			}
 			pt.x++;
 		}
-		if (ft_atoi(color[pt.y]) < 0 || ft_atoi(color[pt.y]) > 255)
-		{
+		if (ft_atoi(color[pt.y]) < 0 || ft_atol(color[pt.y]) > 255)
 			return (false);
-		}
 		pt.y++;
 	}
 	return (true);
