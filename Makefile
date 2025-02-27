@@ -1,17 +1,5 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/09/30 19:29:39 by pbumidan          #+#    #+#              #
-#    Updated: 2024/12/16 20:15:22 by pbumidan         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
 
 NAME = cubed
-# NAME_BONUS = so_long_bonus
 
 LIBFT = ./libft/libft.a
 GNL = ./gnl/gnl.a
@@ -24,21 +12,25 @@ MLX42 = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 # -I include -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 SRCS = \
-	maintest.c \
-	initialize.c \
+	main.c \
+	check_file.c \
 	extract_comp.c \
+	extract_color.c \
+	extract_wall.c \
 	map_extract.c \
 	map_validate.c \
+	map_create.c \
 	map_fill.c \
-	utils_free.c \
-	utils_space.c \
+	hook_game.c \
+	hook_key.c \
+	ray_cast.c \
+	ray_render.c \
 	utils.c \
-	moves2.c \
+	utils_free.c \
 
 SRCS_SHARED = \
 
 SRCS_BONUS = \
-
 
 OBJS := $(SRCS:.c=.o)
 OBJS_SHARED:= $(SRCS_SHARED:.c=.o)
@@ -49,9 +41,10 @@ CFLAGS = -Wall -Wextra -Werror -Wunreachable-code -Ofast -I ./MLX42/include
 all: $(NAME)
 
 %.o: %.c
-	@cc $(CFLAGS) -c $< -o $@
+	@cc $(CFLAGS) -c $< -o $@ 
 
 $(NAME): .mlx .libft .gnl $(OBJS) $(OBJS_SHARED)
+# $(NAME): .mlx .libft $(OBJS) $(OBJS_SHARED)
 	@cc $(CFLAGS) $(OBJS) $(OBJS_SHARED) $(LIBFT) $(GNL) $(MLX42) -o $(NAME)
 	@echo "$(CYAN)* * * $(NAME) COMPLETE! * * *$(NC)"
 

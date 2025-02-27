@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/19 15:17:23 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/22 17:31:44 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,24 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdbool.h>
+# include <fcntl.h>
 # include <math.h>
 # include "./libft/libft.h"
 # include "./gnl/get_next_line.h"
 # include "./MLX42/include/MLX42/MLX42.h"
 
-# define WIDTH 480
-# define HEIGHT 480
-# define MINI_TILE 30
+# define S_W 1900
+# define S_H 1000
+# define TILE_SIZE 64
+# define FOV 60
+# define ROTATION_SPEED 0.040
+# define PLAYER_SPEED 4
 
-# define PLAYER_SPEED 0.045
-# define PLAYER_TILE 10
+typedef struct s_flt_pt
+{
+	float	x;
+	float	y;
+}	t_flt_pt;
 
 typedef struct s_dbl_pt
 {
@@ -40,71 +47,81 @@ typedef struct s_int_pt
 	int	y;
 }	t_int_pt;
 
-typedef struct s_wall
+typedef struct s_player
 {
-    char    *NO;
-    char    *EA;
-    char    *WE;
-    char    *SO;
-	bool	walls_OK;
-}   t_wall;
+	t_int_pt	pos;
+	double		angle;
+	float		pov;
+	int			right_left;
+	int			east_west;
+	int			north_south;
+}	t_player;
 
-typedef struct s_fc
+typedef struct s_ray
 {
-    int	R;
-    int	G;
-	int	B;
-    bool OK;
-}   t_fc;
+	t_dbl_pt	horiz;
+	t_dbl_pt	vert;
+	double		r_angle;
+	double		dist;
+	int			index;
+	bool		wall_hit;
+}	t_ray;
 
-typedef struct s_images
+typedef struct s_data
 {
-	mlx_image_t	*NO;
-	mlx_image_t	*EA;
-	mlx_image_t	*SO;
-	mlx_image_t	*WE;
-}			t_images;
+	char			*map;
+	char			**map2d;
+	t_int_pt		p;
+	t_int_pt		m;
+	mlx_texture_t	*no_t;
+	mlx_texture_t	*ea_t;
+	mlx_texture_t	*so_t;
+	mlx_texture_t	*we_t;
+	bool			n;
+	bool			e;
+	bool			w;
+	bool			s;
+	bool			wall;
+	unsigned int	floor_color;
+	bool			floor;
+	unsigned int	ceil_color;
+	bool			ceil;
+}	t_data;
 
-typedef struct s_main
+typedef struct s_mlx
 {
-    t_wall  *walls;
-	t_fc	*floor;
-    t_fc    *ceil;
-	t_dbl_pt	pplane;
-	t_dbl_pt	pdir;
-	t_dbl_pt	ppos;
-	t_int_pt	msize;
-    char    *map;
-	char	**sq_map;
-    mlx_t   *mlx_ptr;
-	mlx_image_t *minimap;
-}	t_main;
+	mlx_t			*mlx_p;
+	mlx_image_t		*img;
+	t_ray			*ray;
+	t_data			*dt;
+	t_player		*ply;
+}	t_mlx;
 
-//map
-void	check_file(int argc, char **argv, t_main *game);
-bool	extract_components(int fd, char *line, t_main *game);
-bool extract_map1(int fd, t_main *game);
-bool	validate_map(t_main *game);
-bool	check_fill(t_main *game);
-//free
-void free_struct(t_main *game);
-void free_arr(char **arr);
-void safe_free(void **ptr);
-void free_and_close(char *line, int fd);
-//space
-bool is_space(char c);
-char *remove_wspace(char *line, int start);
-bool is_empty_line(char *line);
-char *remove_wspace(char *line, int start);
-char *remove_whitespaces(char *line, int start);
-bool remove_spaces(char **colors);
+//parsing functions
+bool	check_args(int argc, char **argv, t_data *game);
+bool	extract_components(int fd, char *line, t_data *game);
+bool	parse_rgb(char *line, char *str, t_data *game);
+bool	parse_wall(char *line, char *identifier, t_data *game, bool *OK);
+bool	extract_map(int fd, t_data *game);
+bool	validate_map(t_data *game);
+bool	create_sqmap(t_data *game);
+bool	check_floodfill(t_data *game, char **tmp_arr, int rows, int cols);
+
+//game functions
+void	cast_rays(t_mlx *mlx);
+void	render_ray(t_mlx *mlx, int ray);
+void	game_hook(void *ml);
+void	key_hook(mlx_key_data_t keydata, void *ml);
+void	end_the_game(t_mlx *mlx, int exit_code);
+
 //utils
-void	errorhandler(t_main *game, char *msg, bool fatal);
-void	error_exit(char *msg, bool fatal);
-size_t  arr_size(char **arr);
-int find_max(int *arr, int size);
-char** allocate2DCharArray(int x, int y);
-//moves
-void	key_hook_slow(void *param);
+float	nor_angle(float angle);
+int		unit_circle(float angle, char c);
+void	error_msg(char *msg);
+char	*remove_wspace(char *line, int start);
+int		get_pixeldata(int c);
+void	free_arr(char **arr);
+void	free_all(t_mlx *mlx);
+long	ft_atol(char *str);
 
 #endif

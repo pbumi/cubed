@@ -5,70 +5,84 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/31 17:16:51 by pbumidan          #+#    #+#             */
-/*   Updated: 2024/12/18 20:31:53 by pbumidan         ###   ########.fr       */
+/*   Created: 2025/02/15 19:16:49 by pbumidan          #+#    #+#             */
+/*   Updated: 2025/02/22 19:06:32 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cubed.h"
+#include "cubed.h"
 
-void safe_free(void **ptr)
+void	free_arr(char **arr)
 {
-    if (*ptr)
-    {
-        free(*ptr);
-        *ptr = NULL;
-    }
-}
+	int	i;
 
-void safe_free_arr(char **arr)
-{
-    if (arr == NULL) // Check if the array is NULL to avoid dereferencing a NULL pointer
-        return;
-    
-    int i = 0;
-    while (arr[i] != NULL) // Loop through the array of strings
-    {
-        safe_free((void **)&arr[i]); // Use safe_free for each element to safely free it
-        i++;
-    }
-    safe_free((void **)&arr); // Free the array itself (pointer to the array) safely
-}
-
-void free_arr(char **arr)
-{
-    if (arr == NULL) // Check if the array is NULL to avoid dereferencing a NULL pointer
-        return;
-    int i = 0;
-    while (arr[i] != NULL)   // Loop through the array of strings
-    {
-        free(arr[i]);         // Free each string (element) in the array
-        i++;
-    }
-    free(arr);                 // Free the array itself (pointer to the array)
-}
-
-
-
-void free_struct(t_main *game)
-{
-	if (game)
+	if (arr == NULL)
+		return ;
+	i = 0;
+	while (arr[i] != NULL)
 	{
-		free(game->walls->NO);
-		free(game->walls->SO);
-		free(game->walls->WE);
-		free(game->walls->EA);
-		free(game->walls);
-		free(game->floor);
-		free(game->ceil);
-		free(game->map);
-		free_arr(game->sq_map);
+		free(arr[i]);
+		i++;
 	}
+	free(arr);
 }
 
-void free_and_close(char *line, int fd)
+void	free_all(t_mlx *mlx)
 {
-	free (line);
-	line = NULL;
-	close(fd);
+	free(mlx->dt->map);
+	mlx->dt->map = NULL;
+	free_arr(mlx->dt->map2d);
+	mlx->dt->map2d = NULL;
+	if (mlx->dt->ea_t)
+		mlx_delete_texture(mlx->dt->ea_t);
+	if (mlx->dt->we_t)
+		mlx_delete_texture(mlx->dt->we_t);
+	if (mlx->dt->no_t)
+		mlx_delete_texture(mlx->dt->no_t);
+	if (mlx->dt->so_t)
+		mlx_delete_texture(mlx->dt->so_t);
+	mlx->dt->no_t = NULL;
+	mlx->dt->so_t = NULL;
+	mlx->dt->we_t = NULL;
+	mlx->dt->ea_t = NULL;
+	if (mlx->ply)
+		free(mlx->ply);
+	if (mlx->ray)
+		free(mlx->ray);
+	mlx->dt = NULL;
+	mlx->ply = NULL;
+	mlx->ray = NULL;
+}
+
+int	x_isdigit(char c)
+{
+	if (c >= '0' && c <= '9')
+	{
+		return (1);
+	}
+	return (0);
+}
+
+long	ft_atol(char *str)
+{
+	long		nb;
+	int			isneg;
+	int			i;
+
+	nb = 0;
+	isneg = 1;
+	i = 0;
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
+	{
+		isneg *= -1;
+		i++;
+	}
+	while (x_isdigit(str[i]))
+	{
+		nb = (nb * 10) + (str[i] - '0');
+		i++;
+	}
+	return (nb * isneg);
 }
