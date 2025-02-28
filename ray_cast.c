@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 18:03:11 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/22 19:09:19 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:32:55 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,9 @@ void	cast_rays(t_mlx *mlx)
 		h_inter = get_h_inter(mlx, nor_angle(mlx->ray->r_angle));
 		v_inter = get_v_inter(mlx, nor_angle(mlx->ray->r_angle));
 		if (v_inter <= h_inter)
+		{
 			mlx->ray->dist = v_inter;
+		}
 		else
 		{
 			mlx->ray->dist = h_inter;
