@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:51:37 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/15 19:24:45 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/03/05 19:21:27 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,9 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	mlx = (t_mlx){0};
 	if (initialize_mlx_struct(&mlx, &dt) == false)
+	{	
 		end_the_game(&mlx, EXIT_FAILURE);
+	}
 	start_the_game(&mlx);
 	end_the_game(&mlx, EXIT_SUCCESS);
 	return (0);
