@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:51:37 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/03/05 19:21:27 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/03/05 19:29:31 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,9 @@ int	main(int argc, char **argv)
 
 	dt = (t_data){0};
 	if (check_args(argc, argv, &dt) == false)
+	{
 		return (EXIT_FAILURE);
+	}
 	mlx = (t_mlx){0};
 	if (initialize_mlx_struct(&mlx, &dt) == false)
 	{	
