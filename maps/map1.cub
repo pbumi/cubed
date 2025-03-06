@@ -1,9 +1,9 @@
-SO         ./textures/SO.png
-WE                              ./textures/WE.png
-C        185         ,    148             ,                   112
-F   200               ,      207       , 243            
-EA ./textures/EA.png
-NO              ./textures/NO.png
+SO         ./textures/qSO.png
+WE                              ./textures/qWE.png
+C        207         ,    190             ,                   62
+F   62               ,      110       , 207      
+EA ./textures/qEA.png
+NO              ./textures/qNO.png
 
         111111111111111111111111
         11111111111111111111111111

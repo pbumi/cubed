@@ -5,12 +5,6 @@ LIBFT = ./libft/libft.a
 GNL = ./gnl/gnl.a
 MLX42 = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 
-# cgpt = ./MLX42/build/libmlx42.a -Iinclude -lglfw -lX11 -lpthread -lXrandr -lXi -ldl
-
-# = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
-#-L"/Users/$(USER)/.brew/opt/glfw/lib/"
-# -I include -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
-
 SRCS = \
 	main.c \
 	check_file.c \
@@ -44,7 +38,6 @@ all: $(NAME)
 	@cc $(CFLAGS) -c $< -o $@ 
 
 $(NAME): .mlx .libft .gnl $(OBJS) $(OBJS_SHARED)
-# $(NAME): .mlx .libft $(OBJS) $(OBJS_SHARED)
 	@cc $(CFLAGS) $(OBJS) $(OBJS_SHARED) $(LIBFT) $(GNL) $(MLX42) -o $(NAME)
 	@echo "$(CYAN)* * * $(NAME) COMPLETE! * * *$(NC)"
 
