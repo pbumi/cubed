@@ -30,7 +30,7 @@ OBJS := $(SRCS:.c=.o)
 OBJS_SHARED:= $(SRCS_SHARED:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror -Wunreachable-code -Ofast -I ./MLX42/include
+CFLAGS = -Wall -Wextra -Werror -I ./MLX42/include
 
 all: $(NAME)
 
