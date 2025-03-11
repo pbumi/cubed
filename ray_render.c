@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 18:30:03 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/15 19:33:53 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:43:06 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ static mlx_texture_t	*get_texture(t_mlx *mlx)
 	if (mlx->ray->wall_hit == false)
 	{
 		if (mlx->ray->r_angle > M_PI / 2 && mlx->ray->r_angle < 3 * (M_PI / 2))
-			return (mlx->dt->we_t);
-		else
 			return (mlx->dt->ea_t);
+		else
+			return (mlx->dt->we_t);
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 16:50:32 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/22 19:08:26 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:45:28 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,12 @@ static void	set_color(t_data *game, char *str, char **colors)
 	b = (ft_atoi(colors[2]));
 	if (ft_strncmp(str, "F", 1) == 0)
 	{
-		game->floor_color = ((b << 24) | (g << 16) | (r << 8) | 0xFF);
+		game->floor_color = ((r << 24) | (g << 16) | (b << 8) | 0xFF);
 		game->floor = true;
 	}
 	else if (ft_strncmp(str, "C ", 1) == 0)
 	{
-		game->ceil_color = ((b << 24) | (g << 16) | (r << 8) | 0xFF);
+		game->ceil_color = ((r << 24) | (g << 16) | (b << 8) | 0xFF);
 		game->ceil = true;
 	}
 }
@@ -97,11 +97,16 @@ static bool	get_rgb(char *line, t_data *game, char *str)
 	return (true);
 }
 
-bool	parse_rgb(char *line, char *str, t_data *game)
+bool	parse_rgb(char *line, char *str, t_data *game, bool *OK)
 {
 	char	*sub;
 
-	if (ft_strncmp(line, str, 2) == 0)
+	if (ft_strncmp(line, str, 2) == 0 && *OK == true)
+	{
+		error_msg("* Duplicate floor/ceiling colors *");
+		return (false);
+	}
+	if (ft_strncmp(line, str, 2) == 0 && *OK == false)
 	{
 		sub = remove_wspace(line, 2);
 		if (!sub)

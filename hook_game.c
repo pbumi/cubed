@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 18:37:12 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/15 19:29:48 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/03/07 19:06:37 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static void	move_player(t_mlx *mlx, double move_x, double move_y)
 	t_int_pt	map;
 	t_int_pt	new;
 
-	new.y = (int)(mlx->ply->pos.y + move_y);
-	new.x = (int)(mlx->ply->pos.x + move_x);
+	new.y = (mlx->ply->pos.y + (int)move_y);
+	new.x = (mlx->ply->pos.x + (int)move_x);
 	map.y = (new.y / TILE_SIZE);
 	map.x = (new.x / TILE_SIZE);
 	if (mlx->dt->map2d[map.y][map.x] != '1' && \

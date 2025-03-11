@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:49:04 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/22 17:31:44 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/03/07 19:15:10 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ typedef struct s_mlx
 //parsing functions
 bool	check_args(int argc, char **argv, t_data *game);
 bool	extract_components(int fd, char *line, t_data *game);
-bool	parse_rgb(char *line, char *str, t_data *game);
+bool	parse_rgb(char *line, char *str, t_data *game, bool *OK);
 bool	parse_wall(char *line, char *identifier, t_data *game, bool *OK);
 bool	extract_map(int fd, t_data *game);
 bool	validate_map(t_data *game);

@@ -6,7 +6,7 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 17:02:54 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/15 19:14:15 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/03/07 19:15:56 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ static bool	parse_contents(char *line, t_data *game)
 {	
 	if (game->w && game->s && game->w && game->e)
 		game->wall = true;
-	if (parse_rgb(line, "F ", game) == false)
+	if (!parse_rgb(line, "F ", game, &game->floor))
 		return (false);
-	if (parse_rgb(line, "C ", game) == false)
+	if (!parse_rgb(line, "C ", game, &game->ceil))
 		return (false);
 	if (!parse_wall(line, "NO ", game, &game->n))
 		return (false);

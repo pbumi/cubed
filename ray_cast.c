@@ -6,15 +6,15 @@
 /*   By: pbumidan <pbumidan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 18:03:11 by pbumidan          #+#    #+#             */
-/*   Updated: 2025/02/22 19:09:19 by pbumidan         ###   ########.fr       */
+/*   Updated: 2025/03/05 19:27:51 by pbumidan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cubed.h"
 
-static int	inter_check(float angle, float *inter, float *step, int is_horizon)
+static int	check_vwallhit(float angle, float *inter, float *step, int is_hntal)
 {
-	if (is_horizon)
+	if (is_hntal == 1)
 	{
 		if (angle > 0 && angle < M_PI)
 		{
@@ -23,7 +23,7 @@ static int	inter_check(float angle, float *inter, float *step, int is_horizon)
 		}
 		*step *= -1;
 	}
-	else
+	else if (is_hntal == 0)
 	{
 		if (!(angle > M_PI / 2 && angle < 3 * M_PI / 2))
 		{
@@ -59,17 +59,17 @@ static float	get_h_inter(t_mlx *mlx, float angl)
 {
 	t_flt_pt	h_ray;
 	t_flt_pt	step;
-	int			pixel;
+	int			hit;
 
 	step.y = TILE_SIZE;
 	step.x = TILE_SIZE / tan(angl);
 	h_ray.y = (int)(mlx->ply->pos.y / TILE_SIZE) * TILE_SIZE;
-	pixel = inter_check(angl, &h_ray.y, &step.y, 1);
+	hit = check_vwallhit(angl, &h_ray.y, &step.y, 1);
 	h_ray.x = mlx->ply->pos.x + (h_ray.y - mlx->ply->pos.y) / tan(angl);
 	if ((unit_circle(angl, 'y') && step.x > 0)
 		|| (!unit_circle(angl, 'y') && step.x < 0))
 		step.x *= -1;
-	while (wall_hit(h_ray.x, h_ray.y - pixel, mlx))
+	while (wall_hit(h_ray.x, h_ray.y - hit, mlx))
 	{
 		h_ray.x += step.x;
 		h_ray.y += step.y;
@@ -84,17 +84,17 @@ static float	get_v_inter(t_mlx *mlx, float angl)
 {
 	t_flt_pt	v_ray;
 	t_flt_pt	step;
-	int			pixel;
+	int			hit;
 
 	step.x = TILE_SIZE;
 	step.y = TILE_SIZE * tan(angl);
 	v_ray.x = (int)(mlx->ply->pos.x / TILE_SIZE) * TILE_SIZE;
-	pixel = inter_check(angl, &v_ray.x, &step.x, 0);
+	hit = check_vwallhit(angl, &v_ray.x, &step.x, 0);
 	v_ray.y = mlx->ply->pos.y + (v_ray.x - mlx->ply->pos.x) * tan(angl);
 	if ((unit_circle(angl, 'x') && step.y < 0)
 		|| (!unit_circle(angl, 'x') && step.y > 0))
 		step.y *= -1;
-	while (wall_hit(v_ray.x - pixel, v_ray.y, mlx))
+	while (wall_hit(v_ray.x - hit, v_ray.y, mlx))
 	{
 		v_ray.x += step.x;
 		v_ray.y += step.y;
@@ -118,7 +118,9 @@ void	cast_rays(t_mlx *mlx)
 		h_inter = get_h_inter(mlx, nor_angle(mlx->ray->r_angle));
 		v_inter = get_v_inter(mlx, nor_angle(mlx->ray->r_angle));
 		if (v_inter <= h_inter)
+		{
 			mlx->ray->dist = v_inter;
+		}
 		else
 		{
 			mlx->ray->dist = h_inter;

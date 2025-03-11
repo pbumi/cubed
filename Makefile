@@ -1,15 +1,9 @@
 
-NAME = cubed
+NAME = cub3D
 
 LIBFT = ./libft/libft.a
 GNL = ./gnl/gnl.a
 MLX42 = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
-
-# cgpt = ./MLX42/build/libmlx42.a -Iinclude -lglfw -lX11 -lpthread -lXrandr -lXi -ldl
-
-# = ./MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
-#-L"/Users/$(USER)/.brew/opt/glfw/lib/"
-# -I include -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 SRCS = \
 	main.c \
@@ -36,7 +30,7 @@ OBJS := $(SRCS:.c=.o)
 OBJS_SHARED:= $(SRCS_SHARED:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror -Wunreachable-code -Ofast -I ./MLX42/include
+CFLAGS = -Wall -Wextra -Werror -I ./MLX42/include
 
 all: $(NAME)
 
@@ -44,7 +38,6 @@ all: $(NAME)
 	@cc $(CFLAGS) -c $< -o $@ 
 
 $(NAME): .mlx .libft .gnl $(OBJS) $(OBJS_SHARED)
-# $(NAME): .mlx .libft $(OBJS) $(OBJS_SHARED)
 	@cc $(CFLAGS) $(OBJS) $(OBJS_SHARED) $(LIBFT) $(GNL) $(MLX42) -o $(NAME)
 	@echo "$(CYAN)* * * $(NAME) COMPLETE! * * *$(NC)"
 
